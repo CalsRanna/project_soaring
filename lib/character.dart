@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/component/toolbar.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/stat.dart';
-import 'package:project_soaring/widget/bordered_container.dart';
+import 'package:project_soaring/util/label.dart';
+import 'package:project_soaring/widget/container.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -29,7 +30,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 children: [
                   Row(
                     children: [
-                      BorderedContainer(
+                      SoaringContainer(
                         child: Column(
                           children: [
                             Text(value.name),
@@ -39,7 +40,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: BorderedContainer(
+                        child: SoaringContainer(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -61,38 +62,15 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(attackProvider);
-                              final attack = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('攻击：$attack');
-                            }),
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(defenseProvider);
-                              final defense = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('防御：$defense');
-                            }),
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(lifeProvider);
-                              final life = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('生命值：$life');
-                            }),
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(manaProvider);
-                              final mana = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('法力值：$mana');
-                            }),
+                            for (var i = 0; i < 4; i++)
+                              Consumer(builder: (context, ref, child) {
+                                final provider = ref.watch(statsProvider(i));
+                                final stat = switch (provider) {
+                                  AsyncData(:final value) => value,
+                                  _ => 0,
+                                };
+                                return Text('${Labels.traits[i]}：$stat');
+                              }),
                           ],
                         ),
                       ),
@@ -101,32 +79,15 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(strengthProvider);
-                              final value = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('力量：$value');
-                            }),
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(agilityProvider);
-                              final value = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('敏捷：$value');
-                            }),
-                            Consumer(builder: (context, ref, child) {
-                              final provider = ref.watch(intelligenceProvider);
-                              final value = switch (provider) {
-                                AsyncData(:final value) => value,
-                                _ => 0,
-                              };
-                              return Text('智力：$value');
-                            }),
-                            const Text('精神：0'),
-                            const Text('体质：0'),
+                            for (var i = 4; i < 10; i++)
+                              Consumer(builder: (context, ref, child) {
+                                final provider = ref.watch(statsProvider(i));
+                                final stat = switch (provider) {
+                                  AsyncData(:final value) => value,
+                                  _ => 0,
+                                };
+                                return Text('${Labels.traits[i]}：$stat');
+                              }),
                           ],
                         ),
                       ),
@@ -135,6 +96,15 @@ class _CharacterPageState extends State<CharacterPage> {
                   const SizedBox(height: 16),
                   const CustomDivider(label: '其他属性'),
                   const SizedBox(height: 16),
+                  for (var i = 10; i < 17; i++)
+                    Consumer(builder: (context, ref, child) {
+                      final provider = ref.watch(statsProvider(i));
+                      final stat = switch (provider) {
+                        AsyncData(:final value) => value,
+                        _ => 0,
+                      };
+                      return Text('${Labels.traits[i]}：$stat');
+                    }),
                   const Spacer(),
                   const Toolbar(),
                 ],

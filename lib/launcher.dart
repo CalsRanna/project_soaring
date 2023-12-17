@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_soaring/character.dart';
-import 'package:project_soaring/widget/bordered_container.dart';
+import 'package:project_soaring/widget/container.dart';
 
 class LauncherPage extends StatefulWidget {
   const LauncherPage({super.key});
@@ -25,7 +25,7 @@ class _LauncherPageState extends State<LauncherPage> {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: startGame,
-              child: const BorderedContainer(
+              child: const SoaringContainer(
                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
                 child: Text('开始游戏'),
               ),
@@ -34,7 +34,7 @@ class _LauncherPageState extends State<LauncherPage> {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: startGame,
-              child: const BorderedContainer(
+              child: const SoaringContainer(
                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
                 child: Text('继续游戏'),
               ),

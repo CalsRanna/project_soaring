@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/generator.dart';
+import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/provider/item.dart';
 import 'package:project_soaring/schema/item.dart';
 

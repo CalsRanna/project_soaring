@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
-import 'package:project_soaring/schema/item.dart';
+import 'package:project_soaring/util/label.dart';
 
 part 'equipment.g.dart';
 
@@ -19,45 +18,24 @@ class Equipment {
   List<Trait> traits = [];
   int type = 0;
 
-  int get score =>
-      level * 10 +
-      extraLevel * 5 +
-      traits.fold(
-        0,
-        (a, b) => a + b.score,
-      );
+  int get score {
+    return traits.fold(
+      0,
+      (previousValue, trait) => previousValue + trait.score,
+    );
+  }
+}
 
-  static const levelColors = [
-    Colors.grey,
-    Colors.white,
-    Colors.green,
-    Colors.blue,
-    Colors.purpleAccent,
-    Colors.orange,
-  ];
-  static const levels = [
-    '粗糙',
-    '普通',
-    '优秀',
-    '精良',
-    '史诗',
-    '传说',
-  ];
-  // types: 0-item, 1-equipment
-  static const positions = [
-    '头部',
-    '颈部',
-    '肩膀',
-    '背部',
-    '胸部',
-    '手腕',
-    '腰部',
-    '腿部',
-    '手指',
-    '手指',
-    '饰品',
-    '饰品',
-    '主手',
-    '副手',
-  ];
+@embedded
+@Name('traits')
+class Trait {
+  int modification = 0;
+  int type = 0;
+
+  int get score => (modification * 0.8).round();
+
+  @override
+  String toString() {
+    return '+$modification${Labels.traits[type]}';
+  }
 }

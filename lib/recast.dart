@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_soaring/generator.dart';
+import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/schema/item.dart';
 
 class RecastPage extends StatefulWidget {

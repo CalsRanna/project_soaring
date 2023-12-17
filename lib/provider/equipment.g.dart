@@ -7,7 +7,7 @@ part of 'equipment.dart';
 // **************************************************************************
 
 String _$equippedEquipmentsNotifierHash() =>
-    r'f76ea1e8ef4f61e22092b9cdbf6b4af1fd393d62';
+    r'e888e6bad745c17fdedbad9acdbb5c47a53fee6f';
 
 /// See also [EquippedEquipmentsNotifier].
 @ProviderFor(EquippedEquipmentsNotifier)
@@ -25,22 +25,173 @@ final equippedEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
 typedef _$EquippedEquipmentsNotifier
     = AutoDisposeAsyncNotifier<List<Equipment>>;
 String _$availableEquipmentsNotifierHash() =>
-    r'f9ea58d1e09659b87e36185fd3d1b04ba33fe579';
+    r'98e5868b42eb6d0c9d0557b96e91a778dd5ef7d7';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+abstract class _$AvailableEquipmentsNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<List<Equipment>> {
+  late final int? position;
+
+  FutureOr<List<Equipment>> build(
+    int? position,
+  );
+}
 
 /// See also [AvailableEquipmentsNotifier].
 @ProviderFor(AvailableEquipmentsNotifier)
-final availableEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    AvailableEquipmentsNotifier, List<Equipment>>.internal(
-  AvailableEquipmentsNotifier.new,
-  name: r'availableEquipmentsNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$availableEquipmentsNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const availableEquipmentsNotifierProvider = AvailableEquipmentsNotifierFamily();
 
-typedef _$AvailableEquipmentsNotifier
-    = AutoDisposeAsyncNotifier<List<Equipment>>;
+/// See also [AvailableEquipmentsNotifier].
+class AvailableEquipmentsNotifierFamily
+    extends Family<AsyncValue<List<Equipment>>> {
+  /// See also [AvailableEquipmentsNotifier].
+  const AvailableEquipmentsNotifierFamily();
+
+  /// See also [AvailableEquipmentsNotifier].
+  AvailableEquipmentsNotifierProvider call(
+    int? position,
+  ) {
+    return AvailableEquipmentsNotifierProvider(
+      position,
+    );
+  }
+
+  @override
+  AvailableEquipmentsNotifierProvider getProviderOverride(
+    covariant AvailableEquipmentsNotifierProvider provider,
+  ) {
+    return call(
+      provider.position,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'availableEquipmentsNotifierProvider';
+}
+
+/// See also [AvailableEquipmentsNotifier].
+class AvailableEquipmentsNotifierProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<AvailableEquipmentsNotifier,
+        List<Equipment>> {
+  /// See also [AvailableEquipmentsNotifier].
+  AvailableEquipmentsNotifierProvider(
+    int? position,
+  ) : this._internal(
+          () => AvailableEquipmentsNotifier()..position = position,
+          from: availableEquipmentsNotifierProvider,
+          name: r'availableEquipmentsNotifierProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$availableEquipmentsNotifierHash,
+          dependencies: AvailableEquipmentsNotifierFamily._dependencies,
+          allTransitiveDependencies:
+              AvailableEquipmentsNotifierFamily._allTransitiveDependencies,
+          position: position,
+        );
+
+  AvailableEquipmentsNotifierProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.position,
+  }) : super.internal();
+
+  final int? position;
+
+  @override
+  FutureOr<List<Equipment>> runNotifierBuild(
+    covariant AvailableEquipmentsNotifier notifier,
+  ) {
+    return notifier.build(
+      position,
+    );
+  }
+
+  @override
+  Override overrideWith(AvailableEquipmentsNotifier Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: AvailableEquipmentsNotifierProvider._internal(
+        () => create()..position = position,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        position: position,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<AvailableEquipmentsNotifier,
+      List<Equipment>> createElement() {
+    return _AvailableEquipmentsNotifierProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AvailableEquipmentsNotifierProvider &&
+        other.position == position;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, position.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin AvailableEquipmentsNotifierRef
+    on AutoDisposeAsyncNotifierProviderRef<List<Equipment>> {
+  /// The parameter `position` of this provider.
+  int? get position;
+}
+
+class _AvailableEquipmentsNotifierProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<AvailableEquipmentsNotifier,
+        List<Equipment>> with AvailableEquipmentsNotifierRef {
+  _AvailableEquipmentsNotifierProviderElement(super.provider);
+
+  @override
+  int? get position => (origin as AvailableEquipmentsNotifierProvider).position;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

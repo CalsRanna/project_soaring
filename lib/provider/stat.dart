@@ -131,3 +131,35 @@ Future<int> spirit(SpiritRef ref) async {
   }
   return value + character.level * 1;
 }
+
+@riverpod
+Future<int> vitality(VitalityRef ref) async {
+  final character = await ref.watch(characterNotifierProvider.future);
+  final equipments = await ref.watch(equippedEquipmentsNotifierProvider.future);
+  var value = 0;
+  for (var equipment in equipments) {
+    final traits = equipment.traits;
+    for (var trait in traits) {
+      if (trait.type == 8) {
+        value += trait.modification;
+      }
+    }
+  }
+  return value + character.level * 1;
+}
+
+@riverpod
+Future<int> stats(StatsRef ref, int stat) async {
+  final character = await ref.watch(characterNotifierProvider.future);
+  final equipments = await ref.watch(equippedEquipmentsNotifierProvider.future);
+  var value = 0;
+  for (var equipment in equipments) {
+    final traits = equipment.traits;
+    for (var trait in traits) {
+      if (trait.type == stat) {
+        value += trait.modification;
+      }
+    }
+  }
+  return value + character.level * 1;
+}

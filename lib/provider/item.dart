@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:project_soaring/generator.dart';
+import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/schema/isar.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

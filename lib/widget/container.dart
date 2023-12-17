@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class BorderedContainer extends StatelessWidget {
-  const BorderedContainer({
+class SoaringContainer extends StatelessWidget {
+  const SoaringContainer({
     super.key,
+    this.color,
     this.height,
     this.padding,
     this.width,
     this.child,
   });
+  final Color? color;
   final double? height;
   final double? width;
   final EdgeInsets? padding;
@@ -15,12 +17,12 @@ class BorderedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final onSurface = colorScheme.onSurface;
+    final border = Border.all(color: onSurface);
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-      ),
+      decoration: BoxDecoration(border: border, color: color),
       height: height,
       padding: padding,
       width: width,

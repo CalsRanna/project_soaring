@@ -31,7 +31,7 @@ class Toolbar extends StatelessWidget {
             label: '装备',
             onTap: () async {
               final notifier =
-                  ref.read(availableEquipmentsNotifierProvider.notifier);
+                  ref.read(availableEquipmentsNotifierProvider(null).notifier);
               await notifier.mock();
               if (!context.mounted) return;
               Navigator.of(context).push(
