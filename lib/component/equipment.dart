@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/provider/equipment.dart';
@@ -22,17 +24,20 @@ class EquipmentTile extends StatelessWidget {
     if (equipment != null) {
       color = Labels.rankColors[equipment!.rank];
     }
-    final border = Border.all(color: color);
+    var border = Border.all(color: color);
+    var style = TextStyle(color: color);
+    final surfaceVariant = colorScheme.surfaceVariant;
+    if (equipment == null) {
+      border = Border.all(color: surfaceVariant);
+      style = TextStyle(color: surfaceVariant);
+    }
     final text = equipment?.name ?? Labels.positions[position!];
-    final style = TextStyle(color: color);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => handleTap(context, equipment),
       child: Container(
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: border,
-        ),
+        decoration: BoxDecoration(border: border),
         height: 64,
         width: 64,
         child: Text(text, style: style, textAlign: TextAlign.center),
@@ -100,13 +105,16 @@ class EquipmentInformationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final onSurface = colorScheme.onSurface;
+    final rankColor = Labels.rankColors[equipment.rank];
+    final textTheme = theme.textTheme;
+    final titleMedium = textTheme.titleMedium;
+
     return Material(
       child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
+        decoration: BoxDecoration(border: Border.all(color: onSurface)),
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +124,7 @@ class EquipmentInformationTile extends StatelessWidget {
               children: [
                 Text(
                   equipment.name,
-                  style: TextStyle(color: Labels.rankColors[equipment.rank]),
+                  style: titleMedium?.copyWith(color: rankColor),
                 ),
                 const SizedBox(width: 8),
                 if (equipment.extraLevel > 0) Text('+ ${equipment.extraLevel}'),
@@ -124,20 +132,31 @@ class EquipmentInformationTile extends StatelessWidget {
             ),
             Text(
               Labels.levels[equipment.rank],
-              style: TextStyle(
-                color: Labels.rankColors[equipment.rank],
-              ),
+              style: TextStyle(color: rankColor),
             ),
             Text(Labels.positions[equipment.position]),
+            const SizedBox(height: 8),
             for (var trait in equipment.traits)
               Text(
                 '+ ${trait.modification} ${Labels.traits[trait.type]}',
               ),
+            const SizedBox(height: 4),
             Text('装备评分: ${equipment.score}'),
-            Text(
-              equipment.description,
-              style: TextStyle(color: Colors.grey[600]),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Transform.rotate(
+                  angle: pi / 4,
+                  child: Container(color: rankColor, height: 8, width: 8),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  equipment.description,
+                  style: TextStyle(color: rankColor),
+                ),
+              ],
             ),
+            const SizedBox(height: 8),
             Consumer(
               builder: (context, ref, child) => Wrap(
                 spacing: 8,
@@ -152,7 +171,11 @@ class EquipmentInformationTile extends StatelessWidget {
                       text: '卸下',
                       onTap: () => takeoff(context, ref, equipment),
                     ),
-                  if (!equipment.equipped) const SoaringButton(text: '卖出'),
+                  if (!equipment.equipped)
+                    SoaringButton(
+                      text: '卖出',
+                      onTap: () => sold(context, ref, equipment),
+                    ),
                 ],
               ),
             )
@@ -173,6 +196,14 @@ class EquipmentInformationTile extends StatelessWidget {
   void takeoff(BuildContext context, WidgetRef ref, Equipment equipment) async {
     final notifier = ref.read(equippedEquipmentsNotifierProvider.notifier);
     await notifier.takeoff(equipment);
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+  }
+
+  void sold(BuildContext context, WidgetRef ref, Equipment equipment) async {
+    final notifier =
+        ref.read(availableEquipmentsNotifierProvider(null).notifier);
+    await notifier.sold(equipment);
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

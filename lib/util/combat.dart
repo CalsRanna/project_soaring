@@ -21,7 +21,7 @@ class Combat {
   void autoCombat(Creature creature) {
     int round = 0;
     logs.add('战斗开始。');
-    while (stats[2] > 0 && creature.life > 0) {
+    while (stats[2] > 0 && creature.life > 0 && round < 10) {
       if (round.isEven) {
         final damage = max(stats[0] - creature.defense, 0);
         creature.life -= damage;
@@ -37,7 +37,7 @@ class Combat {
       }
       round++;
     }
-    win = stats[2] > 0;
+    win = stats[2] > 0 && round < 10;
     logs.add('战斗${win == true ? '胜利' : '失败'}。');
     if (win == true) {
       loot(creature);

@@ -19,9 +19,6 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('角色'),
-      ),
       body: SafeArea(
         child: Consumer(builder: (context, ref, child) {
           final character = ref.watch(characterNotifierProvider);
@@ -52,58 +49,15 @@ class _CharacterPageState extends State<CharacterPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const CustomDivider(label: '基本属性'),
-                  const SizedBox(height: 16),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            for (var i = 0; i < 4; i++)
-                              Consumer(builder: (context, ref, child) {
-                                final provider = ref.watch(statsProvider(i));
-                                final stat = switch (provider) {
-                                  AsyncData(:final value) => value,
-                                  _ => 0,
-                                };
-                                return Text('${Labels.traits[i]}：$stat');
-                              }),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            for (var i = 4; i < 10; i++)
-                              Consumer(builder: (context, ref, child) {
-                                final provider = ref.watch(statsProvider(i));
-                                final stat = switch (provider) {
-                                  AsyncData(:final value) => value,
-                                  _ => 0,
-                                };
-                                return Text('${Labels.traits[i]}：$stat');
-                              }),
-                          ],
-                        ),
-                      ),
-                    ],
+                  const _StatsPanel(label: '基本属性', statIndexes: [2, 0, 3, 1]),
+                  const _StatsPanel(
+                    label: '六维属性',
+                    statIndexes: [4, 7, 8, 5, 6, 9],
                   ),
-                  const SizedBox(height: 16),
-                  const CustomDivider(label: '其他属性'),
-                  const SizedBox(height: 16),
-                  for (var i = 10; i < 17; i++)
-                    Consumer(builder: (context, ref, child) {
-                      final provider = ref.watch(statsProvider(i));
-                      final stat = switch (provider) {
-                        AsyncData(:final value) => value,
-                        _ => 0,
-                      };
-                      return Text('${Labels.traits[i]}：$stat');
-                    }),
+                  const _StatsPanel(
+                    label: '其他属性',
+                    statIndexes: [10, 16, 15, 11, 13, 14, 12],
+                  ),
                   const Spacer(),
                   const Toolbar(),
                 ],
@@ -112,6 +66,44 @@ class _CharacterPageState extends State<CharacterPage> {
           };
         }),
       ),
+    );
+  }
+}
+
+class _StatsPanel extends StatelessWidget {
+  const _StatsPanel({required this.label, required this.statIndexes});
+
+  final String label;
+  final List<int> statIndexes;
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final size = media.size;
+    final width = size.width / 2 - 16;
+    return Column(
+      children: [
+        CustomDivider(label: label),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Wrap(
+            children: [
+              for (var i in statIndexes)
+                Consumer(builder: (context, ref, child) {
+                  final provider = ref.watch(statsProvider(i));
+                  final stat = switch (provider) {
+                    AsyncData(:final value) => value,
+                    _ => 0,
+                  };
+                  return SizedBox(
+                    width: width,
+                    child: Text('${Labels.traits[i]}：$stat'),
+                  );
+                }),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

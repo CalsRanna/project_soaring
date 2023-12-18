@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/util/generator.dart';
-import 'package:project_soaring/schema/item.dart';
 
 class RecastPage extends StatefulWidget {
   const RecastPage({super.key});
@@ -10,9 +10,13 @@ class RecastPage extends StatefulWidget {
 }
 
 class _RecastPageState extends State<RecastPage> {
-  late Item item;
+  Equipment equipment = Equipment();
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final surfaceVariant = colorScheme.surfaceVariant;
+    final onSurface = colorScheme.onSurface;
     return Scaffold(
       appBar: AppBar(
         title: const Text('重铸'),
@@ -21,24 +25,16 @@ class _RecastPageState extends State<RecastPage> {
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
+              decoration: BoxDecoration(color: surfaceVariant),
               width: 100,
               height: 100,
               alignment: Alignment.center,
-              child: Text(item.name),
+              child: Text(equipment.name.isEmpty ? '+' : ''),
             ),
             const SizedBox(height: 16),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
+                decoration: BoxDecoration(border: Border.all(color: onSurface)),
                 child: ListView.separated(
                   padding: const EdgeInsets.all(8),
                   separatorBuilder: (context, index) =>
@@ -46,15 +42,15 @@ class _RecastPageState extends State<RecastPage> {
                   itemBuilder: (context, index) => ListTile(
                     // tileColor: Theme.of(context).colorScheme.surfaceVariant,
                     title: Text(
-                      item.traits[index].toString(),
+                      equipment.traits[index].toString(),
                     ),
                     onTap: () {
                       setState(() {
-                        item.traits[index] = Generator().recast(item);
+                        equipment.traits[index] = Generator().recast();
                       });
                     },
                   ),
-                  itemCount: item.traits.length,
+                  itemCount: equipment.traits.length,
                 ),
               ),
             )

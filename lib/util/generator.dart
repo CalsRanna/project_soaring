@@ -81,7 +81,7 @@ class Generator {
     return equipment;
   }
 
-  Trait recast(Item item) {
+  Trait recast() {
     final random = Random();
     final type = random.nextInt(16);
     var trait = Trait();

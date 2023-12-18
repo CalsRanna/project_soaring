@@ -1,25 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Labels {
-  static const pages = [
-    '角色',
-    '装备',
-    '背包',
-    '装备重铸',
-    '地下城',
-    '任务',
-    '地图',
-    '成就',
-    '设置'
-  ];
-  static const levels = [
-    '粗糙',
-    '普通',
-    '优秀',
-    '精良',
-    '史诗',
-    '传说',
-  ];
+  static const pages = ['装备', '背包', '地图', '地下城', '任务', '设置'];
+  static const levels = ['粗糙', '普通', '优秀', '精良', '史诗', '传说'];
   static const rankColors = [
     Colors.grey,
     Colors.white,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_soaring/page/backpack.dart';
 import 'package:project_soaring/page/character.dart';
+import 'package:project_soaring/page/combat.dart';
 import 'package:project_soaring/page/dungeon/dungeon.dart';
 import 'package:project_soaring/page/equipment.dart';
 import 'package:project_soaring/page/launcher.dart';
@@ -79,5 +80,15 @@ class RecastPageRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const RecastPage();
+  }
+}
+
+@TypedGoRoute<CombatPageRoute>(path: '/combat')
+class CombatPageRoute extends GoRouteData {
+  const CombatPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const CombatPage();
   }
 }

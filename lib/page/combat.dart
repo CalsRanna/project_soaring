@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/schema/character.dart';
-import 'package:project_soaring/schema/creature.dart';
+import 'package:project_soaring/provider/character.dart';
+import 'package:project_soaring/provider/creature.dart';
+import 'package:project_soaring/provider/stat.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/combat.dart';
@@ -12,15 +13,7 @@ import 'package:project_soaring/widget/button.dart';
 import 'package:project_soaring/widget/container.dart';
 
 class CombatPage extends StatefulWidget {
-  const CombatPage({
-    super.key,
-    required this.character,
-    required this.creature,
-    required this.stats,
-  });
-  final Character character;
-  final Creature creature;
-  final List<int> stats;
+  const CombatPage({super.key});
 
   @override
   State<CombatPage> createState() => _CombatPageState();
@@ -95,8 +88,14 @@ class _CombatPageState extends State<CombatPage> {
   }
 
   Future<void> combat(WidgetRef ref) async {
-    final combat = Combat(character: widget.character, stats: widget.stats);
-    combat.autoCombat(widget.creature);
+    final character = await ref.read(characterNotifierProvider.future);
+    List<int> stats = [];
+    for (var i = 0; i < Labels.traits.length; i++) {
+      stats.add(await ref.read(statsProvider(i).future));
+    }
+    final combat = Combat(character: character, stats: stats);
+    final creature = await ref.read(creatureNotifierProvider.future);
+    combat.autoCombat(creature);
     setState(() {
       this.logs.clear();
     });

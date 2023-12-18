@@ -14,6 +14,7 @@ List<RouteBase> get $appRoutes => [
       $dungeonPageRoute,
       $equipmentPageRoute,
       $recastPageRoute,
+      $combatPageRoute,
     ];
 
 RouteBase get $launcherPageRoute => GoRouteData.$route(
@@ -165,6 +166,29 @@ extension $RecastPageRouteExtension on RecastPageRoute {
 
   String get location => GoRouteData.$location(
         '/recast',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $combatPageRoute => GoRouteData.$route(
+      path: '/combat',
+      factory: $CombatPageRouteExtension._fromState,
+    );
+
+extension $CombatPageRouteExtension on CombatPageRoute {
+  static CombatPageRoute _fromState(GoRouterState state) =>
+      const CombatPageRoute();
+
+  String get location => GoRouteData.$location(
+        '/combat',
       );
 
   void go(BuildContext context) => context.go(location);

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/component/equipment.dart';
+import 'package:project_soaring/page/combat.dart';
+import 'package:project_soaring/provider/character.dart';
+import 'package:project_soaring/provider/creature.dart';
 import 'package:project_soaring/provider/equipment.dart';
+import 'package:project_soaring/provider/stat.dart';
+import 'package:project_soaring/router/router.dart';
 import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/util/dungeon.dart';
@@ -95,33 +100,50 @@ class _DungeonPageState extends State<DungeonPage> {
       setState(() {
         tile.explored = true;
       });
-      if (tile.type == 2) {
-        final notifier = ref.read(lootEquipmentsNotifierProvider.notifier);
-        await notifier.loot();
+      if (tile.type == 1) {
+        return;
       }
+      final notifier = ref.read(creatureNotifierProvider.notifier);
+      await notifier.spawn();
       if (!mounted) return;
-      if (tile.type == 5) {
-        Modal.of(context).show(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'GOTCHA',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SoaringButton(text: 'RESTART', onTap: restart),
-                  const SizedBox(width: 16),
-                  SoaringButton(text: 'CONTINUE', onTap: moveOn),
-                ],
-              )
-            ],
-          ),
-        );
-      }
+      const CombatPageRoute().push(context);
+      // Modal.of(context).show(
+      //   child: CombatPage(
+      //     character: character,
+      //     creature: creature,
+      //     stats: stats,
+      //   ),
+      // );
+      // setState(() {
+      //   tile.explored = true;
+      // });
+      // if (tile.type == 2) {
+      //   final notifier = ref.read(lootEquipmentsNotifierProvider.notifier);
+      //   await notifier.loot();
+      // }
+      // if (!mounted) return;
+      // if (tile.type == 5) {
+      //   Modal.of(context).show(
+      //     child: Column(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         Text(
+      //           'GOTCHA',
+      //           style: Theme.of(context).textTheme.titleLarge,
+      //         ),
+      //         const SizedBox(height: 32),
+      //         Row(
+      //           mainAxisSize: MainAxisSize.min,
+      //           children: [
+      //             SoaringButton(text: 'RESTART', onTap: restart),
+      //             const SizedBox(width: 16),
+      //             SoaringButton(text: 'CONTINUE', onTap: moveOn),
+      //           ],
+      //         )
+      //       ],
+      //     ),
+      //   );
+      // }
     } else {
       Message.of(context).show('NOT REACHABLE');
     }

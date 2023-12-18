@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:isar/isar.dart';
+import 'package:project_soaring/provider/character.dart';
+import 'package:project_soaring/schema/character.dart';
 import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/isar.dart';
@@ -64,6 +68,20 @@ class AvailableEquipmentsNotifier extends _$AvailableEquipmentsNotifier {
     ref.invalidateSelf();
     ref.invalidate(availableEquipmentsNotifierProvider(equipment.position));
     ref.invalidate(equippedEquipmentsNotifierProvider);
+    await future;
+  }
+
+  Future<void> sold(Equipment equipment) async {
+    final gold = pow(equipment.score, 1.5).round() + (equipment.rank + 1) * 10;
+    final character = await ref.read(characterNotifierProvider.future);
+    character.gold += gold;
+    await isar.writeTxn(() async {
+      await isar.equipments.delete(equipment.id);
+      await isar.characters.put(character);
+    });
+    ref.invalidateSelf();
+    ref.invalidate(availableEquipmentsNotifierProvider(equipment.position));
+    ref.invalidate(characterNotifierProvider);
     await future;
   }
 }
