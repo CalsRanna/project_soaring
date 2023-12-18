@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/launcher.dart';
+import 'package:project_soaring/router/router.dart';
 import 'package:project_soaring/schema/isar.dart';
 
 void main() async {
   await IsarInitializer.ensureInitialized();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: ProjectSoaring()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ProjectSoaring extends StatelessWidget {
+  const ProjectSoaring({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
+      routerConfig: router,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           surfaceTintColor: Colors.transparent,
@@ -26,7 +25,6 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LauncherPage(),
     );
   }
 }

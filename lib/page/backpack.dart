@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/provider/item.dart';
 import 'package:project_soaring/schema/item.dart';
 
@@ -36,7 +33,7 @@ class _BackpackPageState extends State<BackpackPage> {
                   for (var item in items)
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => handleTap(item),
+                      onTap: () {},
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -53,29 +50,5 @@ class _BackpackPageState extends State<BackpackPage> {
         ],
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final count = Random().nextInt(100);
-    for (var i = 0; i < count; i++) {
-      items.add(Generator().item());
-    }
-    items.sort((a, b) => b.score.compareTo(a.score));
-  }
-
-  void handleTap(Item item) {
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: [
-    //       Material(
-    //         child: EquipmentInformation(item: item),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

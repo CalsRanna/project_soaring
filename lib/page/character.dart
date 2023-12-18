@@ -31,19 +31,18 @@ class _CharacterPageState extends State<CharacterPage> {
                   Row(
                     children: [
                       SoaringContainer(
-                        child: Column(
-                          children: [
-                            Text(value.name),
-                            Text('等级：${value.level}'),
-                          ],
-                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        width: 96,
+                        child: Center(child: Text(value.name)),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: SoaringContainer(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              Text('等级：${value.level}'),
                               Text('经验值：${value.experience}'),
                               Text('金钱：${value.gold}'),
                             ],

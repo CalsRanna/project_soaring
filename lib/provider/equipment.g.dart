@@ -25,7 +25,7 @@ final equippedEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
 typedef _$EquippedEquipmentsNotifier
     = AutoDisposeAsyncNotifier<List<Equipment>>;
 String _$availableEquipmentsNotifierHash() =>
-    r'98e5868b42eb6d0c9d0557b96e91a778dd5ef7d7';
+    r'1a8f5afdc4d9b50e9e3393094276155bc434bf16';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -195,7 +195,7 @@ class _AvailableEquipmentsNotifierProviderElement
 }
 
 String _$lootEquipmentsNotifierHash() =>
-    r'e5fe67bff74e7ff78919edad677fb575ddf94253';
+    r'2d2367bead5ca166ed21d7da66917a3856303127';
 
 /// See also [LootEquipmentsNotifier].
 @ProviderFor(LootEquipmentsNotifier)

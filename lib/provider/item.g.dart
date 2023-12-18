@@ -23,7 +23,7 @@ final availableEquipmentsProvider =
 );
 
 typedef AvailableEquipmentsRef = AutoDisposeFutureProviderRef<List<Item>>;
-String _$itemsNotifierHash() => r'b464e7fcee64461e1ceeedf1e38db293fae81078';
+String _$itemsNotifierHash() => r'7e8218e7fd43e8298c1cca97cd5426c03d9c9650';
 
 /// See also [ItemsNotifier].
 @ProviderFor(ItemsNotifier)

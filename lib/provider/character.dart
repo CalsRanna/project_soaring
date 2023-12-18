@@ -1,6 +1,8 @@
 import 'package:isar/isar.dart';
 import 'package:project_soaring/schema/character.dart';
+import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/isar.dart';
+import 'package:project_soaring/util/generator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'character.g.dart';
@@ -17,5 +19,18 @@ class CharacterNotifier extends _$CharacterNotifier {
       });
     }
     return character;
+  }
+
+  Future<void> create(String name) async {
+    var character = await future;
+    character.name = name;
+    await isar.writeTxn(() async {
+      isar.characters.put(character);
+    });
+    final equipments = Generator().starterKit();
+    await isar.writeTxn(() async {
+      await isar.equipments.putAll(equipments);
+    });
+    ref.invalidateSelf();
   }
 }

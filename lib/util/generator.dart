@@ -7,6 +7,21 @@ import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 
 class Generator {
+  String name() {
+    final random = Random();
+    const firstNames = Labels.firstNames;
+    final firstName = firstNames[random.nextInt(firstNames.length)];
+    int min = 0x4e00;
+    int max = 0x9fa5;
+    int unicode = min + random.nextInt(max - min + 1);
+    var lastName = String.fromCharCode(unicode);
+    if (random.nextBool()) {
+      unicode = min + random.nextInt(max - min + 1);
+      lastName += String.fromCharCode(unicode);
+    }
+    return '$firstName$lastName';
+  }
+
   Item item() {
     final random = Random();
     var item = Item();
@@ -14,6 +29,26 @@ class Generator {
     item.description = 'Description ${random.nextInt(100)}';
     item.type = random.nextInt(2);
     return item;
+  }
+
+  List<Equipment> starterKit() {
+    var clothes = Equipment();
+    clothes.description = '极其常见的粗布衣服。';
+    clothes.equipped = true;
+    clothes.level = 1;
+    clothes.name = '粗布衣服';
+    clothes.position = 4;
+    clothes.rank = 0;
+    clothes.type = 1;
+    var trousers = Equipment();
+    trousers.description = '极其常见的粗布短裤。';
+    trousers.equipped = true;
+    trousers.level = 1;
+    trousers.name = '粗布短裤';
+    trousers.position = 7;
+    trousers.rank = 0;
+    trousers.type = 1;
+    return [clothes, trousers];
   }
 
   Equipment equipment() {

@@ -44,23 +44,6 @@ class AvailableEquipmentsNotifier extends _$AvailableEquipmentsNotifier {
     return equipments;
   }
 
-  Future<void> mock() async {
-    final builder = isar.equipments.filter();
-    final exist = await builder.equippedEqualTo(false).findAll();
-    if (exist.isNotEmpty) return;
-    final generator = Generator();
-    final List<Equipment> equipments = [];
-    for (var i = 0; i < 100; i++) {
-      equipments.add(generator.equipment());
-    }
-    await isar.writeTxn(() async {
-      await isar.equipments.clear();
-      await isar.equipments.putAll(equipments);
-    });
-    ref.invalidateSelf();
-    await future;
-  }
-
   Future<void> equip(Equipment equipment) async {
     final equipments = await ref.read(
       equippedEquipmentsNotifierProvider.future,

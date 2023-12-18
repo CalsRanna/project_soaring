@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/backpack.dart';
-import 'package:project_soaring/character.dart';
-import 'package:project_soaring/equipment.dart';
-import 'package:project_soaring/page/dungeon/dungeon.dart';
-import 'package:project_soaring/provider/equipment.dart';
-import 'package:project_soaring/recast.dart';
+import 'package:project_soaring/router/router.dart';
+import 'package:project_soaring/util/label.dart';
 
 class Toolbar extends StatelessWidget {
   const Toolbar({super.key});
@@ -16,68 +11,21 @@ class Toolbar extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        ToolbarTile(
-          label: '角色',
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const CharacterPage(),
-              ),
-            );
-          },
-        ),
-        Consumer(
-          builder: (context, ref, child) => ToolbarTile(
-            label: '装备',
-            onTap: () async {
-              final notifier =
-                  ref.read(availableEquipmentsNotifierProvider(null).notifier);
-              await notifier.mock();
-              if (!context.mounted) return;
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const EquipmentPage(),
-                ),
-              );
-            },
-          ),
-        ),
-        ToolbarTile(
-          label: '背包',
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const BackpackPage(),
-              ),
-            );
-          },
-        ),
-        ToolbarTile(
-          label: '地下城',
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const DungeonPage(),
-              ),
-            );
-          },
-        ),
-        ToolbarTile(label: '任务', onTap: () {}),
-        ToolbarTile(label: '地图', onTap: () {}),
-        ToolbarTile(label: '成就', onTap: () {}),
-        ToolbarTile(
-          label: '装备重铸',
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const RecastPage(),
-              ),
-            );
-          },
-        ),
-        ToolbarTile(label: '设置', onTap: () {}),
+        for (var page in Labels.pages)
+          ToolbarTile(label: page, onTap: () => replace(context, page)),
       ],
     );
+  }
+
+  void replace(BuildContext context, String page) {
+    var _ = switch (page) {
+      '角色' => const CharacterPageRoute().replace(context),
+      '装备' => const EquipmentPageRoute().push(context),
+      '背包' => const BackpackPageRoute().push(context),
+      '装备重铸' => const RecastPageRoute().push(context),
+      '地下城' => const DungeonPageRoute().push(context),
+      _ => null,
+    };
   }
 }
 

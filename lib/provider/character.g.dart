@@ -6,7 +6,7 @@ part of 'character.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$characterNotifierHash() => r'491911ca8390254328b29a532e6433fda254f9c9';
+String _$characterNotifierHash() => r'd79bdca711788c1ec07985f53d1d00f5f485788a';
 
 /// See also [CharacterNotifier].
 @ProviderFor(CharacterNotifier)
