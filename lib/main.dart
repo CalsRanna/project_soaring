@@ -30,35 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class ToolbarTile extends StatefulWidget {
-  const ToolbarTile({super.key, required this.label, this.onTap});
-
-  final String label;
-  final void Function()? onTap;
-
-  @override
-  State<ToolbarTile> createState() => _ToolbarTileState();
-}
-
-class _ToolbarTileState extends State<ToolbarTile> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: widget.onTap,
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        width: 72,
-        child: Text(widget.label),
-      ),
-    );
-  }
-}

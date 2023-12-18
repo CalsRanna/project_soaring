@@ -84,3 +84,22 @@ class AvailableEquipmentsNotifier extends _$AvailableEquipmentsNotifier {
     await future;
   }
 }
+
+@riverpod
+class LootEquipmentsNotifier extends _$LootEquipmentsNotifier {
+  @override
+  Future<List<Equipment>> build() async {
+    return [];
+  }
+
+  Future<void> loot() async {
+    final equipment = Generator().equipment();
+    await isar.writeTxn(() async {
+      await isar.equipments.put(equipment);
+    });
+    final previousState = await future;
+    final equipments = [...previousState, equipment];
+    equipments.sort((a, b) => b.score.compareTo(a.score));
+    state = AsyncData(equipments);
+  }
+}

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:project_soaring/schema/creature.dart';
+import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
@@ -65,5 +66,32 @@ class Generator {
     creature.mana = random.nextInt(100) + 1;
     creature.rank = random.nextInt(4);
     return creature;
+  }
+
+  Dungeon dungeon() {
+    final random = Random();
+    var dungeon = Dungeon();
+    dungeon.name = 'Dungeon ${random.nextInt(100)}';
+    dungeon.difficulty = random.nextInt(3);
+    for (var i = 0; i < 100; i++) {
+      var tile = Tile();
+      tile.difficulty = random.nextInt(3);
+      tile.x = i ~/ 10;
+      tile.y = i % 10;
+      tile.type = random.nextInt(4);
+      dungeon.tiles.add(tile);
+    }
+    var start = random.nextInt(100);
+    while (dungeon.tiles[start].type == 0) {
+      start = random.nextInt(100);
+    }
+    dungeon.tiles[start].explored = true;
+    dungeon.tiles[start].type = 4;
+    var end = random.nextInt(100);
+    while (dungeon.tiles[end].type == 0 || dungeon.tiles[end].type == 4) {
+      end = random.nextInt(100);
+    }
+    dungeon.tiles[end].type = 5;
+    return dungeon;
   }
 }

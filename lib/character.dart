@@ -154,8 +154,9 @@ class CustomDivider extends StatelessWidget {
           angle: pi / 4,
           child: Container(
             decoration: BoxDecoration(
-              border:
-                  Border.all(color: Theme.of(context).colorScheme.onSurface),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             width: 8,
             height: 8,

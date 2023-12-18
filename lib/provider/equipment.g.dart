@@ -193,5 +193,23 @@ class _AvailableEquipmentsNotifierProviderElement
   @override
   int? get position => (origin as AvailableEquipmentsNotifierProvider).position;
 }
+
+String _$lootEquipmentsNotifierHash() =>
+    r'e5fe67bff74e7ff78919edad677fb575ddf94253';
+
+/// See also [LootEquipmentsNotifier].
+@ProviderFor(LootEquipmentsNotifier)
+final lootEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
+    LootEquipmentsNotifier, List<Equipment>>.internal(
+  LootEquipmentsNotifier.new,
+  name: r'lootEquipmentsNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$lootEquipmentsNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LootEquipmentsNotifier = AutoDisposeAsyncNotifier<List<Equipment>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
