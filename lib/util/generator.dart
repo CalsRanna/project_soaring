@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
@@ -51,5 +52,18 @@ class Generator {
     trait.type = type;
     trait.modification = random.nextInt(100) + 1;
     return trait;
+  }
+
+  Creature spawn() {
+    final random = Random();
+    var creature = Creature();
+    creature.name = 'Creature ${random.nextInt(100)}';
+    creature.attack = random.nextInt(100) + 1;
+    creature.defense = random.nextInt(100) + 1;
+    creature.level = random.nextInt(60) + 1;
+    creature.life = random.nextInt(100) + 1;
+    creature.mana = random.nextInt(100) + 1;
+    creature.rank = random.nextInt(4);
+    return creature;
   }
 }

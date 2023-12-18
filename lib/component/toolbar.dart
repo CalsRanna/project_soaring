@@ -4,6 +4,7 @@ import 'package:project_soaring/backpack.dart';
 import 'package:project_soaring/character.dart';
 import 'package:project_soaring/equipment.dart';
 import 'package:project_soaring/main.dart';
+import 'package:project_soaring/page/dungeon/dungeon.dart';
 import 'package:project_soaring/provider/equipment.dart';
 import 'package:project_soaring/recast.dart';
 
@@ -52,7 +53,16 @@ class Toolbar extends StatelessWidget {
             );
           },
         ),
-        ToolbarTile(label: '战斗', onTap: () {}),
+        ToolbarTile(
+          label: '地下城',
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const DungeonPage(),
+              ),
+            );
+          },
+        ),
         ToolbarTile(label: '任务', onTap: () {}),
         ToolbarTile(label: '地图', onTap: () {}),
         ToolbarTile(label: '成就', onTap: () {}),

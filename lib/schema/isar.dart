@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project_soaring/schema/character.dart';
+import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 
@@ -12,7 +13,7 @@ class IsarInitializer {
     WidgetsFlutterBinding.ensureInitialized();
     final directory = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
-      [CharacterSchema, EquipmentSchema, ItemSchema],
+      [CharacterSchema, CreatureSchema, EquipmentSchema, ItemSchema],
       directory: directory.path,
     );
   }
