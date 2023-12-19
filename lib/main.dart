@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/router/router.dart';
 import 'package:project_soaring/schema/isar.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await IsarInitializer.ensureInitialized();
   runApp(const ProviderScope(child: ProjectSoaring()));
 }

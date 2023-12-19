@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project_soaring/page/areas.dart';
 import 'package:project_soaring/page/backpack.dart';
 import 'package:project_soaring/page/character.dart';
 import 'package:project_soaring/page/combat.dart';
 import 'package:project_soaring/page/dungeon/dungeon.dart';
+import 'package:project_soaring/page/dungeon/dungeons.dart';
 import 'package:project_soaring/page/equipment.dart';
 import 'package:project_soaring/page/launcher.dart';
 import 'package:project_soaring/page/recast.dart';
@@ -50,6 +52,26 @@ class BackpackPageRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const BackpackPage();
+  }
+}
+
+@TypedGoRoute<AreasPageRoute>(path: '/areas')
+class AreasPageRoute extends GoRouteData {
+  const AreasPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AreasPage();
+  }
+}
+
+@TypedGoRoute<DungeonsPageRoute>(path: '/dungeons')
+class DungeonsPageRoute extends GoRouteData {
+  const DungeonsPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DungeonsPage();
   }
 }
 

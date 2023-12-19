@@ -11,7 +11,7 @@ import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/util/dungeon.dart';
 import 'package:project_soaring/util/generator.dart';
-import 'package:project_soaring/widget/Modal.dart';
+import 'package:project_soaring/widget/modal.dart';
 import 'package:project_soaring/widget/button.dart';
 import 'package:project_soaring/widget/message.dart';
 

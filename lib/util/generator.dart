@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
@@ -7,6 +8,20 @@ import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 
 class Generator {
+  late Random random;
+  Generator() {
+    random = Random();
+  }
+  Area area({int? level, String? name, String? description}) {
+    var area = Area();
+    area.level = level ?? random.nextInt(60) + 1;
+    const presets = Labels.areas;
+    final index = random.nextInt(presets.length);
+    area.name = name ?? presets[index]['name']!;
+    area.description = description ?? presets[index]['description']!;
+    return area;
+  }
+
   String name() {
     final random = Random();
     const firstNames = Labels.firstNames;

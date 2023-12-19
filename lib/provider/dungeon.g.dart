@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'character.dart';
+part of 'dungeon.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$characterNotifierHash() => r'4c95ff0a3ff2450f43c3d8ca086ab8ebbbffd989';
+String _$dungeonsNotifierHash() => r'9be46373917a35b708f0494efb25be6f2cc17358';
 
-/// See also [CharacterNotifier].
-@ProviderFor(CharacterNotifier)
-final characterNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<CharacterNotifier, Character>.internal(
-  CharacterNotifier.new,
-  name: r'characterNotifierProvider',
+/// See also [DungeonsNotifier].
+@ProviderFor(DungeonsNotifier)
+final dungeonsNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<DungeonsNotifier, List<Dungeon>>.internal(
+  DungeonsNotifier.new,
+  name: r'dungeonsNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$characterNotifierHash,
+      : _$dungeonsNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CharacterNotifier = AutoDisposeAsyncNotifier<Character>;
+typedef _$DungeonsNotifier = AutoDisposeAsyncNotifier<List<Dungeon>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

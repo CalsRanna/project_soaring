@@ -11,6 +11,8 @@ List<RouteBase> get $appRoutes => [
       $spawnPageRoute,
       $characterPageRoute,
       $backpackPageRoute,
+      $areasPageRoute,
+      $dungeonsPageRoute,
       $dungeonPageRoute,
       $equipmentPageRoute,
       $recastPageRoute,
@@ -97,6 +99,52 @@ extension $BackpackPageRouteExtension on BackpackPageRoute {
 
   String get location => GoRouteData.$location(
         '/backpack',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $areasPageRoute => GoRouteData.$route(
+      path: '/areas',
+      factory: $AreasPageRouteExtension._fromState,
+    );
+
+extension $AreasPageRouteExtension on AreasPageRoute {
+  static AreasPageRoute _fromState(GoRouterState state) =>
+      const AreasPageRoute();
+
+  String get location => GoRouteData.$location(
+        '/areas',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $dungeonsPageRoute => GoRouteData.$route(
+      path: '/dungeons',
+      factory: $DungeonsPageRouteExtension._fromState,
+    );
+
+extension $DungeonsPageRouteExtension on DungeonsPageRoute {
+  static DungeonsPageRoute _fromState(GoRouterState state) =>
+      const DungeonsPageRoute();
+
+  String get location => GoRouteData.$location(
+        '/dungeons',
       );
 
   void go(BuildContext context) => context.go(location);

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'character.dart';
+part of 'area.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,94 +9,88 @@ part of 'character.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetCharacterCollection on Isar {
-  IsarCollection<Character> get characters => this.collection();
+extension GetAreaCollection on Isar {
+  IsarCollection<Area> get areas => this.collection();
 }
 
-const CharacterSchema = CollectionSchema(
-  name: r'characters',
-  id: -5356870469787570786,
+const AreaSchema = CollectionSchema(
+  name: r'areas',
+  id: 4043266962716923857,
   properties: {
-    r'experience': PropertySchema(
+    r'description': PropertySchema(
       id: 0,
-      name: r'experience',
-      type: IsarType.long,
-    ),
-    r'gold': PropertySchema(
-      id: 1,
-      name: r'gold',
-      type: IsarType.long,
-    ),
-    r'harvestAt': PropertySchema(
-      id: 2,
-      name: r'harvestAt',
-      type: IsarType.dateTime,
+      name: r'description',
+      type: IsarType.string,
     ),
     r'level': PropertySchema(
-      id: 3,
+      id: 1,
       name: r'level',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'name',
       type: IsarType.string,
+    ),
+    r'stationed': PropertySchema(
+      id: 3,
+      name: r'stationed',
+      type: IsarType.bool,
     )
   },
-  estimateSize: _characterEstimateSize,
-  serialize: _characterSerialize,
-  deserialize: _characterDeserialize,
-  deserializeProp: _characterDeserializeProp,
+  estimateSize: _areaEstimateSize,
+  serialize: _areaSerialize,
+  deserialize: _areaDeserialize,
+  deserializeProp: _areaDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _characterGetId,
-  getLinks: _characterGetLinks,
-  attach: _characterAttach,
+  getId: _areaGetId,
+  getLinks: _areaGetLinks,
+  attach: _areaAttach,
   version: '3.1.0+1',
 );
 
-int _characterEstimateSize(
-  Character object,
+int _areaEstimateSize(
+  Area object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.description.length * 3;
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
-void _characterSerialize(
-  Character object,
+void _areaSerialize(
+  Area object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.experience);
-  writer.writeLong(offsets[1], object.gold);
-  writer.writeDateTime(offsets[2], object.harvestAt);
-  writer.writeLong(offsets[3], object.level);
-  writer.writeString(offsets[4], object.name);
+  writer.writeString(offsets[0], object.description);
+  writer.writeLong(offsets[1], object.level);
+  writer.writeString(offsets[2], object.name);
+  writer.writeBool(offsets[3], object.stationed);
 }
 
-Character _characterDeserialize(
+Area _areaDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Character();
-  object.experience = reader.readLong(offsets[0]);
-  object.gold = reader.readLong(offsets[1]);
-  object.harvestAt = reader.readDateTime(offsets[2]);
+  final object = Area();
+  object.description = reader.readString(offsets[0]);
   object.id = id;
-  object.level = reader.readLong(offsets[3]);
-  object.name = reader.readString(offsets[4]);
+  object.level = reader.readLong(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  object.stationed = reader.readBool(offsets[3]);
   return object;
 }
 
-P _characterDeserializeProp<P>(
+P _areaDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -104,44 +98,40 @@ P _characterDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
-    case 3:
-      return (reader.readLong(offset)) as P;
-    case 4:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _characterGetId(Character object) {
+Id _areaGetId(Area object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _characterGetLinks(Character object) {
+List<IsarLinkBase<dynamic>> _areaGetLinks(Area object) {
   return [];
 }
 
-void _characterAttach(IsarCollection<dynamic> col, Id id, Character object) {
+void _areaAttach(IsarCollection<dynamic> col, Id id, Area object) {
   object.id = id;
 }
 
-extension CharacterQueryWhereSort
-    on QueryBuilder<Character, Character, QWhere> {
-  QueryBuilder<Character, Character, QAfterWhere> anyId() {
+extension AreaQueryWhereSort on QueryBuilder<Area, Area, QWhere> {
+  QueryBuilder<Area, Area, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension CharacterQueryWhere
-    on QueryBuilder<Character, Character, QWhereClause> {
-  QueryBuilder<Character, Character, QAfterWhereClause> idEqualTo(Id id) {
+extension AreaQueryWhere on QueryBuilder<Area, Area, QWhereClause> {
+  QueryBuilder<Area, Area, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -150,7 +140,7 @@ extension CharacterQueryWhere
     });
   }
 
-  QueryBuilder<Character, Character, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<Area, Area, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -172,7 +162,7 @@ extension CharacterQueryWhere
     });
   }
 
-  QueryBuilder<Character, Character, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<Area, Area, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -181,7 +171,7 @@ extension CharacterQueryWhere
     });
   }
 
-  QueryBuilder<Character, Character, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<Area, Area, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -190,7 +180,7 @@ extension CharacterQueryWhere
     });
   }
 
-  QueryBuilder<Character, Character, QAfterWhereClause> idBetween(
+  QueryBuilder<Area, Area, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -207,171 +197,138 @@ extension CharacterQueryWhere
   }
 }
 
-extension CharacterQueryFilter
-    on QueryBuilder<Character, Character, QFilterCondition> {
-  QueryBuilder<Character, Character, QAfterFilterCondition> experienceEqualTo(
-      int value) {
+extension AreaQueryFilter on QueryBuilder<Area, Area, QFilterCondition> {
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'experience',
+        property: r'description',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition>
-      experienceGreaterThan(
-    int value, {
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionGreaterThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'experience',
+        property: r'description',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> experienceLessThan(
-    int value, {
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionLessThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'experience',
+        property: r'description',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> experienceBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionBetween(
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'experience',
+        property: r'description',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> goldEqualTo(
-      int value) {
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'description',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'gold',
-        value: value,
+        property: r'description',
+        value: '',
       ));
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> goldGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<Area, Area, QAfterFilterCondition> descriptionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'gold',
-        value: value,
+        property: r'description',
+        value: '',
       ));
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> goldLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'gold',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> goldBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'gold',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> harvestAtEqualTo(
-      DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'harvestAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition>
-      harvestAtGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'harvestAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> harvestAtLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'harvestAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> harvestAtBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'harvestAt',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> idEqualTo(
-      Id value) {
+  QueryBuilder<Area, Area, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -380,7 +337,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<Area, Area, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -393,7 +350,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> idLessThan(
+  QueryBuilder<Area, Area, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -406,7 +363,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> idBetween(
+  QueryBuilder<Area, Area, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -423,8 +380,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelEqualTo(
-      int value) {
+  QueryBuilder<Area, Area, QAfterFilterCondition> levelEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'level',
@@ -433,7 +389,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelGreaterThan(
+  QueryBuilder<Area, Area, QAfterFilterCondition> levelGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -446,7 +402,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelLessThan(
+  QueryBuilder<Area, Area, QAfterFilterCondition> levelLessThan(
     int value, {
     bool include = false,
   }) {
@@ -459,7 +415,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelBetween(
+  QueryBuilder<Area, Area, QAfterFilterCondition> levelBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -476,7 +432,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -489,7 +445,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -504,7 +460,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameLessThan(
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -519,7 +475,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameBetween(
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -538,7 +494,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -551,7 +507,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -564,8 +520,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameContains(
-      String value,
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameContains(String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -576,8 +531,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameMatches(
-      String pattern,
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameMatches(String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -588,7 +542,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -597,7 +551,7 @@ extension CharacterQueryFilter
     });
   }
 
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<Area, Area, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -605,220 +559,189 @@ extension CharacterQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Area, Area, QAfterFilterCondition> stationedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'stationed',
+        value: value,
+      ));
+    });
+  }
 }
 
-extension CharacterQueryObject
-    on QueryBuilder<Character, Character, QFilterCondition> {}
+extension AreaQueryObject on QueryBuilder<Area, Area, QFilterCondition> {}
 
-extension CharacterQueryLinks
-    on QueryBuilder<Character, Character, QFilterCondition> {}
+extension AreaQueryLinks on QueryBuilder<Area, Area, QFilterCondition> {}
 
-extension CharacterQuerySortBy on QueryBuilder<Character, Character, QSortBy> {
-  QueryBuilder<Character, Character, QAfterSortBy> sortByExperience() {
+extension AreaQuerySortBy on QueryBuilder<Area, Area, QSortBy> {
+  QueryBuilder<Area, Area, QAfterSortBy> sortByDescription() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.asc);
+      return query.addSortBy(r'description', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> sortByExperienceDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> sortByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.desc);
+      return query.addSortBy(r'description', Sort.desc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> sortByGold() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gold', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByGoldDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gold', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByHarvestAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'harvestAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByHarvestAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'harvestAt', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByLevel() {
+  QueryBuilder<Area, Area, QAfterSortBy> sortByLevel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'level', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> sortByLevelDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> sortByLevelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'level', Sort.desc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> sortByName() {
+  QueryBuilder<Area, Area, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Area, Area, QAfterSortBy> sortByStationed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stationed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Area, Area, QAfterSortBy> sortByStationedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stationed', Sort.desc);
+    });
+  }
 }
 
-extension CharacterQuerySortThenBy
-    on QueryBuilder<Character, Character, QSortThenBy> {
-  QueryBuilder<Character, Character, QAfterSortBy> thenByExperience() {
+extension AreaQuerySortThenBy on QueryBuilder<Area, Area, QSortThenBy> {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByDescription() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.asc);
+      return query.addSortBy(r'description', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByExperienceDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.desc);
+      return query.addSortBy(r'description', Sort.desc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByGold() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gold', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByGoldDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gold', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByHarvestAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'harvestAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByHarvestAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'harvestAt', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenById() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByLevel() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByLevel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'level', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByLevelDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByLevelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'level', Sort.desc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByName() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<Character, Character, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<Area, Area, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Area, Area, QAfterSortBy> thenByStationed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stationed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Area, Area, QAfterSortBy> thenByStationedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'stationed', Sort.desc);
+    });
+  }
 }
 
-extension CharacterQueryWhereDistinct
-    on QueryBuilder<Character, Character, QDistinct> {
-  QueryBuilder<Character, Character, QDistinct> distinctByExperience() {
+extension AreaQueryWhereDistinct on QueryBuilder<Area, Area, QDistinct> {
+  QueryBuilder<Area, Area, QDistinct> distinctByDescription(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'experience');
+      return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Character, Character, QDistinct> distinctByGold() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'gold');
-    });
-  }
-
-  QueryBuilder<Character, Character, QDistinct> distinctByHarvestAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'harvestAt');
-    });
-  }
-
-  QueryBuilder<Character, Character, QDistinct> distinctByLevel() {
+  QueryBuilder<Area, Area, QDistinct> distinctByLevel() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'level');
     });
   }
 
-  QueryBuilder<Character, Character, QDistinct> distinctByName(
+  QueryBuilder<Area, Area, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<Area, Area, QDistinct> distinctByStationed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'stationed');
+    });
+  }
 }
 
-extension CharacterQueryProperty
-    on QueryBuilder<Character, Character, QQueryProperty> {
-  QueryBuilder<Character, int, QQueryOperations> idProperty() {
+extension AreaQueryProperty on QueryBuilder<Area, Area, QQueryProperty> {
+  QueryBuilder<Area, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Character, int, QQueryOperations> experienceProperty() {
+  QueryBuilder<Area, String, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'experience');
+      return query.addPropertyName(r'description');
     });
   }
 
-  QueryBuilder<Character, int, QQueryOperations> goldProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'gold');
-    });
-  }
-
-  QueryBuilder<Character, DateTime, QQueryOperations> harvestAtProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'harvestAt');
-    });
-  }
-
-  QueryBuilder<Character, int, QQueryOperations> levelProperty() {
+  QueryBuilder<Area, int, QQueryOperations> levelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'level');
     });
   }
 
-  QueryBuilder<Character, String, QQueryOperations> nameProperty() {
+  QueryBuilder<Area, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Area, bool, QQueryOperations> stationedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'stationed');
     });
   }
 }
