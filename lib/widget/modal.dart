@@ -7,9 +7,9 @@ class Modal {
 
   Modal.of(this.context);
 
-  Future<void> show({Widget? child}) async {
+  Future<void> show({bool barrierDismissible = true, Widget? child}) async {
     showDialog(
-      barrierDismissible: false,
+      barrierDismissible: barrierDismissible,
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(

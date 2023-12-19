@@ -47,6 +47,7 @@ class AreasNotifier extends _$AreasNotifier {
     await isar.writeTxn(() async {
       await isar.areas.putAll(areas);
     });
+    ref.invalidateSelf();
   }
 }
 

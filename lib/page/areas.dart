@@ -43,7 +43,7 @@ class _AreasPageState extends State<AreasPage> {
                       children: [
                         Row(
                           children: [
-                            Text(areas[index].name),
+                            Text('「${areas[index].name}」'),
                             const SizedBox(width: 8),
                             Text('适合等级：${areas[index].level}'),
                             const SizedBox(width: 8),

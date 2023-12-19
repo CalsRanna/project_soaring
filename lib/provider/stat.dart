@@ -20,5 +20,8 @@ Future<int> stats(StatsRef ref, int stat) async {
   if (stat == 2 || stat == 3) {
     value += character.level * 10;
   }
+  if (stat == 0 || stat == 1) {
+    value += character.level * 1;
+  }
   return value;
 }

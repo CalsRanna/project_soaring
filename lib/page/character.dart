@@ -8,8 +8,10 @@ import 'package:project_soaring/provider/area.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/stat.dart';
 import 'package:project_soaring/schema/area.dart';
+import 'package:project_soaring/schema/character.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/container.dart';
+import 'package:project_soaring/widget/modal.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -24,60 +26,40 @@ class _CharacterPageState extends State<CharacterPage> {
     return Scaffold(
       body: SafeArea(
         child: Consumer(builder: (context, ref, child) {
-          final character = ref.watch(characterNotifierProvider);
+          final characterProvider = ref.watch(characterNotifierProvider);
+          Character? character = switch (characterProvider) {
+            AsyncData(:final value) => value,
+            _ => null,
+          };
           final provider = ref.watch(stationedAreaProvider);
           Area? area = switch (provider) {
             AsyncData(:final value) => value,
             _ => null,
           };
-          return switch (character) {
-            AsyncData(:final value) => Column(
-                children: [
-                  Row(
-                    children: [
-                      SoaringContainer(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        width: 96,
-                        child: Center(child: Text(value.name)),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: SoaringContainer(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text('等级：${value.level}'),
-                              Text('经验值：${value.experience}'),
-                              Text('金钱：${value.gold}'),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const _StatsPanel(label: '基本属性', statIndexes: [2, 0, 3, 1]),
-                  const _StatsPanel(
-                    label: '六维属性',
-                    statIndexes: [4, 7, 8, 5, 6, 9],
-                  ),
-                  const _StatsPanel(
-                    label: '其他属性',
-                    statIndexes: [10, 16, 15, 11, 13, 14, 12],
-                  ),
-                  if (area != null)
-                    _StationedArea(
-                      harvestAt: value.harvestAt,
-                      name: area.name,
-                      onTap: () => handleTap(ref),
-                    ),
-                  const Spacer(),
-                  const Toolbar(),
-                ],
+          return Column(children: [
+            if (character != null) ...[
+              _StatusBar(character: character),
+              const SizedBox(height: 16),
+              const _StatsPanel(label: '基本属性', statIndexes: [2, 0, 3, 1]),
+              const _StatsPanel(
+                label: '六维属性',
+                statIndexes: [4, 8, 6, 7, 5, 9],
               ),
-            _ => const SizedBox(),
-          };
+              const _StatsPanel(
+                label: '其他属性',
+                statIndexes: [10, 16, 15, 11, 13, 14, 12],
+              ),
+            ],
+            if (character != null && area != null) ...[
+              _StationedArea(
+                harvestAt: character.harvestAt,
+                name: area.name,
+                onTap: () => handleTap(ref),
+              ),
+              const Spacer(),
+              const Toolbar(),
+            ]
+          ]);
         }),
       ),
     );
@@ -87,7 +69,54 @@ class _CharacterPageState extends State<CharacterPage> {
     final area = await ref.read(stationedAreaProvider.future);
     if (area == null) return;
     final notifier = ref.read(characterNotifierProvider.notifier);
-    notifier.harvest(area);
+    final (experience, gold) = await notifier.harvest(area);
+    if (!mounted) return;
+    Modal.of(context).show(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('驻扎期间获得：'),
+          Text('「$experience」点经验值，「$gold」金币'),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusBar extends StatelessWidget {
+  const _StatusBar({required this.character});
+
+  final Character character;
+
+  @override
+  Widget build(BuildContext context) {
+    final status = [
+      '等级：${character.level}',
+      '经验值：${character.experience}',
+      '金钱：${character.gold}'
+    ];
+    const overflow = TextOverflow.ellipsis;
+    return Row(
+      children: [
+        SoaringContainer(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          width: 96,
+          child: Center(child: Text(character.name)),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: SoaringContainer(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                for (var item in status)
+                  Expanded(child: Text(item, overflow: overflow)),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
   }
 }
 
@@ -113,11 +142,28 @@ class __StationedAreaState extends State<_StationedArea> {
   void initState() {
     super.initState();
     duration = calculate();
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (!mounted) return;
       setState(() {
         duration = calculate();
       });
     });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant _StationedArea oldWidget) {
+    if (widget.harvestAt != oldWidget.harvestAt) {
+      setState(() {
+        duration = calculate();
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -133,7 +179,7 @@ class __StationedAreaState extends State<_StationedArea> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('当前驻扎：「${widget.name}」'),
-              Text('已驻扎「$duration」分钟'),
+              Text('已驻扎${format(duration)}'),
             ],
           ),
         ),
@@ -143,6 +189,12 @@ class __StationedAreaState extends State<_StationedArea> {
 
   int calculate() {
     return DateTime.now().difference(widget.harvestAt).inMinutes;
+  }
+
+  String format(int minutes) {
+    if (minutes < 60) return '「$minutes」分钟';
+    if (minutes < 60 * 24) return '「${minutes ~/ 60}」小时';
+    return '「${minutes ~/ (60 * 24)}」天';
   }
 }
 
