@@ -21,7 +21,7 @@ final stationedAreaProvider = AutoDisposeFutureProvider<Area?>.internal(
 );
 
 typedef StationedAreaRef = AutoDisposeFutureProviderRef<Area?>;
-String _$areasNotifierHash() => r'5a146bea79971603eedf59b3e162846d758f31ae';
+String _$areasNotifierHash() => r'576ba3a5b3dab282fbb0a144fd775f2800108909';
 
 /// See also [AreasNotifier].
 @ProviderFor(AreasNotifier)

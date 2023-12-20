@@ -163,11 +163,15 @@ RouteBase get $dungeonPageRoute => GoRouteData.$route(
     );
 
 extension $DungeonPageRouteExtension on DungeonPageRoute {
-  static DungeonPageRoute _fromState(GoRouterState state) =>
-      const DungeonPageRoute();
+  static DungeonPageRoute _fromState(GoRouterState state) => DungeonPageRoute(
+        id: int.parse(state.uri.queryParameters['id']!),
+      );
 
   String get location => GoRouteData.$location(
         '/dungeon',
+        queryParams: {
+          'id': id.toString(),
+        },
       );
 
   void go(BuildContext context) => context.go(location);

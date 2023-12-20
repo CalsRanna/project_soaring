@@ -4,6 +4,7 @@ import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
+import 'package:project_soaring/schema/event.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 
@@ -118,10 +119,16 @@ class Generator {
     return creature;
   }
 
-  Dungeon dungeon() {
+  Dungeon dungeon({int? index}) {
+    const dungeons = Labels.dungeons;
     final random = Random();
     var dungeon = Dungeon();
-    dungeon.name = 'Dungeon ${random.nextInt(100)}';
+    dungeon.name = index == null
+        ? 'Dungeon ${random.nextInt(100)}'
+        : dungeons[index]['name']!;
+    dungeon.story = index == null
+        ? 'Story ${random.nextInt(100)}'
+        : dungeons[index]['story']!;
     dungeon.difficulty = random.nextInt(3);
     for (var i = 0; i < 100; i++) {
       var tile = Tile();
@@ -143,5 +150,36 @@ class Generator {
     }
     dungeon.tiles[end].type = 5;
     return dungeon;
+  }
+
+  List<Tile> rogueLiteTiles(Dungeon dungeon) {
+    List<Tile> tiles = [];
+    for (var i = 0; i < 100; i++) {
+      var tile = Tile();
+      tile.difficulty = random.nextInt(3);
+      tile.x = i ~/ 10;
+      tile.y = i % 10;
+      tile.type = random.nextInt(4);
+      tiles.add(tile);
+    }
+    var start = random.nextInt(100);
+    while (tiles[start].type == 0) {
+      start = random.nextInt(100);
+    }
+    tiles[start].explored = true;
+    tiles[start].type = 4;
+    var end = random.nextInt(100);
+    while (tiles[end].type == 0 || tiles[end].type == 4) {
+      end = random.nextInt(100);
+    }
+    tiles[end].type = 5;
+    return tiles;
+  }
+
+  Event event() {
+    var event = Event();
+    event.content = 'Event ${random.nextInt(100)}';
+    event.reward = random.nextInt(5);
+    return event;
   }
 }

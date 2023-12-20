@@ -77,11 +77,12 @@ class DungeonsPageRoute extends GoRouteData {
 
 @TypedGoRoute<DungeonPageRoute>(path: '/dungeon')
 class DungeonPageRoute extends GoRouteData {
-  const DungeonPageRoute();
+  final int id;
+  const DungeonPageRoute({required this.id});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const DungeonPage();
+    return DungeonPage(id: id);
   }
 }
 

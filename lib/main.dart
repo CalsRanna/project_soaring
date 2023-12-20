@@ -7,6 +7,7 @@ import 'package:project_soaring/schema/isar.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   await IsarInitializer.ensureInitialized();
   runApp(const ProviderScope(child: ProjectSoaring()));
 }

@@ -56,9 +56,9 @@ class _CharacterPageState extends State<CharacterPage> {
                 name: area.name,
                 onTap: () => handleTap(ref),
               ),
-              const Spacer(),
-              const Toolbar(),
-            ]
+            ],
+            const Spacer(),
+            const Toolbar(),
           ]);
         }),
       ),
@@ -69,7 +69,7 @@ class _CharacterPageState extends State<CharacterPage> {
     final area = await ref.read(stationedAreaProvider.future);
     if (area == null) return;
     final notifier = ref.read(characterNotifierProvider.notifier);
-    final (experience, gold) = await notifier.harvest(area);
+    final (experience, gold, dungeon) = await notifier.harvest(area);
     if (!mounted) return;
     Modal.of(context).show(
       child: Column(
@@ -77,169 +77,17 @@ class _CharacterPageState extends State<CharacterPage> {
         children: [
           const Text('驻扎期间获得：'),
           Text('「$experience」点经验值，「$gold」金币'),
+          if (dungeon != null) Text('发现「$dungeon」'),
         ],
       ),
     );
   }
 }
 
-class _StatusBar extends StatelessWidget {
-  const _StatusBar({required this.character});
-
-  final Character character;
-
-  @override
-  Widget build(BuildContext context) {
-    final status = [
-      '等级：${character.level}',
-      '经验值：${character.experience}',
-      '金钱：${character.gold}'
-    ];
-    const overflow = TextOverflow.ellipsis;
-    return Row(
-      children: [
-        SoaringContainer(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          width: 96,
-          child: Center(child: Text(character.name)),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: SoaringContainer(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                for (var item in status)
-                  Expanded(child: Text(item, overflow: overflow)),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class _StationedArea extends StatefulWidget {
-  const _StationedArea({
-    required this.harvestAt,
-    required this.name,
-    this.onTap,
-  });
-
-  final DateTime harvestAt;
-  final String name;
-  final void Function()? onTap;
-
-  @override
-  State<_StationedArea> createState() => __StationedAreaState();
-}
-
-class __StationedAreaState extends State<_StationedArea> {
-  late Timer timer;
-  late int duration;
-  @override
-  void initState() {
-    super.initState();
-    duration = calculate();
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      if (!mounted) return;
-      setState(() {
-        duration = calculate();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant _StationedArea oldWidget) {
-    if (widget.harvestAt != oldWidget.harvestAt) {
-      setState(() {
-        duration = calculate();
-      });
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: duration > 0 ? widget.onTap : null,
-      child: SoaringContainer(
-        height: 64,
-        width: double.infinity,
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('当前驻扎：「${widget.name}」'),
-              Text('已驻扎${format(duration)}'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  int calculate() {
-    return DateTime.now().difference(widget.harvestAt).inMinutes;
-  }
-
-  String format(int minutes) {
-    if (minutes < 60) return '「$minutes」分钟';
-    if (minutes < 60 * 24) return '「${minutes ~/ 60}」小时';
-    return '「${minutes ~/ (60 * 24)}」天';
-  }
-}
-
-class _StatsPanel extends StatelessWidget {
-  const _StatsPanel({required this.label, required this.statIndexes});
-
-  final String label;
-  final List<int> statIndexes;
-
-  @override
-  Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
-    final size = media.size;
-    final width = size.width / 2 - 16;
-    return Column(
-      children: [
-        CustomDivider(label: label),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Wrap(
-            children: [
-              for (var i in statIndexes)
-                Consumer(builder: (context, ref, child) {
-                  final provider = ref.watch(statsProvider(i));
-                  final stat = switch (provider) {
-                    AsyncData(:final value) => value,
-                    _ => 0,
-                  };
-                  return SizedBox(
-                    width: width,
-                    child: Text('${Labels.traits[i]}：$stat'),
-                  );
-                }),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class CustomDivider extends StatelessWidget {
-  const CustomDivider({super.key, this.label});
-
   final String? label;
+
+  const CustomDivider({super.key, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +139,159 @@ class CustomDivider extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _StationedArea extends StatefulWidget {
+  final DateTime harvestAt;
+
+  final String name;
+  final void Function()? onTap;
+  const _StationedArea({
+    required this.harvestAt,
+    required this.name,
+    this.onTap,
+  });
+
+  @override
+  State<_StationedArea> createState() => __StationedAreaState();
+}
+
+class __StationedAreaState extends State<_StationedArea> {
+  late Timer timer;
+  late int duration;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: duration > 0 ? widget.onTap : null,
+      child: SoaringContainer(
+        height: 64,
+        width: double.infinity,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('当前驻扎：「${widget.name}」'),
+              Text('已驻扎${format(duration)}'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  int calculate() {
+    return DateTime.now().difference(widget.harvestAt).inMinutes;
+  }
+
+  @override
+  void didUpdateWidget(covariant _StationedArea oldWidget) {
+    if (widget.harvestAt != oldWidget.harvestAt) {
+      setState(() {
+        duration = calculate();
+      });
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  String format(int minutes) {
+    if (minutes < 60) return '「$minutes」分钟';
+    if (minutes < 60 * 24) return '「${minutes ~/ 60}」小时';
+    return '「${minutes ~/ (60 * 24)}」天';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    duration = calculate();
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (!mounted) return;
+      setState(() {
+        duration = calculate();
+      });
+    });
+  }
+}
+
+class _StatsPanel extends StatelessWidget {
+  final String label;
+
+  final List<int> statIndexes;
+  const _StatsPanel({required this.label, required this.statIndexes});
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final size = media.size;
+    final width = size.width / 2 - 16;
+    return Column(
+      children: [
+        CustomDivider(label: label),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Wrap(
+            children: [
+              for (var i in statIndexes)
+                Consumer(builder: (context, ref, child) {
+                  final provider = ref.watch(statsProvider(i));
+                  final stat = switch (provider) {
+                    AsyncData(:final value) => value,
+                    _ => 0,
+                  };
+                  return SizedBox(
+                    width: width,
+                    child: Text('${Labels.traits[i]}：$stat'),
+                  );
+                }),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatusBar extends StatelessWidget {
+  final Character character;
+
+  const _StatusBar({required this.character});
+
+  @override
+  Widget build(BuildContext context) {
+    final status = [
+      '等级：${character.level}',
+      '经验值：${character.experience}',
+      '金钱：${character.gold}'
+    ];
+    const overflow = TextOverflow.ellipsis;
+    return Row(
+      children: [
+        SoaringContainer(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          width: 96,
+          child: Center(child: Text(character.name)),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: SoaringContainer(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                for (var item in status)
+                  Expanded(child: Text(item, overflow: overflow)),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }

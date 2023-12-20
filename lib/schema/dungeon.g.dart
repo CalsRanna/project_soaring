@@ -32,8 +32,13 @@ const DungeonSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'tiles': PropertySchema(
+    r'story': PropertySchema(
       id: 3,
+      name: r'story',
+      type: IsarType.string,
+    ),
+    r'tiles': PropertySchema(
+      id: 4,
       name: r'tiles',
       type: IsarType.objectList,
       target: r'tiles',
@@ -60,6 +65,7 @@ int _dungeonEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.story.length * 3;
   bytesCount += 3 + object.tiles.length * 3;
   {
     final offsets = allOffsets[Tile]!;
@@ -80,8 +86,9 @@ void _dungeonSerialize(
   writer.writeLong(offsets[0], object.difficulty);
   writer.writeBool(offsets[1], object.explored);
   writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.story);
   writer.writeObjectList<Tile>(
-    offsets[3],
+    offsets[4],
     allOffsets,
     TileSchema.serialize,
     object.tiles,
@@ -99,8 +106,9 @@ Dungeon _dungeonDeserialize(
   object.explored = reader.readBool(offsets[1]);
   object.id = id;
   object.name = reader.readString(offsets[2]);
+  object.story = reader.readString(offsets[3]);
   object.tiles = reader.readObjectList<Tile>(
-        offsets[3],
+        offsets[4],
         TileSchema.deserialize,
         allOffsets,
         Tile(),
@@ -123,6 +131,8 @@ P _dungeonDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readObjectList<Tile>(
             offset,
             TileSchema.deserialize,
@@ -469,6 +479,136 @@ extension DungeonQueryFilter
     });
   }
 
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'story',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'story',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'story',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'story',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'story',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'story',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'story',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'story',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'story',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> storyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'story',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Dungeon, Dungeon, QAfterFilterCondition> tilesLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
@@ -603,6 +743,18 @@ extension DungeonQuerySortBy on QueryBuilder<Dungeon, Dungeon, QSortBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterSortBy> sortByStory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'story', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterSortBy> sortByStoryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'story', Sort.desc);
+    });
+  }
 }
 
 extension DungeonQuerySortThenBy
@@ -654,6 +806,18 @@ extension DungeonQuerySortThenBy
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterSortBy> thenByStory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'story', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QAfterSortBy> thenByStoryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'story', Sort.desc);
+    });
+  }
 }
 
 extension DungeonQueryWhereDistinct
@@ -674,6 +838,13 @@ extension DungeonQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Dungeon, Dungeon, QDistinct> distinctByStory(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'story', caseSensitive: caseSensitive);
     });
   }
 }
@@ -701,6 +872,12 @@ extension DungeonQueryProperty
   QueryBuilder<Dungeon, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Dungeon, String, QQueryOperations> storyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'story');
     });
   }
 

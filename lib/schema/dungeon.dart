@@ -6,9 +6,10 @@ part 'dungeon.g.dart';
 @Name('dungeons')
 class Dungeon {
   Id id = Isar.autoIncrement;
-  String name = '';
   int difficulty = 0;
   bool explored = false;
+  String name = '';
+  String story = '';
   List<Tile> tiles = [];
 }
 

@@ -2,11 +2,14 @@ import 'dart:math';
 
 import 'package:isar/isar.dart';
 import 'package:project_soaring/provider/area.dart';
+import 'package:project_soaring/provider/dungeon.dart';
 import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/character.dart';
+import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/isar.dart';
 import 'package:project_soaring/util/generator.dart';
+import 'package:project_soaring/util/label.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'character.g.dart';
@@ -59,10 +62,10 @@ class CharacterNotifier extends _$CharacterNotifier {
   /// [area] The area from which resources are to be harvested.
   ///
   /// Returns a Future that completes with a Record containing the experience and gold gained from harvesting.
-  Future<(int, int)> harvest(Area area) async {
+  Future<(int, int, String?)> harvest(Area area) async {
     final now = DateTime.now();
     final character = await future;
-    if (now.isBefore(character.harvestAt)) return (0, 0);
+    if (now.isBefore(character.harvestAt)) return (0, 0, null);
     final seconds = now.difference(character.harvestAt).inSeconds;
     final count = seconds ~/ 30;
     final averageLevel = (area.level + 3) / 2;
@@ -74,13 +77,60 @@ class CharacterNotifier extends _$CharacterNotifier {
     character.experience += experience.toInt();
     character.gold += gold.toInt();
     _levelUp(character);
+    final dungeon = await _discover();
     character.harvestAt = now;
     await isar.writeTxn(() async {
       isar.characters.put(character);
     });
     ref.invalidateSelf();
     ref.invalidate(stationedAreaProvider);
-    return (experience.toInt(), gold.toInt());
+    if (dungeon != null) {
+      ref.invalidate(dungeonsNotifierProvider);
+    }
+    return (experience.toInt(), gold.toInt(), dungeon);
+  }
+
+  Future<void> updateExperience(int experience) async {
+    final character = await future;
+    character.experience += experience;
+    _levelUp(character);
+    await isar.writeTxn(() async {
+      isar.characters.put(character);
+    });
+    ref.invalidateSelf();
+  }
+
+  Future<void> updateGold(int gold) async {
+    final character = await future;
+    character.gold += gold;
+    await isar.writeTxn(() async {
+      isar.characters.put(character);
+    });
+    ref.invalidateSelf();
+  }
+
+  Future<String?> _discover() async {
+    final random = Random();
+    final rate = random.nextDouble();
+    if (rate >= 0.05) return null;
+    final availableDungeons = await ref.read(dungeonsNotifierProvider.future);
+    const dungeons = Labels.dungeons;
+    if (availableDungeons.length >= dungeons.length) return null;
+    int index;
+    String? name;
+    Dungeon? exist;
+    do {
+      index = random.nextInt(dungeons.length);
+      name = dungeons[index]['name'];
+      exist = availableDungeons
+          .where((dungeon) => dungeon.name == name)
+          .firstOrNull;
+    } while (exist != null);
+    final dungeon = Generator().dungeon(index: index);
+    await isar.writeTxn(() async {
+      isar.dungeons.put(dungeon);
+    });
+    return dungeon.name;
   }
 
   /// Handles the logic for leveling up the character.

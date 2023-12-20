@@ -6,9 +6,16 @@ part of 'character.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$characterNotifierHash() => r'4c95ff0a3ff2450f43c3d8ca086ab8ebbbffd989';
+String _$characterNotifierHash() => r'cdb317949d714b5eb544b7a110caedce9e0aff91';
 
-/// See also [CharacterNotifier].
+/// `CharacterNotifier` class
+///
+/// This class is responsible for handling operations related to Character.
+/// It extends `_$CharacterNotifier` which provides additional functionalities to this class.
+///
+/// This class uses the `riverpod` package for state management and `isar` for database operations.
+///
+/// Copied from [CharacterNotifier].
 @ProviderFor(CharacterNotifier)
 final characterNotifierProvider =
     AutoDisposeAsyncNotifierProvider<CharacterNotifier, Character>.internal(
