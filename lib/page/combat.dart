@@ -26,62 +26,73 @@ class _CombatPageState extends State<CombatPage> {
   List<Equipment> equipments = [];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('战斗')),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Expanded(child: SizedBox()),
-            if (win != true)
-              Consumer(builder: (context, ref, child) {
-                return SoaringButton(
-                  text: '开始战斗',
-                  onTap: () => combat(ref),
-                );
-              }),
-            const SizedBox(height: 16),
-            Expanded(
-              child: SoaringContainer(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    final text = logs[index];
-                    if (text != 'LOOT') {
-                      return Text(text);
-                    } else {
-                      final itemSpans = items
-                          .map(
-                            (item) => TextSpan(
-                              text: '[${item.name}]',
-                              style: TextStyle(
-                                color: Labels.rankColors[item.rank],
-                              ),
-                            ),
-                          )
-                          .toList();
-
-                      final equipmentSpans = equipments
-                          .map(
-                            (equipment) => TextSpan(
-                              text: '[${equipment.name}]',
-                              style: TextStyle(
-                                color: Labels.rankColors[equipment.rank],
-                              ),
-                            ),
-                          )
-                          .toList();
-                      return Text.rich(
-                        TextSpan(
-                          text: '获得',
-                          children: [...equipmentSpans, ...itemSpans],
-                        ),
-                      );
-                    }
-                  },
-                  itemCount: logs.length,
-                ),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              const Expanded(flex: 2, child: SizedBox()),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Consumer(builder: (context, ref, child) {
+                    return SoaringButton(
+                      text: '开始战斗',
+                      onTap: () => combat(ref),
+                    );
+                  }),
+                  const SizedBox(width: 16),
+                  SoaringButton(
+                    text: '离开战斗',
+                    onTap: leave,
+                  )
+                ],
               ),
-            )
-          ],
+              const SizedBox(height: 16),
+              Expanded(
+                child: SoaringContainer(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final text = logs[index];
+                      if (text != 'LOOT') {
+                        return Text(text);
+                      } else {
+                        final itemSpans = items
+                            .map(
+                              (item) => TextSpan(
+                                text: '[${item.name}]',
+                                style: TextStyle(
+                                  color: Labels.rankColors[item.rank],
+                                ),
+                              ),
+                            )
+                            .toList();
+
+                        final equipmentSpans = equipments
+                            .map(
+                              (equipment) => TextSpan(
+                                text: '[${equipment.name}]',
+                                style: TextStyle(
+                                  color: Labels.rankColors[equipment.rank],
+                                ),
+                              ),
+                            )
+                            .toList();
+                        return Text.rich(
+                          TextSpan(
+                            text: '获得',
+                            children: [...equipmentSpans, ...itemSpans],
+                          ),
+                        );
+                      }
+                    },
+                    itemCount: logs.length,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -121,5 +132,9 @@ class _CombatPageState extends State<CombatPage> {
         });
       }
     });
+  }
+
+  void leave() {
+    Navigator.of(context).pop();
   }
 }

@@ -24,7 +24,7 @@ class Toolbar extends StatelessWidget {
       '背包' => const BackpackPageRoute().push(context),
       '地图' => const AreasPageRoute().push(context),
       '装备重铸' => const RecastPageRoute().push(context),
-      '地下城' => const DungeonsPageRoute().push(context),
+      '地宫' => const DungeonsPageRoute().push(context),
       _ => null,
     };
   }

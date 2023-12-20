@@ -9,6 +9,7 @@ import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/stat.dart';
 import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/character.dart';
+import 'package:project_soaring/util/formula.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/container.dart';
 import 'package:project_soaring/widget/modal.dart';
@@ -213,7 +214,7 @@ class __StationedAreaState extends State<_StationedArea> {
   void initState() {
     super.initState();
     duration = calculate();
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (!mounted) return;
       setState(() {
         duration = calculate();
@@ -269,8 +270,8 @@ class _StatusBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = [
       '等级：${character.level}',
-      '经验值：${character.experience}',
-      '金钱：${character.gold}'
+      '经验值：${character.experience} / ${Formula.levelUp(character.level)}',
+      // '金钱：${character.gold}'
     ];
     const overflow = TextOverflow.ellipsis;
     return Row(
@@ -283,11 +284,14 @@ class _StatusBar extends StatelessWidget {
         const SizedBox(width: 16),
         Expanded(
           child: SoaringContainer(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
               children: [
-                for (var item in status)
-                  Expanded(child: Text(item, overflow: overflow)),
+                for (var i = 0; i < status.length; i++)
+                  Expanded(
+                    flex: i + 1,
+                    child: Text(status[i], overflow: overflow),
+                  ),
               ],
             ),
           ),

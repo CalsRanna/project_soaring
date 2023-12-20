@@ -8,6 +8,7 @@ import 'package:project_soaring/schema/character.dart';
 import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/isar.dart';
+import 'package:project_soaring/util/formula.dart';
 import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -141,11 +142,11 @@ class CharacterNotifier extends _$CharacterNotifier {
   ///
   /// [character] is the character object to be leveled up.
   void _levelUp(Character character) {
-    var max = pow(2, character.level - 1).toInt() * 100;
+    var max = Formula.levelUp(character.level);
     while (character.experience >= max) {
       character.experience -= max;
       character.level++;
-      max = pow(2, character.level - 1).toInt() * 100;
+      max = Formula.levelUp(character.level);
     }
   }
 }

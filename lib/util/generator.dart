@@ -108,8 +108,10 @@ class Generator {
 
   Creature spawn() {
     final random = Random();
+    const creatures = Labels.creatures;
+    final index = random.nextInt(creatures.length);
     var creature = Creature();
-    creature.name = 'Creature ${random.nextInt(100)}';
+    creature.name = creatures[index];
     creature.attack = random.nextInt(100) + 1;
     creature.defense = random.nextInt(100) + 1;
     creature.level = random.nextInt(60) + 1;
@@ -177,8 +179,11 @@ class Generator {
   }
 
   Event event() {
+    const events = Labels.events;
+    final random = Random();
+    final index = random.nextInt(events.length);
     var event = Event();
-    event.content = 'Event ${random.nextInt(100)}';
+    event.content = events[index]['content'] ?? 'Random Event';
     event.reward = random.nextInt(5);
     return event;
   }

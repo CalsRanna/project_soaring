@@ -17,7 +17,7 @@ class _DungeonsPageState extends State<DungeonsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('地下城列表')),
+      appBar: AppBar(title: const Text('地宫列表')),
       body: Consumer(builder: (context, ref, child) {
         final provider = ref.watch(dungeonsNotifierProvider);
         List<Dungeon> dungeons = switch (provider) {
