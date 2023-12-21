@@ -17,6 +17,7 @@ List<RouteBase> get $appRoutes => [
       $equipmentPageRoute,
       $recastPageRoute,
       $combatPageRoute,
+      $trialsPageRoute,
     ];
 
 RouteBase get $launcherPageRoute => GoRouteData.$route(
@@ -241,6 +242,29 @@ extension $CombatPageRouteExtension on CombatPageRoute {
 
   String get location => GoRouteData.$location(
         '/combat',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $trialsPageRoute => GoRouteData.$route(
+      path: '/trials',
+      factory: $TrialsPageRouteExtension._fromState,
+    );
+
+extension $TrialsPageRouteExtension on TrialsPageRoute {
+  static TrialsPageRoute _fromState(GoRouterState state) =>
+      const TrialsPageRoute();
+
+  String get location => GoRouteData.$location(
+        '/trials',
       );
 
   void go(BuildContext context) => context.go(location);

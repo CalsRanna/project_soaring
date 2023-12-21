@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:isar/isar.dart';
 import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/isar.dart';
@@ -7,25 +9,30 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'creature.g.dart';
 
 @riverpod
-class CreatureNotifier extends _$CreatureNotifier {
+class CreaturesNotifier extends _$CreaturesNotifier {
   @override
-  Future<Creature> build() async {
-    var creature = await isar.creatures.where().findFirst();
-    if (creature == null) {
-      creature = Creature();
-      await isar.writeTxn(() async {
-        isar.creatures.put(creature!);
-      });
-    }
-    return creature;
+  Future<List<Creature>> build() async {
+    return await isar.creatures.where().findAll();
   }
 
-  Future<void> spawn() async {
-    final creature = Generator().spawn();
+  Future<void> spawn({int? level}) async {
+    List<Creature> creatures = [];
+    final random = Random();
+    final count = random.nextInt(3) + 1;
+    for (var i = 0; i < count; i++) {
+      creatures.add(Generator().spawn(level: level));
+    }
     await isar.writeTxn(() async {
-      await isar.creatures.put(creature);
+      await isar.creatures.putAll(creatures);
     });
-    ref.invalidateSelf();
-    await future;
+  }
+
+  Future<void> remove() async {
+    final creatures = await future;
+    await isar.writeTxn(() async {
+      await isar.creatures.deleteAll(
+        creatures.map((creature) => creature.id).toList(),
+      );
+    });
   }
 }

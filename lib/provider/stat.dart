@@ -5,22 +5,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'stat.g.dart';
 
 @riverpod
-Future<int> stats(StatsRef ref, int stat) async {
+Future<int> stat(StatRef ref, int type) async {
   final character = await ref.watch(characterNotifierProvider.future);
   final equipments = await ref.watch(equippedEquipmentsNotifierProvider.future);
   var value = 0;
   for (var equipment in equipments) {
     final traits = equipment.traits;
     for (var trait in traits) {
-      if (trait.type == stat) {
+      if (trait.type == type) {
         value += trait.modification;
       }
     }
   }
-  if (stat == 2 || stat == 3) {
+  if (type == 2 || type == 3) {
     value += character.level * 10;
   }
-  if (stat == 0 || stat == 1) {
+  if (type == 0 || type == 1) {
     value += character.level * 1;
   }
   return value;

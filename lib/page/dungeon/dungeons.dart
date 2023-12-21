@@ -31,8 +31,9 @@ class _DungeonsPageState extends State<DungeonsPage> {
               onTap: () => handleTap(ref, dungeons[index].id),
             );
           },
-          separatorBuilder: (context, index) => const SizedBox(height: 16),
           itemCount: dungeons.length,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          separatorBuilder: (context, index) => const SizedBox(height: 16),
         );
       }),
     );

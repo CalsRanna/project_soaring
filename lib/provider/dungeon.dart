@@ -79,16 +79,16 @@ class TileNotifier extends _$TileNotifier {
     return dungeon?.tiles[index];
   }
 
-  Future<Creature> creature() async {
+  Future<List<Creature>> creatures() async {
     final tile = await future;
     tile?.explored = true;
     ref.invalidateSelf();
-    final creature = Generator().spawn();
-    await isar.writeTxn(() async {
-      await isar.creatures.put(creature);
-    });
-    ref.invalidate(creatureNotifierProvider);
-    return creature;
+    var creatures = await ref.read(creaturesNotifierProvider.future);
+    if (creatures.isEmpty) {
+      creatures.add(Generator().spawn());
+      ref.invalidate(creaturesNotifierProvider);
+    }
+    return creatures;
   }
 
   Future<Event> event() async {

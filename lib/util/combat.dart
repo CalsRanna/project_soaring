@@ -18,6 +18,26 @@ class Combat {
 
   Combat({required this.character, required this.stats});
 
+  void attack(Creature creature) {
+    final damage = max(stats[0] - creature.defense, 0);
+    creature.life -= damage;
+    logs.add('${character.name}对${creature.name}造成$damage点伤害。');
+  }
+
+  void defense(Creature creature) {
+    final damage = max(creature.attack - stats[1], 0);
+    stats[2] -= damage;
+    logs.add('${creature.name}对${character.name}造成$damage点伤害。');
+  }
+
+  void judge(Creature creature) {
+    if (stats[2] <= 0) {
+      logs.add('${character.name}死亡。');
+    } else if (creature.life <= 0) {
+      logs.add('${creature.name}死亡。');
+    }
+  }
+
   void autoCombat(Creature creature) {
     int round = 0;
     logs.add('战斗开始。');

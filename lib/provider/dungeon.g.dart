@@ -170,7 +170,7 @@ final dungeonsNotifierProvider =
 );
 
 typedef _$DungeonsNotifier = AutoDisposeAsyncNotifier<List<Dungeon>>;
-String _$tileNotifierHash() => r'dc0043c8277cbf1933ce4722516f4125d4a5931e';
+String _$tileNotifierHash() => r'863656584b6cc1a08275d9064738c71e90d43f26';
 
 abstract class _$TileNotifier extends BuildlessAutoDisposeAsyncNotifier<Tile?> {
   late final int dungeonId;

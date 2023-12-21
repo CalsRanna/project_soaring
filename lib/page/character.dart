@@ -26,42 +26,45 @@ class _CharacterPageState extends State<CharacterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Consumer(builder: (context, ref, child) {
-          final characterProvider = ref.watch(characterNotifierProvider);
-          Character? character = switch (characterProvider) {
-            AsyncData(:final value) => value,
-            _ => null,
-          };
-          final provider = ref.watch(stationedAreaProvider);
-          Area? area = switch (provider) {
-            AsyncData(:final value) => value,
-            _ => null,
-          };
-          return Column(children: [
-            if (character != null) ...[
-              _StatusBar(character: character),
-              const SizedBox(height: 16),
-              const _StatsPanel(label: '基本属性', statIndexes: [2, 0, 3, 1]),
-              const _StatsPanel(
-                label: '六维属性',
-                statIndexes: [4, 8, 6, 7, 5, 9],
-              ),
-              const _StatsPanel(
-                label: '其他属性',
-                statIndexes: [10, 16, 15, 11, 13, 14, 12],
-              ),
-            ],
-            if (character != null && area != null) ...[
-              _StationedArea(
-                harvestAt: character.harvestAt,
-                name: area.name,
-                onTap: () => handleTap(ref),
-              ),
-            ],
-            const Spacer(),
-            const Toolbar(),
-          ]);
-        }),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Consumer(builder: (context, ref, child) {
+            final characterProvider = ref.watch(characterNotifierProvider);
+            Character? character = switch (characterProvider) {
+              AsyncData(:final value) => value,
+              _ => null,
+            };
+            final areaProvider = ref.watch(stationedAreaProvider);
+            Area? area = switch (areaProvider) {
+              AsyncData(:final value) => value,
+              _ => null,
+            };
+            return Column(children: [
+              if (character != null) ...[
+                _StatusBar(character: character),
+                const SizedBox(height: 16),
+                const _StatsPanel(label: '基本属性', statIndexes: [2, 0, 3, 1]),
+                const _StatsPanel(
+                  label: '六维属性',
+                  statIndexes: [4, 8, 6, 7, 5, 9],
+                ),
+                const _StatsPanel(
+                  label: '其他属性',
+                  statIndexes: [10, 16, 15, 11, 13, 14, 12],
+                ),
+              ],
+              if (character != null && area != null) ...[
+                _StationedArea(
+                  harvestAt: character.harvestAt,
+                  name: area.name,
+                  onTap: () => handleTap(ref),
+                ),
+              ],
+              const Spacer(),
+              const Toolbar(),
+            ]);
+          }),
+        ),
       ),
     );
   }
@@ -233,7 +236,7 @@ class _StatsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final size = media.size;
-    final width = size.width / 2 - 16;
+    final width = size.width / 2 - 24;
     return Column(
       children: [
         CustomDivider(label: label),
@@ -243,7 +246,7 @@ class _StatsPanel extends StatelessWidget {
             children: [
               for (var i in statIndexes)
                 Consumer(builder: (context, ref, child) {
-                  final provider = ref.watch(statsProvider(i));
+                  final provider = ref.watch(statProvider(i));
                   final stat = switch (provider) {
                     AsyncData(:final value) => value,
                     _ => 0,

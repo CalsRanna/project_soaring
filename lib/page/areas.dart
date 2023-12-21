@@ -89,8 +89,9 @@ class _AreasPageState extends State<AreasPage> {
               ),
             ),
           ),
-          separatorBuilder: (context, index) => const SizedBox(height: 16),
           itemCount: areas.length,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          separatorBuilder: (context, index) => const SizedBox(height: 16),
         );
       }),
     );

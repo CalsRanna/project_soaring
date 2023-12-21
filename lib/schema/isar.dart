@@ -6,7 +6,10 @@ import 'package:project_soaring/schema/character.dart';
 import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/dungeon.dart';
 import 'package:project_soaring/schema/equipment.dart';
+import 'package:project_soaring/schema/event.dart';
 import 'package:project_soaring/schema/item.dart';
+import 'package:project_soaring/schema/spell.dart';
+import 'package:project_soaring/schema/trial.dart';
 
 late Isar isar;
 
@@ -21,7 +24,10 @@ class IsarInitializer {
         CreatureSchema,
         DungeonSchema,
         EquipmentSchema,
-        ItemSchema
+        EventSchema,
+        ItemSchema,
+        SpellSchema,
+        TrialSchema,
       ],
       directory: directory.path,
     );

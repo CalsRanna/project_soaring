@@ -10,6 +10,7 @@ import 'package:project_soaring/page/equipment.dart';
 import 'package:project_soaring/page/launcher.dart';
 import 'package:project_soaring/page/recast.dart';
 import 'package:project_soaring/page/spawn.dart';
+import 'package:project_soaring/page/trials.dart';
 
 part 'router.g.dart';
 
@@ -113,5 +114,15 @@ class CombatPageRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CombatPage();
+  }
+}
+
+@TypedGoRoute<TrialsPageRoute>(path: '/trials')
+class TrialsPageRoute extends GoRouteData {
+  const TrialsPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const TrialsPage();
   }
 }

@@ -6,7 +6,7 @@ part of 'stat.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$statsHash() => r'0138e71aa7b28f1cda1d0374c0121d725fd4051e';
+String _$statHash() => r'd9fb4dcf94943a436f2819df77393301ef525022';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,30 +29,30 @@ class _SystemHash {
   }
 }
 
-/// See also [stats].
-@ProviderFor(stats)
-const statsProvider = StatsFamily();
+/// See also [stat].
+@ProviderFor(stat)
+const statProvider = StatFamily();
 
-/// See also [stats].
-class StatsFamily extends Family<AsyncValue<int>> {
-  /// See also [stats].
-  const StatsFamily();
+/// See also [stat].
+class StatFamily extends Family<AsyncValue<int>> {
+  /// See also [stat].
+  const StatFamily();
 
-  /// See also [stats].
-  StatsProvider call(
-    int stat,
+  /// See also [stat].
+  StatProvider call(
+    int type,
   ) {
-    return StatsProvider(
-      stat,
+    return StatProvider(
+      type,
     );
   }
 
   @override
-  StatsProvider getProviderOverride(
-    covariant StatsProvider provider,
+  StatProvider getProviderOverride(
+    covariant StatProvider provider,
   ) {
     return call(
-      provider.stat,
+      provider.type,
     );
   }
 
@@ -68,90 +68,88 @@ class StatsFamily extends Family<AsyncValue<int>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'statsProvider';
+  String? get name => r'statProvider';
 }
 
-/// See also [stats].
-class StatsProvider extends AutoDisposeFutureProvider<int> {
-  /// See also [stats].
-  StatsProvider(
-    int stat,
+/// See also [stat].
+class StatProvider extends AutoDisposeFutureProvider<int> {
+  /// See also [stat].
+  StatProvider(
+    int type,
   ) : this._internal(
-          (ref) => stats(
-            ref as StatsRef,
-            stat,
+          (ref) => stat(
+            ref as StatRef,
+            type,
           ),
-          from: statsProvider,
-          name: r'statsProvider',
+          from: statProvider,
+          name: r'statProvider',
           debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$statsHash,
-          dependencies: StatsFamily._dependencies,
-          allTransitiveDependencies: StatsFamily._allTransitiveDependencies,
-          stat: stat,
+              const bool.fromEnvironment('dart.vm.product') ? null : _$statHash,
+          dependencies: StatFamily._dependencies,
+          allTransitiveDependencies: StatFamily._allTransitiveDependencies,
+          type: type,
         );
 
-  StatsProvider._internal(
+  StatProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.stat,
+    required this.type,
   }) : super.internal();
 
-  final int stat;
+  final int type;
 
   @override
   Override overrideWith(
-    FutureOr<int> Function(StatsRef provider) create,
+    FutureOr<int> Function(StatRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: StatsProvider._internal(
-        (ref) => create(ref as StatsRef),
+      override: StatProvider._internal(
+        (ref) => create(ref as StatRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        stat: stat,
+        type: type,
       ),
     );
   }
 
   @override
   AutoDisposeFutureProviderElement<int> createElement() {
-    return _StatsProviderElement(this);
+    return _StatProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is StatsProvider && other.stat == stat;
+    return other is StatProvider && other.type == type;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, stat.hashCode);
+    hash = _SystemHash.combine(hash, type.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin StatsRef on AutoDisposeFutureProviderRef<int> {
-  /// The parameter `stat` of this provider.
-  int get stat;
+mixin StatRef on AutoDisposeFutureProviderRef<int> {
+  /// The parameter `type` of this provider.
+  int get type;
 }
 
-class _StatsProviderElement extends AutoDisposeFutureProviderElement<int>
-    with StatsRef {
-  _StatsProviderElement(super.provider);
+class _StatProviderElement extends AutoDisposeFutureProviderElement<int>
+    with StatRef {
+  _StatProviderElement(super.provider);
 
   @override
-  int get stat => (origin as StatsProvider).stat;
+  int get type => (origin as StatProvider).type;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

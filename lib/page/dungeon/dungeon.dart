@@ -125,14 +125,15 @@ class _DungeonPageState extends State<DungeonPage> {
       tileNotifier.explore();
     }
     if (tile.type == 2) {
-      final creature = await tileNotifier.creature();
+      final creatures = await tileNotifier.creatures();
       if (!mounted) return;
+      final names = creatures.map((creature) => '「${creature.name}」').join('，');
       Modal.of(context).show(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('遭遇战斗'),
-            Text('「${creature.name}」'),
+            Text('「$names」'),
             const SizedBox(height: 8),
             Row(
               mainAxisSize: MainAxisSize.min,

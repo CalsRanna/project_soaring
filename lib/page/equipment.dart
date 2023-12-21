@@ -24,89 +24,93 @@ class _EquipmentPageState extends State<EquipmentPage> {
       appBar: AppBar(
         title: const Text('装备'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: onSurface),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: onSurface),
+              ),
+              padding: const EdgeInsets.all(4),
+              child: Consumer(builder: (context, ref, child) {
+                final provider = ref.watch(equippedEquipmentsNotifierProvider);
+                final equipments = switch (provider) {
+                  AsyncData(:final value) => value,
+                  _ => [],
+                };
+                return Row(
+                  children: [
+                    Wrap(
+                      direction: Axis.vertical,
+                      spacing: 4,
+                      children: [
+                        for (var i = 0; i < 6; i++)
+                          EquipmentTile(
+                            equipment: equipments
+                                .where((element) => element.position == i * 2)
+                                .firstOrNull,
+                            position: i * 2,
+                          ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Wrap(
+                      direction: Axis.vertical,
+                      spacing: 4,
+                      children: [
+                        for (var i = 0; i < 6; i++)
+                          EquipmentTile(
+                            equipment: equipments
+                                .where(
+                                    (element) => element.position == i * 2 + 1)
+                                .firstOrNull,
+                            position: i * 2 + 1,
+                          ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
-            padding: const EdgeInsets.all(4),
-            child: Consumer(builder: (context, ref, child) {
-              final provider = ref.watch(equippedEquipmentsNotifierProvider);
-              final equipments = switch (provider) {
-                AsyncData(:final value) => value,
-                _ => [],
-              };
-              return Row(
-                children: [
-                  Wrap(
-                    direction: Axis.vertical,
-                    spacing: 4,
-                    children: [
-                      for (var i = 0; i < 6; i++)
-                        EquipmentTile(
-                          equipment: equipments
-                              .where((element) => element.position == i * 2)
-                              .firstOrNull,
-                          position: i * 2,
-                        ),
-                    ],
+            const SizedBox(height: 16),
+            Wrap(
+              runSpacing: 4,
+              spacing: 4,
+              children: [
+                for (var i = 0; i < Labels.positions.length; i++)
+                  SoaringTab(
+                    active: position == i,
+                    label: Labels.positions[i],
+                    onTap: () => handleTap(i),
                   ),
-                  const Spacer(),
-                  Wrap(
-                    direction: Axis.vertical,
-                    spacing: 4,
-                    children: [
-                      for (var i = 0; i < 6; i++)
-                        EquipmentTile(
-                          equipment: equipments
-                              .where((element) => element.position == i * 2 + 1)
-                              .firstOrNull,
-                          position: i * 2 + 1,
-                        ),
-                    ],
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Consumer(builder: (context, ref, child) {
+                final provider =
+                    ref.watch(availableEquipmentsNotifierProvider(position));
+                List<Equipment> equipments = switch (provider) {
+                  AsyncData(:final value) => value,
+                  _ => [],
+                };
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 6,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
                   ),
-                ],
-              );
-            }),
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            runSpacing: 4,
-            spacing: 4,
-            children: [
-              for (var i = 0; i < Labels.positions.length; i++)
-                SoaringTab(
-                  active: position == i,
-                  label: Labels.positions[i],
-                  onTap: () => handleTap(i),
-                ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Consumer(builder: (context, ref, child) {
-              final provider =
-                  ref.watch(availableEquipmentsNotifierProvider(position));
-              List<Equipment> equipments = switch (provider) {
-                AsyncData(:final value) => value,
-                _ => [],
-              };
-              return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 6,
-                  crossAxisSpacing: 4,
-                  mainAxisSpacing: 4,
-                ),
-                itemBuilder: (context, index) => EquipmentTile(
-                  equipment: equipments[index],
-                ),
-                itemCount: equipments.length,
-              );
-            }),
-          ),
-        ],
+                  itemBuilder: (context, index) => EquipmentTile(
+                    equipment: equipments[index],
+                  ),
+                  itemCount: equipments.length,
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

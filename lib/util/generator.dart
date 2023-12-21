@@ -106,17 +106,18 @@ class Generator {
     return trait;
   }
 
-  Creature spawn() {
+  Creature spawn({int? level}) {
     final random = Random();
     const creatures = Labels.creatures;
     final index = random.nextInt(creatures.length);
     var creature = Creature();
+    level = level ?? (random.nextInt(100) + 1);
     creature.name = creatures[index];
-    creature.attack = random.nextInt(100) + 1;
-    creature.defense = random.nextInt(100) + 1;
-    creature.level = random.nextInt(60) + 1;
-    creature.life = random.nextInt(100) + 1;
-    creature.mana = random.nextInt(100) + 1;
+    creature.attack = level * 8 + random.nextInt(5);
+    creature.defense = level * 5 + random.nextInt(5);
+    creature.level = level;
+    creature.life = level * 10 + random.nextInt(10);
+    creature.mana = level * 10 + random.nextInt(10);
     creature.rank = random.nextInt(4);
     return creature;
   }
