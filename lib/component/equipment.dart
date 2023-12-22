@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_soaring/package/config/text.dart';
 import 'package:project_soaring/provider/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
@@ -31,7 +32,7 @@ class EquipmentTile extends StatelessWidget {
       border = Border.all(color: surfaceVariant);
       style = TextStyle(color: surfaceVariant);
     }
-    final text = equipment?.name ?? Labels.positions[position!];
+    final text = equipment?.name ?? SoaringText.positions[position!];
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => handleTap(context, equipment),
@@ -137,7 +138,7 @@ class EquipmentInformationTile extends StatelessWidget {
               Labels.levels[equipment.rank],
               style: TextStyle(color: rankColor),
             ),
-            Text(Labels.positions[equipment.position]),
+            Text(SoaringText.positions[equipment.position]),
             const SizedBox(height: 8),
             for (var trait in equipment.traits) Text(trait.toString()),
             const SizedBox(height: 4),

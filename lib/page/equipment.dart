@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/component/equipment.dart';
+import 'package:project_soaring/package/config/text.dart';
 import 'package:project_soaring/provider/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
-import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/tab.dart';
 
 class EquipmentPage extends StatefulWidget {
@@ -79,10 +79,10 @@ class _EquipmentPageState extends State<EquipmentPage> {
               runSpacing: 4,
               spacing: 4,
               children: [
-                for (var i = 0; i < Labels.positions.length; i++)
+                for (var i = 0; i < SoaringText.positions.length; i++)
                   SoaringTab(
                     active: position == i,
-                    label: Labels.positions[i],
+                    label: SoaringText.positions[i],
                     onTap: () => handleTap(i),
                   ),
               ],

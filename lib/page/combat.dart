@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_soaring/package/config/text.dart';
 import 'package:project_soaring/provider/combat.dart';
 import 'package:project_soaring/provider/creature.dart';
 import 'package:project_soaring/schema/item.dart';
@@ -207,10 +208,10 @@ class __CreatureTileState extends State<_CreatureTile> {
         child: Column(
           children: [
             Text('[${widget.level}] ${widget.name}'),
-            Text('${Labels.traits[2]}：${widget.life}'),
-            Text('${Labels.traits[3]}：${widget.mana}'),
-            Text('${Labels.traits[0]}：${widget.attack}'),
-            Text('${Labels.traits[1]}：${widget.defense}'),
+            Text('${SoaringText.traits[2]}：${widget.life}'),
+            Text('${SoaringText.traits[3]}：${widget.mana}'),
+            Text('${SoaringText.traits[0]}：${widget.attack}'),
+            Text('${SoaringText.traits[1]}：${widget.defense}'),
           ],
         ),
       ),
