@@ -3,9 +3,10 @@ import 'dart:math';
 import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/dungeon.dart';
-import 'package:project_soaring/schema/equipment.dart';
+// import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/event.dart';
 import 'package:project_soaring/schema/item.dart';
+import 'package:project_soaring/schema/trait.dart';
 import 'package:project_soaring/util/label.dart';
 
 class Generator {
@@ -47,8 +48,8 @@ class Generator {
     return item;
   }
 
-  List<Equipment> starterKit() {
-    var clothes = Equipment();
+  List<Item> starterKit() {
+    var clothes = Item();
     clothes.description = '极其常见的粗布衣服。';
     clothes.equipped = true;
     clothes.level = 1;
@@ -56,7 +57,7 @@ class Generator {
     clothes.position = 4;
     clothes.rank = 0;
     clothes.type = 1;
-    var trousers = Equipment();
+    var trousers = Item();
     trousers.description = '极其常见的粗布短裤。';
     trousers.equipped = true;
     trousers.level = 1;
@@ -64,12 +65,17 @@ class Generator {
     trousers.position = 7;
     trousers.rank = 0;
     trousers.type = 1;
+    // var trait = Trait();
+    // trait.type = 1;
+    // trait.modification = 1;
+    // clothes.traits.add(trait);
+    // trousers.traits.add(trait);
     return [clothes, trousers];
   }
 
-  Equipment equipment() {
+  Item equipment() {
     final random = Random();
-    var equipment = Equipment();
+    var equipment = Item();
     equipment.position = random.nextInt(12);
     const labels = Labels.equipments;
     final label = labels[equipment.position];
@@ -81,29 +87,43 @@ class Generator {
     equipment.type = 1;
     final rank = random.nextInt(6);
     equipment.rank = rank;
-    var count = random.nextInt(3);
-    if (rank > 0) {
-      count += random.nextInt(rank);
-    }
-    for (var i = 0; i < count; i++) {
-      final type = random.nextInt(16);
-      var trait = Trait();
-      trait.type = type;
-      trait.modification =
-          ((random.nextInt(100) + 1) * (rank + 1) * 0.8).round();
-      equipment.traits.add(trait);
-    }
-    equipment.traits.sort((a, b) => a.type.compareTo(b.type));
+    // var count = random.nextInt(3);
+    // if (rank > 0) {
+    //   count += random.nextInt(rank);
+    // }
+    // for (var i = 0; i < count; i++) {
+    //   final type = random.nextInt(16);
+    //   var trait = Trait();
+    //   trait.type = type;
+    //   trait.modification =
+    //       ((random.nextInt(100) + 1) * (rank + 1) * 0.8).round();
+    //   equipment.traits.add(trait);
+    // }
+    // equipment.traits.sort((a, b) => a.type.compareTo(b.type));
     return equipment;
   }
 
-  Trait recast() {
-    final random = Random();
-    final type = random.nextInt(16);
-    var trait = Trait();
-    trait.type = type;
-    trait.modification = random.nextInt(100) + 1;
-    return trait;
+  // Trait recast() {
+  //   final random = Random();
+  //   final type = random.nextInt(16);
+  //   var trait = Trait();
+  //   trait.type = type;
+  //   trait.modification = random.nextInt(100) + 1;
+  //   return trait;
+  // }
+
+  Creature hero(String name) {
+    var creature = Creature();
+    creature.name = name;
+    creature.level = 1;
+    creature.rank = 0;
+    creature.traits.add(Trait()
+      ..type = 0
+      ..value = 10);
+    creature.traits.add(Trait()
+      ..type = 1
+      ..value = 10);
+    return creature;
   }
 
   Creature spawn({int? level}) {
@@ -113,11 +133,7 @@ class Generator {
     var creature = Creature();
     level = level ?? (random.nextInt(100) + 1);
     creature.name = creatures[index];
-    creature.attack = level * 8 + random.nextInt(5);
-    creature.defense = level * 5 + random.nextInt(5);
     creature.level = level;
-    creature.life = level * 10 + random.nextInt(10);
-    creature.mana = level * 10 + random.nextInt(10);
     creature.rank = random.nextInt(4);
     return creature;
   }

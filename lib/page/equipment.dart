@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/component/equipment.dart';
 import 'package:project_soaring/provider/equipment.dart';
-import 'package:project_soaring/schema/equipment.dart';
+import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/tab.dart';
 
@@ -92,7 +92,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
               child: Consumer(builder: (context, ref, child) {
                 final provider =
                     ref.watch(availableEquipmentsNotifierProvider(position));
-                List<Equipment> equipments = switch (provider) {
+                List<Item> equipments = switch (provider) {
                   AsyncData(:final value) => value,
                   _ => [],
                 };

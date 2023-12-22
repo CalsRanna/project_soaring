@@ -1,16 +1,12 @@
 import 'package:isar/isar.dart';
+import 'package:project_soaring/package/model/creature.dart';
+import 'package:project_soaring/schema/trait.dart';
 
 part 'creature.g.dart';
 
 @collection
 @Name('creatures')
-class Creature {
+class Creature extends SoaringCreature {
   Id id = Isar.autoIncrement;
-  int attack = 0;
-  int defense = 0;
-  int level = 1;
-  int life = 0;
-  int mana = 0;
-  String name = '';
-  int rank = 0;
+  List<Trait> traits = [];
 }

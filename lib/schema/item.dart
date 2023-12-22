@@ -1,17 +1,13 @@
 import 'package:isar/isar.dart';
-import 'package:project_soaring/schema/equipment.dart';
+import 'package:project_soaring/package/model/item.dart';
+import 'package:project_soaring/schema/trait.dart';
 
 part 'item.g.dart';
 
 @collection
 @Name('items')
-class Item {
+class Item extends SoaringItem {
   Id id = Isar.autoIncrement;
-  String name = '';
-  int rank = 0;
-  String description = '';
-  int type = 0;
-
   List<Trait> traits = [];
 
   int get score {

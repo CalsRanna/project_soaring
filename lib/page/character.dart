@@ -4,13 +4,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/component/toolbar.dart';
+import 'package:project_soaring/package/config/text.dart';
 import 'package:project_soaring/provider/area.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/stat.dart';
 import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/character.dart';
+import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/util/formula.dart';
-import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/container.dart';
 import 'package:project_soaring/widget/modal.dart';
 
@@ -41,16 +42,17 @@ class _CharacterPageState extends State<CharacterPage> {
             };
             return Column(children: [
               if (character != null) ...[
-                _StatusBar(character: character),
+                if (character.creature.value != null)
+                  _StatusBar(creature: character.creature.value!),
                 const SizedBox(height: 16),
-                const _StatsPanel(label: '基本属性', statIndexes: [2, 0, 3, 1]),
+                const _StatsPanel(label: '基本属性', statIndexes: [0, 14, 1, 15]),
                 const _StatsPanel(
                   label: '六维属性',
-                  statIndexes: [4, 8, 6, 7, 5, 9],
+                  statIndexes: [2, 3, 4, 5, 6, 7],
                 ),
                 const _StatsPanel(
                   label: '其他属性',
-                  statIndexes: [10, 16, 15, 11, 13, 14, 12],
+                  statIndexes: [8, 9, 10, 11, 12, 13],
                 ),
               ],
               if (character != null && area != null) ...[
@@ -253,7 +255,7 @@ class _StatsPanel extends StatelessWidget {
                   };
                   return SizedBox(
                     width: width,
-                    child: Text('${Labels.traits[i]}：$stat'),
+                    child: Text('${SoaringText.traits[i]}：$stat'),
                   );
                 }),
             ],
@@ -265,15 +267,15 @@ class _StatsPanel extends StatelessWidget {
 }
 
 class _StatusBar extends StatelessWidget {
-  final Character character;
+  final Creature creature;
 
-  const _StatusBar({required this.character});
+  const _StatusBar({required this.creature});
 
   @override
   Widget build(BuildContext context) {
     final status = [
-      '等级：${character.level}',
-      '经验值：${character.experience} / ${Formula.levelUp(character.level)}',
+      '等级：${creature.level}',
+      '经验值：${creature.experience} / ${Formula.levelUp(creature.level)}',
       // '金钱：${character.gold}'
     ];
     const overflow = TextOverflow.ellipsis;
@@ -282,7 +284,7 @@ class _StatusBar extends StatelessWidget {
         SoaringContainer(
           padding: const EdgeInsets.symmetric(vertical: 4),
           width: 96,
-          child: Center(child: Text(character.name)),
+          child: Center(child: Text(creature.name)),
         ),
         const SizedBox(width: 16),
         Expanded(

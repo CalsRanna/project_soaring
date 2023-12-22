@@ -22,31 +22,56 @@ const ItemSchema = CollectionSchema(
       name: r'description',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'equipped': PropertySchema(
       id: 1,
+      name: r'equipped',
+      type: IsarType.bool,
+    ),
+    r'level': PropertySchema(
+      id: 2,
+      name: r'level',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
+    r'position': PropertySchema(
+      id: 4,
+      name: r'position',
+      type: IsarType.long,
+    ),
+    r'positionText': PropertySchema(
+      id: 5,
+      name: r'positionText',
+      type: IsarType.string,
+    ),
     r'rank': PropertySchema(
-      id: 2,
+      id: 6,
       name: r'rank',
       type: IsarType.long,
     ),
     r'score': PropertySchema(
-      id: 3,
+      id: 7,
       name: r'score',
       type: IsarType.long,
     ),
     r'traits': PropertySchema(
-      id: 4,
+      id: 8,
       name: r'traits',
       type: IsarType.objectList,
-      target: r'traits',
+      target: r'Trait',
     ),
     r'type': PropertySchema(
-      id: 5,
+      id: 9,
       name: r'type',
       type: IsarType.long,
+    ),
+    r'typeText': PropertySchema(
+      id: 10,
+      name: r'typeText',
+      type: IsarType.string,
     )
   },
   estimateSize: _itemEstimateSize,
@@ -56,7 +81,7 @@ const ItemSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {r'traits': TraitSchema},
+  embeddedSchemas: {r'Trait': TraitSchema},
   getId: _itemGetId,
   getLinks: _itemGetLinks,
   attach: _itemAttach,
@@ -71,6 +96,7 @@ int _itemEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.description.length * 3;
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.positionText.length * 3;
   bytesCount += 3 + object.traits.length * 3;
   {
     final offsets = allOffsets[Trait]!;
@@ -79,6 +105,7 @@ int _itemEstimateSize(
       bytesCount += TraitSchema.estimateSize(value, offsets, allOffsets);
     }
   }
+  bytesCount += 3 + object.typeText.length * 3;
   return bytesCount;
 }
 
@@ -89,16 +116,21 @@ void _itemSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.description);
-  writer.writeString(offsets[1], object.name);
-  writer.writeLong(offsets[2], object.rank);
-  writer.writeLong(offsets[3], object.score);
+  writer.writeBool(offsets[1], object.equipped);
+  writer.writeLong(offsets[2], object.level);
+  writer.writeString(offsets[3], object.name);
+  writer.writeLong(offsets[4], object.position);
+  writer.writeString(offsets[5], object.positionText);
+  writer.writeLong(offsets[6], object.rank);
+  writer.writeLong(offsets[7], object.score);
   writer.writeObjectList<Trait>(
-    offsets[4],
+    offsets[8],
     allOffsets,
     TraitSchema.serialize,
     object.traits,
   );
-  writer.writeLong(offsets[5], object.type);
+  writer.writeLong(offsets[9], object.type);
+  writer.writeString(offsets[10], object.typeText);
 }
 
 Item _itemDeserialize(
@@ -109,17 +141,20 @@ Item _itemDeserialize(
 ) {
   final object = Item();
   object.description = reader.readString(offsets[0]);
+  object.equipped = reader.readBool(offsets[1]);
   object.id = id;
-  object.name = reader.readString(offsets[1]);
-  object.rank = reader.readLong(offsets[2]);
+  object.level = reader.readLong(offsets[2]);
+  object.name = reader.readString(offsets[3]);
+  object.position = reader.readLong(offsets[4]);
+  object.rank = reader.readLong(offsets[6]);
   object.traits = reader.readObjectList<Trait>(
-        offsets[4],
+        offsets[8],
         TraitSchema.deserialize,
         allOffsets,
         Trait(),
       ) ??
       [];
-  object.type = reader.readLong(offsets[5]);
+  object.type = reader.readLong(offsets[9]);
   return object;
 }
 
@@ -133,12 +168,20 @@ P _itemDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readLong(offset)) as P;
+    case 7:
+      return (reader.readLong(offset)) as P;
+    case 8:
       return (reader.readObjectList<Trait>(
             offset,
             TraitSchema.deserialize,
@@ -146,8 +189,10 @@ P _itemDeserializeProp<P>(
             Trait(),
           ) ??
           []) as P;
-    case 5:
+    case 9:
       return (reader.readLong(offset)) as P;
+    case 10:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -371,6 +416,15 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterFilterCondition> equippedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'equipped',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -415,6 +469,58 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> levelEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'level',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> levelGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'level',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> levelLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'level',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> levelBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'level',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -546,6 +652,188 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'position',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'position',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'position',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'position',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'positionText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'positionText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'positionText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'positionText',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'positionText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'positionText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'positionText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'positionText',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'positionText',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> positionTextIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'positionText',
         value: '',
       ));
     });
@@ -790,6 +1078,135 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'typeText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'typeText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'typeText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'typeText',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'typeText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'typeText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'typeText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'typeText',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'typeText',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> typeTextIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'typeText',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension ItemQueryObject on QueryBuilder<Item, Item, QFilterCondition> {
@@ -816,6 +1233,30 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> sortByEquipped() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'equipped', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByEquippedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'equipped', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'level', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByLevelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'level', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -825,6 +1266,30 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
   QueryBuilder<Item, Item, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByPosition() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'position', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByPositionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'position', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByPositionText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'positionText', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByPositionTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'positionText', Sort.desc);
     });
   }
 
@@ -863,6 +1328,18 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
       return query.addSortBy(r'type', Sort.desc);
     });
   }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByTypeText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeText', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByTypeTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeText', Sort.desc);
+    });
+  }
 }
 
 extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
@@ -878,6 +1355,18 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> thenByEquipped() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'equipped', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByEquippedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'equipped', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -890,6 +1379,18 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> thenByLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'level', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByLevelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'level', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -899,6 +1400,30 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
   QueryBuilder<Item, Item, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByPosition() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'position', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByPositionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'position', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByPositionText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'positionText', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByPositionTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'positionText', Sort.desc);
     });
   }
 
@@ -937,6 +1462,18 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
       return query.addSortBy(r'type', Sort.desc);
     });
   }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByTypeText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeText', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByTypeTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeText', Sort.desc);
+    });
+  }
 }
 
 extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
@@ -947,10 +1484,35 @@ extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
     });
   }
 
+  QueryBuilder<Item, Item, QDistinct> distinctByEquipped() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'equipped');
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'level');
+    });
+  }
+
   QueryBuilder<Item, Item, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByPosition() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'position');
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByPositionText(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'positionText', caseSensitive: caseSensitive);
     });
   }
 
@@ -971,6 +1533,13 @@ extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
       return query.addDistinctBy(r'type');
     });
   }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByTypeText(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'typeText', caseSensitive: caseSensitive);
+    });
+  }
 }
 
 extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
@@ -986,9 +1555,33 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Item, bool, QQueryOperations> equippedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'equipped');
+    });
+  }
+
+  QueryBuilder<Item, int, QQueryOperations> levelProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'level');
+    });
+  }
+
   QueryBuilder<Item, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Item, int, QQueryOperations> positionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'position');
+    });
+  }
+
+  QueryBuilder<Item, String, QQueryOperations> positionTextProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'positionText');
     });
   }
 
@@ -1013,6 +1606,12 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
   QueryBuilder<Item, int, QQueryOperations> typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
+    });
+  }
+
+  QueryBuilder<Item, String, QQueryOperations> typeTextProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'typeText');
     });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:project_soaring/schema/creature.dart';
 
 part 'character.g.dart';
 
@@ -6,9 +7,7 @@ part 'character.g.dart';
 @Name('characters')
 class Character {
   Id id = Isar.autoIncrement;
-  int experience = 0;
   int gold = 0;
   DateTime harvestAt = DateTime.now();
-  int level = 1;
-  String name = '';
+  final creature = IsarLink<Creature>();
 }

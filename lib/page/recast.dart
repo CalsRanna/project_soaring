@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_soaring/schema/equipment.dart';
-import 'package:project_soaring/util/generator.dart';
+import 'package:project_soaring/schema/item.dart';
 
 class RecastPage extends StatefulWidget {
   const RecastPage({super.key});
@@ -10,7 +9,7 @@ class RecastPage extends StatefulWidget {
 }
 
 class _RecastPageState extends State<RecastPage> {
-  Equipment equipment = Equipment();
+  Item equipment = Item();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -46,7 +45,7 @@ class _RecastPageState extends State<RecastPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        equipment.traits[index] = Generator().recast();
+                        // equipment.traits[index] = Generator().recast();
                       });
                     },
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_soaring/provider/area.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/router/router.dart';
 import 'package:project_soaring/util/generator.dart';
@@ -53,6 +54,8 @@ class _SpawnPageState extends State<SpawnPage> {
   Future<void> enterGame(WidgetRef ref) async {
     final notifier = ref.read(characterNotifierProvider.notifier);
     await notifier.create(name);
+    final areaNotifier = ref.read(areasNotifierProvider.notifier);
+    await areaNotifier.generate();
     if (!mounted) return;
     const CharacterPageRoute().replace(context);
   }

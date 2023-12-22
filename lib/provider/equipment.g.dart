@@ -7,12 +7,12 @@ part of 'equipment.dart';
 // **************************************************************************
 
 String _$equippedEquipmentsNotifierHash() =>
-    r'e888e6bad745c17fdedbad9acdbb5c47a53fee6f';
+    r'2b38c89ae4c61b02d70d88a9e8cd59a63eb2ace4';
 
 /// See also [EquippedEquipmentsNotifier].
 @ProviderFor(EquippedEquipmentsNotifier)
 final equippedEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    EquippedEquipmentsNotifier, List<Equipment>>.internal(
+    EquippedEquipmentsNotifier, List<Item>>.internal(
   EquippedEquipmentsNotifier.new,
   name: r'equippedEquipmentsNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,10 +22,9 @@ final equippedEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$EquippedEquipmentsNotifier
-    = AutoDisposeAsyncNotifier<List<Equipment>>;
+typedef _$EquippedEquipmentsNotifier = AutoDisposeAsyncNotifier<List<Item>>;
 String _$availableEquipmentsNotifierHash() =>
-    r'6ad6f3b83f14f5f1bec23a3f0b10e5f584dc4b53';
+    r'9ce47ba05c977df9da3dbf30e12e4d94dad4d68a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -49,10 +48,10 @@ class _SystemHash {
 }
 
 abstract class _$AvailableEquipmentsNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<List<Equipment>> {
+    extends BuildlessAutoDisposeAsyncNotifier<List<Item>> {
   late final int? position;
 
-  FutureOr<List<Equipment>> build(
+  FutureOr<List<Item>> build(
     int? position,
   );
 }
@@ -62,8 +61,7 @@ abstract class _$AvailableEquipmentsNotifier
 const availableEquipmentsNotifierProvider = AvailableEquipmentsNotifierFamily();
 
 /// See also [AvailableEquipmentsNotifier].
-class AvailableEquipmentsNotifierFamily
-    extends Family<AsyncValue<List<Equipment>>> {
+class AvailableEquipmentsNotifierFamily extends Family<AsyncValue<List<Item>>> {
   /// See also [AvailableEquipmentsNotifier].
   const AvailableEquipmentsNotifierFamily();
 
@@ -103,7 +101,7 @@ class AvailableEquipmentsNotifierFamily
 /// See also [AvailableEquipmentsNotifier].
 class AvailableEquipmentsNotifierProvider
     extends AutoDisposeAsyncNotifierProviderImpl<AvailableEquipmentsNotifier,
-        List<Equipment>> {
+        List<Item>> {
   /// See also [AvailableEquipmentsNotifier].
   AvailableEquipmentsNotifierProvider(
     int? position,
@@ -134,7 +132,7 @@ class AvailableEquipmentsNotifierProvider
   final int? position;
 
   @override
-  FutureOr<List<Equipment>> runNotifierBuild(
+  FutureOr<List<Item>> runNotifierBuild(
     covariant AvailableEquipmentsNotifier notifier,
   ) {
     return notifier.build(
@@ -160,7 +158,7 @@ class AvailableEquipmentsNotifierProvider
 
   @override
   AutoDisposeAsyncNotifierProviderElement<AvailableEquipmentsNotifier,
-      List<Equipment>> createElement() {
+      List<Item>> createElement() {
     return _AvailableEquipmentsNotifierProviderElement(this);
   }
 
@@ -180,14 +178,14 @@ class AvailableEquipmentsNotifierProvider
 }
 
 mixin AvailableEquipmentsNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<List<Equipment>> {
+    on AutoDisposeAsyncNotifierProviderRef<List<Item>> {
   /// The parameter `position` of this provider.
   int? get position;
 }
 
 class _AvailableEquipmentsNotifierProviderElement
     extends AutoDisposeAsyncNotifierProviderElement<AvailableEquipmentsNotifier,
-        List<Equipment>> with AvailableEquipmentsNotifierRef {
+        List<Item>> with AvailableEquipmentsNotifierRef {
   _AvailableEquipmentsNotifierProviderElement(super.provider);
 
   @override
@@ -195,12 +193,12 @@ class _AvailableEquipmentsNotifierProviderElement
 }
 
 String _$lootEquipmentsNotifierHash() =>
-    r'2d2367bead5ca166ed21d7da66917a3856303127';
+    r'ab678fd555414e706b9ade6c13c7b85f74ddfc2f';
 
 /// See also [LootEquipmentsNotifier].
 @ProviderFor(LootEquipmentsNotifier)
 final lootEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    LootEquipmentsNotifier, List<Equipment>>.internal(
+    LootEquipmentsNotifier, List<Item>>.internal(
   LootEquipmentsNotifier.new,
   name: r'lootEquipmentsNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -210,6 +208,6 @@ final lootEquipmentsNotifierProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$LootEquipmentsNotifier = AutoDisposeAsyncNotifier<List<Equipment>>;
+typedef _$LootEquipmentsNotifier = AutoDisposeAsyncNotifier<List<Item>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

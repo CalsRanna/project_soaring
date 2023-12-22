@@ -6,7 +6,7 @@ part of 'combat.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$combatNotifierHash() => r'46e4b05f8f7d3a9d1ea09433a23c013cb5f410c9';
+String _$combatNotifierHash() => r'de332c5044e342e22d5d77d79a8436ec0d6bf219';
 
 /// See also [CombatNotifier].
 @ProviderFor(CombatNotifier)

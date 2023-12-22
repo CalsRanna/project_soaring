@@ -17,40 +17,31 @@ const CreatureSchema = CollectionSchema(
   name: r'creatures',
   id: -8457060367723167695,
   properties: {
-    r'attack': PropertySchema(
+    r'experience': PropertySchema(
       id: 0,
-      name: r'attack',
-      type: IsarType.long,
-    ),
-    r'defense': PropertySchema(
-      id: 1,
-      name: r'defense',
+      name: r'experience',
       type: IsarType.long,
     ),
     r'level': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'level',
       type: IsarType.long,
     ),
-    r'life': PropertySchema(
-      id: 3,
-      name: r'life',
-      type: IsarType.long,
-    ),
-    r'mana': PropertySchema(
-      id: 4,
-      name: r'mana',
-      type: IsarType.long,
-    ),
     r'name': PropertySchema(
-      id: 5,
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'rank': PropertySchema(
-      id: 6,
+      id: 3,
       name: r'rank',
       type: IsarType.long,
+    ),
+    r'traits': PropertySchema(
+      id: 4,
+      name: r'traits',
+      type: IsarType.objectList,
+      target: r'Trait',
     )
   },
   estimateSize: _creatureEstimateSize,
@@ -60,7 +51,7 @@ const CreatureSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'Trait': TraitSchema},
   getId: _creatureGetId,
   getLinks: _creatureGetLinks,
   attach: _creatureAttach,
@@ -74,6 +65,14 @@ int _creatureEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.traits.length * 3;
+  {
+    final offsets = allOffsets[Trait]!;
+    for (var i = 0; i < object.traits.length; i++) {
+      final value = object.traits[i];
+      bytesCount += TraitSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   return bytesCount;
 }
 
@@ -83,13 +82,16 @@ void _creatureSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.attack);
-  writer.writeLong(offsets[1], object.defense);
-  writer.writeLong(offsets[2], object.level);
-  writer.writeLong(offsets[3], object.life);
-  writer.writeLong(offsets[4], object.mana);
-  writer.writeString(offsets[5], object.name);
-  writer.writeLong(offsets[6], object.rank);
+  writer.writeLong(offsets[0], object.experience);
+  writer.writeLong(offsets[1], object.level);
+  writer.writeString(offsets[2], object.name);
+  writer.writeLong(offsets[3], object.rank);
+  writer.writeObjectList<Trait>(
+    offsets[4],
+    allOffsets,
+    TraitSchema.serialize,
+    object.traits,
+  );
 }
 
 Creature _creatureDeserialize(
@@ -99,14 +101,18 @@ Creature _creatureDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Creature();
-  object.attack = reader.readLong(offsets[0]);
-  object.defense = reader.readLong(offsets[1]);
+  object.experience = reader.readLong(offsets[0]);
   object.id = id;
-  object.level = reader.readLong(offsets[2]);
-  object.life = reader.readLong(offsets[3]);
-  object.mana = reader.readLong(offsets[4]);
-  object.name = reader.readString(offsets[5]);
-  object.rank = reader.readLong(offsets[6]);
+  object.level = reader.readLong(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  object.rank = reader.readLong(offsets[3]);
+  object.traits = reader.readObjectList<Trait>(
+        offsets[4],
+        TraitSchema.deserialize,
+        allOffsets,
+        Trait(),
+      ) ??
+      [];
   return object;
 }
 
@@ -122,15 +128,17 @@ P _creatureDeserializeProp<P>(
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
       return (reader.readLong(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
-    case 5:
-      return (reader.readString(offset)) as P;
-    case 6:
-      return (reader.readLong(offset)) as P;
+      return (reader.readObjectList<Trait>(
+            offset,
+            TraitSchema.deserialize,
+            allOffsets,
+            Trait(),
+          ) ??
+          []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -225,43 +233,43 @@ extension CreatureQueryWhere on QueryBuilder<Creature, Creature, QWhereClause> {
 
 extension CreatureQueryFilter
     on QueryBuilder<Creature, Creature, QFilterCondition> {
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> attackEqualTo(
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> experienceEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'attack',
+        property: r'experience',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> attackGreaterThan(
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> experienceGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'attack',
+        property: r'experience',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> attackLessThan(
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> experienceLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'attack',
+        property: r'experience',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> attackBetween(
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> experienceBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -269,60 +277,7 @@ extension CreatureQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'attack',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> defenseEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'defense',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> defenseGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'defense',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> defenseLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'defense',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> defenseBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'defense',
+        property: r'experience',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -428,112 +383,6 @@ extension CreatureQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'level',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> lifeEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'life',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> lifeGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'life',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> lifeLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'life',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> lifeBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'life',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> manaEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mana',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> manaGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'mana',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> manaLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'mana',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterFilterCondition> manaBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'mana',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -724,36 +573,116 @@ extension CreatureQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> traitsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'traits',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> traitsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'traits',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> traitsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'traits',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> traitsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'traits',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Creature, Creature, QAfterFilterCondition>
+      traitsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'traits',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> traitsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'traits',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension CreatureQueryObject
-    on QueryBuilder<Creature, Creature, QFilterCondition> {}
+    on QueryBuilder<Creature, Creature, QFilterCondition> {
+  QueryBuilder<Creature, Creature, QAfterFilterCondition> traitsElement(
+      FilterQuery<Trait> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'traits');
+    });
+  }
+}
 
 extension CreatureQueryLinks
     on QueryBuilder<Creature, Creature, QFilterCondition> {}
 
 extension CreatureQuerySortBy on QueryBuilder<Creature, Creature, QSortBy> {
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByAttack() {
+  QueryBuilder<Creature, Creature, QAfterSortBy> sortByExperience() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'attack', Sort.asc);
+      return query.addSortBy(r'experience', Sort.asc);
     });
   }
 
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByAttackDesc() {
+  QueryBuilder<Creature, Creature, QAfterSortBy> sortByExperienceDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'attack', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByDefense() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'defense', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByDefenseDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'defense', Sort.desc);
+      return query.addSortBy(r'experience', Sort.desc);
     });
   }
 
@@ -766,30 +695,6 @@ extension CreatureQuerySortBy on QueryBuilder<Creature, Creature, QSortBy> {
   QueryBuilder<Creature, Creature, QAfterSortBy> sortByLevelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'level', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByLife() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'life', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByLifeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'life', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByMana() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mana', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> sortByManaDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mana', Sort.desc);
     });
   }
 
@@ -820,27 +725,15 @@ extension CreatureQuerySortBy on QueryBuilder<Creature, Creature, QSortBy> {
 
 extension CreatureQuerySortThenBy
     on QueryBuilder<Creature, Creature, QSortThenBy> {
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByAttack() {
+  QueryBuilder<Creature, Creature, QAfterSortBy> thenByExperience() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'attack', Sort.asc);
+      return query.addSortBy(r'experience', Sort.asc);
     });
   }
 
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByAttackDesc() {
+  QueryBuilder<Creature, Creature, QAfterSortBy> thenByExperienceDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'attack', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByDefense() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'defense', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByDefenseDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'defense', Sort.desc);
+      return query.addSortBy(r'experience', Sort.desc);
     });
   }
 
@@ -865,30 +758,6 @@ extension CreatureQuerySortThenBy
   QueryBuilder<Creature, Creature, QAfterSortBy> thenByLevelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'level', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByLife() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'life', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByLifeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'life', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByMana() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mana', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QAfterSortBy> thenByManaDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mana', Sort.desc);
     });
   }
 
@@ -919,33 +788,15 @@ extension CreatureQuerySortThenBy
 
 extension CreatureQueryWhereDistinct
     on QueryBuilder<Creature, Creature, QDistinct> {
-  QueryBuilder<Creature, Creature, QDistinct> distinctByAttack() {
+  QueryBuilder<Creature, Creature, QDistinct> distinctByExperience() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'attack');
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QDistinct> distinctByDefense() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'defense');
+      return query.addDistinctBy(r'experience');
     });
   }
 
   QueryBuilder<Creature, Creature, QDistinct> distinctByLevel() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'level');
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QDistinct> distinctByLife() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'life');
-    });
-  }
-
-  QueryBuilder<Creature, Creature, QDistinct> distinctByMana() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'mana');
     });
   }
 
@@ -971,33 +822,15 @@ extension CreatureQueryProperty
     });
   }
 
-  QueryBuilder<Creature, int, QQueryOperations> attackProperty() {
+  QueryBuilder<Creature, int, QQueryOperations> experienceProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'attack');
-    });
-  }
-
-  QueryBuilder<Creature, int, QQueryOperations> defenseProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'defense');
+      return query.addPropertyName(r'experience');
     });
   }
 
   QueryBuilder<Creature, int, QQueryOperations> levelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'level');
-    });
-  }
-
-  QueryBuilder<Creature, int, QQueryOperations> lifeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'life');
-    });
-  }
-
-  QueryBuilder<Creature, int, QQueryOperations> manaProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mana');
     });
   }
 
@@ -1010,6 +843,12 @@ extension CreatureQueryProperty
   QueryBuilder<Creature, int, QQueryOperations> rankProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'rank');
+    });
+  }
+
+  QueryBuilder<Creature, List<Trait>, QQueryOperations> traitsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'traits');
     });
   }
 }

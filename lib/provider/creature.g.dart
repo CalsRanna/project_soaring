@@ -6,7 +6,7 @@ part of 'creature.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$creaturesNotifierHash() => r'c8dcaa4c95d304623184f224800ac98a197a9cc8';
+String _$creaturesNotifierHash() => r'db5e712a6608cc0a14ad83173a64b219d8539d03';
 
 /// See also [CreaturesNotifier].
 @ProviderFor(CreaturesNotifier)

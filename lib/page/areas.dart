@@ -47,9 +47,11 @@ class _AreasPageState extends State<AreasPage> {
                             const SizedBox(width: 8),
                             Text('适合等级：${areas[index].level}'),
                             const SizedBox(width: 8),
-                            if (character != null)
+                            if (character != null &&
+                                character.creature.value != null)
                               Builder(builder: (context) {
-                                final level = character.level;
+                                final creature = character.creature.value!;
+                                final level = creature.level;
                                 final difficulty =
                                     calculateDifficulty(areas[index], level);
                                 final text = Labels.difficultyTexts[difficulty];
@@ -70,7 +72,7 @@ class _AreasPageState extends State<AreasPage> {
                     child: Builder(builder: (context) {
                       return Center(child: Builder(builder: (context) {
                         if (character == null) return const SizedBox();
-                        final level = character.level;
+                        final level = character.creature.value?.level ?? 1;
                         final available =
                             calculateAvailable(areas[index], level);
                         var text = '';
@@ -99,7 +101,8 @@ class _AreasPageState extends State<AreasPage> {
 
   Future<void> handleTap(WidgetRef ref, Area area) async {
     final character = await ref.read(characterNotifierProvider.future);
-    final available = calculateAvailable(area, character.level);
+    final level = character?.creature.value?.level ?? 1;
+    final available = calculateAvailable(area, level);
     if (available) {
       final notifier = ref.read(areasNotifierProvider.notifier);
       notifier.station(area);

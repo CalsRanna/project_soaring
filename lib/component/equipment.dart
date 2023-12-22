@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/provider/equipment.dart';
-import 'package:project_soaring/schema/equipment.dart';
+import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/button.dart';
 
@@ -11,7 +11,7 @@ class EquipmentTile extends StatelessWidget {
   const EquipmentTile({super.key, this.equipment, this.position, this.onTap})
       : assert(equipment != null || position != null);
 
-  final Equipment? equipment;
+  final Item? equipment;
   final int? position;
   final void Function()? onTap;
 
@@ -45,7 +45,7 @@ class EquipmentTile extends StatelessWidget {
     );
   }
 
-  void handleTap(BuildContext context, Equipment? equipment) async {
+  void handleTap(BuildContext context, Item? equipment) async {
     if (equipment == null) return;
     showDialog(
       context: context,
@@ -57,13 +57,13 @@ class EquipmentTile extends StatelessWidget {
 class EquipmentComparison extends StatelessWidget {
   const EquipmentComparison({super.key, required this.equipment});
 
-  final Equipment equipment;
+  final Item equipment;
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
       final provider = ref.watch(equippedEquipmentsNotifierProvider);
-      List<Equipment> equipments = switch (provider) {
+      List<Item> equipments = switch (provider) {
         AsyncData(:final value) => value,
         _ => [],
       };
@@ -87,11 +87,14 @@ class EquipmentComparison extends StatelessWidget {
           const Expanded(child: SizedBox()),
         ];
       }
-      return Center(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: children,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Center(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          ),
         ),
       );
     });
@@ -101,7 +104,7 @@ class EquipmentComparison extends StatelessWidget {
 class EquipmentInformationTile extends StatelessWidget {
   const EquipmentInformationTile({super.key, required this.equipment});
 
-  final Equipment equipment;
+  final Item equipment;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +130,7 @@ class EquipmentInformationTile extends StatelessWidget {
                   style: titleMedium?.copyWith(color: rankColor),
                 ),
                 const SizedBox(width: 8),
-                if (equipment.extraLevel > 0) Text('+ ${equipment.extraLevel}'),
+                // if (equipment.extraLevel > 0) Text('+ ${equipment.extraLevel}'),
               ],
             ),
             Text(
@@ -136,10 +139,7 @@ class EquipmentInformationTile extends StatelessWidget {
             ),
             Text(Labels.positions[equipment.position]),
             const SizedBox(height: 8),
-            for (var trait in equipment.traits)
-              Text(
-                '+ ${trait.modification} ${Labels.traits[trait.type]}',
-              ),
+            for (var trait in equipment.traits) Text(trait.toString()),
             const SizedBox(height: 4),
             Text('装备评分: ${equipment.score}'),
             const SizedBox(height: 8),
@@ -185,7 +185,7 @@ class EquipmentInformationTile extends StatelessWidget {
     );
   }
 
-  void equip(BuildContext context, WidgetRef ref, Equipment equipment) async {
+  void equip(BuildContext context, WidgetRef ref, Item equipment) async {
     final notifier =
         ref.read(availableEquipmentsNotifierProvider(null).notifier);
     await notifier.equip(equipment);
@@ -193,14 +193,14 @@ class EquipmentInformationTile extends StatelessWidget {
     Navigator.of(context).pop();
   }
 
-  void takeoff(BuildContext context, WidgetRef ref, Equipment equipment) async {
+  void takeoff(BuildContext context, WidgetRef ref, Item equipment) async {
     final notifier = ref.read(equippedEquipmentsNotifierProvider.notifier);
     await notifier.takeoff(equipment);
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }
 
-  void sold(BuildContext context, WidgetRef ref, Equipment equipment) async {
+  void sold(BuildContext context, WidgetRef ref, Item equipment) async {
     final notifier =
         ref.read(availableEquipmentsNotifierProvider(null).notifier);
     await notifier.sold(equipment);

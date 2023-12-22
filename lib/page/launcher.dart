@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/provider/area.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/router/router.dart';
 import 'package:project_soaring/widget/container.dart';
@@ -43,10 +42,9 @@ class _LauncherPageState extends State<LauncherPage> {
 
   Future<void> startGame(WidgetRef ref) async {
     final character = await ref.read(characterNotifierProvider.future);
-    final areaNotifier = ref.read(areasNotifierProvider.notifier);
-    await areaNotifier.generate();
+    final creature = character?.creature.value;
     if (!mounted) return;
-    if (character.name.isEmpty) {
+    if (creature == null || creature.name.isEmpty) {
       const SpawnPageRoute().replace(context);
     } else {
       const CharacterPageRoute().replace(context);

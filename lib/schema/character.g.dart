@@ -17,30 +17,15 @@ const CharacterSchema = CollectionSchema(
   name: r'characters',
   id: -5356870469787570786,
   properties: {
-    r'experience': PropertySchema(
-      id: 0,
-      name: r'experience',
-      type: IsarType.long,
-    ),
     r'gold': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'gold',
       type: IsarType.long,
     ),
     r'harvestAt': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'harvestAt',
       type: IsarType.dateTime,
-    ),
-    r'level': PropertySchema(
-      id: 3,
-      name: r'level',
-      type: IsarType.long,
-    ),
-    r'name': PropertySchema(
-      id: 4,
-      name: r'name',
-      type: IsarType.string,
     )
   },
   estimateSize: _characterEstimateSize,
@@ -49,7 +34,14 @@ const CharacterSchema = CollectionSchema(
   deserializeProp: _characterDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'creature': LinkSchema(
+      id: -1980522149680177604,
+      name: r'creature',
+      target: r'creatures',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _characterGetId,
   getLinks: _characterGetLinks,
@@ -63,7 +55,6 @@ int _characterEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -73,11 +64,8 @@ void _characterSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.experience);
-  writer.writeLong(offsets[1], object.gold);
-  writer.writeDateTime(offsets[2], object.harvestAt);
-  writer.writeLong(offsets[3], object.level);
-  writer.writeString(offsets[4], object.name);
+  writer.writeLong(offsets[0], object.gold);
+  writer.writeDateTime(offsets[1], object.harvestAt);
 }
 
 Character _characterDeserialize(
@@ -87,12 +75,9 @@ Character _characterDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Character();
-  object.experience = reader.readLong(offsets[0]);
-  object.gold = reader.readLong(offsets[1]);
-  object.harvestAt = reader.readDateTime(offsets[2]);
+  object.gold = reader.readLong(offsets[0]);
+  object.harvestAt = reader.readDateTime(offsets[1]);
   object.id = id;
-  object.level = reader.readLong(offsets[3]);
-  object.name = reader.readString(offsets[4]);
   return object;
 }
 
@@ -106,13 +91,7 @@ P _characterDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
-    case 2:
       return (reader.readDateTime(offset)) as P;
-    case 3:
-      return (reader.readLong(offset)) as P;
-    case 4:
-      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -123,11 +102,12 @@ Id _characterGetId(Character object) {
 }
 
 List<IsarLinkBase<dynamic>> _characterGetLinks(Character object) {
-  return [];
+  return [object.creature];
 }
 
 void _characterAttach(IsarCollection<dynamic> col, Id id, Character object) {
   object.id = id;
+  object.creature.attach(col, col.isar.collection<Creature>(), r'creature', id);
 }
 
 extension CharacterQueryWhereSort
@@ -209,60 +189,6 @@ extension CharacterQueryWhere
 
 extension CharacterQueryFilter
     on QueryBuilder<Character, Character, QFilterCondition> {
-  QueryBuilder<Character, Character, QAfterFilterCondition> experienceEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'experience',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition>
-      experienceGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'experience',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> experienceLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'experience',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> experienceBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'experience',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<Character, Character, QAfterFilterCondition> goldEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -422,210 +348,28 @@ extension CharacterQueryFilter
       ));
     });
   }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'level',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'level',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'level',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> levelBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'level',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterFilterCondition> nameIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
-      ));
-    });
-  }
 }
 
 extension CharacterQueryObject
     on QueryBuilder<Character, Character, QFilterCondition> {}
 
 extension CharacterQueryLinks
-    on QueryBuilder<Character, Character, QFilterCondition> {}
+    on QueryBuilder<Character, Character, QFilterCondition> {
+  QueryBuilder<Character, Character, QAfterFilterCondition> creature(
+      FilterQuery<Creature> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'creature');
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> creatureIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'creature', 0, true, 0, true);
+    });
+  }
+}
 
 extension CharacterQuerySortBy on QueryBuilder<Character, Character, QSortBy> {
-  QueryBuilder<Character, Character, QAfterSortBy> sortByExperience() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByExperienceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.desc);
-    });
-  }
-
   QueryBuilder<Character, Character, QAfterSortBy> sortByGold() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gold', Sort.asc);
@@ -649,46 +393,10 @@ extension CharacterQuerySortBy on QueryBuilder<Character, Character, QSortBy> {
       return query.addSortBy(r'harvestAt', Sort.desc);
     });
   }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByLevel() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'level', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByLevelDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'level', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> sortByNameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.desc);
-    });
-  }
 }
 
 extension CharacterQuerySortThenBy
     on QueryBuilder<Character, Character, QSortThenBy> {
-  QueryBuilder<Character, Character, QAfterSortBy> thenByExperience() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByExperienceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'experience', Sort.desc);
-    });
-  }
-
   QueryBuilder<Character, Character, QAfterSortBy> thenByGold() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gold', Sort.asc);
@@ -724,40 +432,10 @@ extension CharacterQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByLevel() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'level', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByLevelDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'level', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Character, Character, QAfterSortBy> thenByNameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.desc);
-    });
-  }
 }
 
 extension CharacterQueryWhereDistinct
     on QueryBuilder<Character, Character, QDistinct> {
-  QueryBuilder<Character, Character, QDistinct> distinctByExperience() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'experience');
-    });
-  }
-
   QueryBuilder<Character, Character, QDistinct> distinctByGold() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'gold');
@@ -767,19 +445,6 @@ extension CharacterQueryWhereDistinct
   QueryBuilder<Character, Character, QDistinct> distinctByHarvestAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'harvestAt');
-    });
-  }
-
-  QueryBuilder<Character, Character, QDistinct> distinctByLevel() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'level');
-    });
-  }
-
-  QueryBuilder<Character, Character, QDistinct> distinctByName(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 }
@@ -792,12 +457,6 @@ extension CharacterQueryProperty
     });
   }
 
-  QueryBuilder<Character, int, QQueryOperations> experienceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'experience');
-    });
-  }
-
   QueryBuilder<Character, int, QQueryOperations> goldProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'gold');
@@ -807,18 +466,6 @@ extension CharacterQueryProperty
   QueryBuilder<Character, DateTime, QQueryOperations> harvestAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'harvestAt');
-    });
-  }
-
-  QueryBuilder<Character, int, QQueryOperations> levelProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'level');
-    });
-  }
-
-  QueryBuilder<Character, String, QQueryOperations> nameProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'name');
     });
   }
 }

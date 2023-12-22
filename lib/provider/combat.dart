@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/creature.dart';
 import 'package:project_soaring/provider/stat.dart';
-import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,8 +14,8 @@ class CombatNotifier extends _$CombatNotifier {
   Future<CombatBroadcast> build() async {
     var broadcast = CombatBroadcast();
     final character = await ref.read(characterNotifierProvider.future);
-    broadcast.playerName = character.name;
-    broadcast.playerLevel = character.level;
+    // broadcast.playerName = character.name;
+    // broadcast.playerLevel = character.level;
     broadcast.playerAttack = await ref.read(statProvider(0).future);
     broadcast.playerDefense = await ref.read(statProvider(1).future);
     broadcast.playerLife = await ref.read(statProvider(2).future);
@@ -25,10 +24,10 @@ class CombatNotifier extends _$CombatNotifier {
     for (var creature in creatures) {
       broadcast.enemiesName.add(creature.name);
       broadcast.enemiesLevel.add(creature.level);
-      broadcast.enemiesAttack.add(creature.attack);
-      broadcast.enemiesDefense.add(creature.defense);
-      broadcast.enemiesLife.add(creature.life);
-      broadcast.enemiesMana.add(creature.mana);
+      // broadcast.enemiesAttack.add(creature.attack);
+      // broadcast.enemiesDefense.add(creature.defense);
+      // broadcast.enemiesLife.add(creature.life);
+      // broadcast.enemiesMana.add(creature.mana);
     }
     return broadcast;
   }
@@ -104,6 +103,5 @@ class CombatBroadcast {
   String winner = '';
   int rewardExperience = 0;
   int rewardGold = 0;
-  List<Equipment> rewardEquipments = [];
   List<Item> rewardItems = [];
 }

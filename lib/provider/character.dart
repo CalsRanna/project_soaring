@@ -5,9 +5,10 @@ import 'package:project_soaring/provider/area.dart';
 import 'package:project_soaring/provider/dungeon.dart';
 import 'package:project_soaring/schema/area.dart';
 import 'package:project_soaring/schema/character.dart';
+import 'package:project_soaring/schema/creature.dart';
 import 'package:project_soaring/schema/dungeon.dart';
-import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/isar.dart';
+import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/formula.dart';
 import 'package:project_soaring/util/generator.dart';
 import 'package:project_soaring/util/label.dart';
@@ -24,15 +25,8 @@ part 'character.g.dart';
 @riverpod
 class CharacterNotifier extends _$CharacterNotifier {
   @override
-  Future<Character> build() async {
-    var character = await isar.characters.where().findFirst();
-    if (character == null) {
-      character = Character();
-      await isar.writeTxn(() async {
-        isar.characters.put(character!);
-      });
-    }
-    return character;
+  Future<Character?> build() async {
+    return await isar.characters.where().findFirst();
   }
 
   /// Creates a new character with the given name.
@@ -42,14 +36,17 @@ class CharacterNotifier extends _$CharacterNotifier {
   ///
   /// [name] is the name of the character to be created.
   Future<void> create(String name) async {
-    var character = await future;
-    character.name = name;
+    var character = Character();
+    final creature = Generator().hero(name);
+    character.creature.value = creature;
     await isar.writeTxn(() async {
-      isar.characters.put(character);
+      await isar.creatures.put(creature);
+      await isar.characters.put(character);
+      await character.creature.save();
     });
     final equipments = Generator().starterKit();
     await isar.writeTxn(() async {
-      await isar.equipments.putAll(equipments);
+      await isar.items.putAll(equipments);
     });
     ref.invalidateSelf();
   }
@@ -66,7 +63,10 @@ class CharacterNotifier extends _$CharacterNotifier {
   Future<(int, int, String?)> harvest(Area area) async {
     final now = DateTime.now();
     final character = await future;
+    if (character == null) return (0, 0, null);
     if (now.isBefore(character.harvestAt)) return (0, 0, null);
+    final creature = character.creature.value;
+    if (creature == null) return (0, 0, null);
     final seconds = now.difference(character.harvestAt).inSeconds;
     final count = seconds ~/ 30;
     final averageLevel = (area.level + 3) / 2;
@@ -75,13 +75,14 @@ class CharacterNotifier extends _$CharacterNotifier {
     final random = Random();
     final factor = random.nextDouble() + 1;
     experience = experience * factor;
-    character.experience += experience.toInt();
+    creature.experience += experience.toInt();
     character.gold += gold.toInt();
-    _levelUp(character);
+    _levelUp(creature);
     final dungeon = await _discover();
     character.harvestAt = now;
     await isar.writeTxn(() async {
-      isar.characters.put(character);
+      await isar.creatures.put(creature);
+      await isar.characters.put(character);
     });
     ref.invalidateSelf();
     ref.invalidate(stationedAreaProvider);
@@ -93,8 +94,11 @@ class CharacterNotifier extends _$CharacterNotifier {
 
   Future<void> updateExperience(int experience) async {
     final character = await future;
-    character.experience += experience;
-    _levelUp(character);
+    if (character == null) return;
+    final creature = character.creature.value;
+    if (creature == null) return;
+    creature.experience += experience;
+    _levelUp(creature);
     await isar.writeTxn(() async {
       isar.characters.put(character);
     });
@@ -103,6 +107,7 @@ class CharacterNotifier extends _$CharacterNotifier {
 
   Future<void> updateGold(int gold) async {
     final character = await future;
+    if (character == null) return;
     character.gold += gold;
     await isar.writeTxn(() async {
       isar.characters.put(character);
@@ -141,12 +146,12 @@ class CharacterNotifier extends _$CharacterNotifier {
   /// The process repeats until the character's experience is less than the max for their new level.
   ///
   /// [character] is the character object to be leveled up.
-  void _levelUp(Character character) {
-    var max = Formula.levelUp(character.level);
-    while (character.experience >= max) {
-      character.experience -= max;
-      character.level++;
-      max = Formula.levelUp(character.level);
+  void _levelUp(Creature creature) {
+    var max = Formula.levelUp(creature.level);
+    while (creature.experience >= max) {
+      creature.experience -= max;
+      creature.level++;
+      max = Formula.levelUp(creature.level);
     }
   }
 }

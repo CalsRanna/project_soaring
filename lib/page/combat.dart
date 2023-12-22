@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/provider/combat.dart';
 import 'package:project_soaring/provider/creature.dart';
-import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/button.dart';
@@ -20,7 +19,6 @@ class CombatPage extends StatefulWidget {
 class _CombatPageState extends State<CombatPage> {
   bool? win;
   List<Item> items = [];
-  List<Equipment> equipments = [];
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -135,21 +133,10 @@ class _CombatPageState extends State<CombatPage> {
                                   ),
                                 )
                                 .toList();
-
-                            final equipmentSpans = equipments
-                                .map(
-                                  (equipment) => TextSpan(
-                                    text: '[${equipment.name}]',
-                                    style: TextStyle(
-                                      color: Labels.rankColors[equipment.rank],
-                                    ),
-                                  ),
-                                )
-                                .toList();
                             return Text.rich(
                               TextSpan(
                                 text: '获得',
-                                children: [...equipmentSpans, ...itemSpans],
+                                children: itemSpans,
                               ),
                             );
                           }

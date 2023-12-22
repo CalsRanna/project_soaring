@@ -7,7 +7,7 @@ import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/dungeon.dart';
 import 'package:project_soaring/provider/equipment.dart';
 import 'package:project_soaring/router/router.dart';
-import 'package:project_soaring/schema/equipment.dart';
+import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/dungeon.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/modal.dart';
@@ -84,7 +84,7 @@ class _DungeonPageState extends State<DungeonPage> {
           ),
           Expanded(child: Consumer(builder: (context, ref, child) {
             final provider = ref.watch(lootEquipmentsNotifierProvider);
-            List<Equipment> equipments = switch (provider) {
+            List<Item> equipments = switch (provider) {
               AsyncData(:final value) => value,
               _ => [],
             };

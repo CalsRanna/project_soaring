@@ -6,7 +6,7 @@ part of 'character.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$characterNotifierHash() => r'00fa1b9040d235db4c06334dbb9cbd886f5d9d1a';
+String _$characterNotifierHash() => r'd83f13aebfa3e05ae4a893b0fdba883b6b1a6452';
 
 /// `CharacterNotifier` class
 ///
@@ -18,7 +18,7 @@ String _$characterNotifierHash() => r'00fa1b9040d235db4c06334dbb9cbd886f5d9d1a';
 /// Copied from [CharacterNotifier].
 @ProviderFor(CharacterNotifier)
 final characterNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<CharacterNotifier, Character>.internal(
+    AutoDisposeAsyncNotifierProvider<CharacterNotifier, Character?>.internal(
   CharacterNotifier.new,
   name: r'characterNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -28,6 +28,6 @@ final characterNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CharacterNotifier = AutoDisposeAsyncNotifier<Character>;
+typedef _$CharacterNotifier = AutoDisposeAsyncNotifier<Character?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
