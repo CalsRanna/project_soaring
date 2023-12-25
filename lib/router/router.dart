@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project_soaring/combat.dart';
 import 'package:project_soaring/page/areas.dart';
 import 'package:project_soaring/page/backpack.dart';
 import 'package:project_soaring/page/character.dart';
@@ -14,7 +15,7 @@ import 'package:project_soaring/page/trials.dart';
 
 part 'router.g.dart';
 
-final router = GoRouter(routes: $appRoutes);
+final router = GoRouter(routes: $appRoutes, initialLocation: '/combat-demo');
 
 @TypedGoRoute<LauncherPageRoute>(path: '/')
 class LauncherPageRoute extends GoRouteData {
@@ -124,5 +125,15 @@ class TrialsPageRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const TrialsPage();
+  }
+}
+
+@TypedGoRoute<CombatDemoPageRoute>(path: '/combat-demo')
+class CombatDemoPageRoute extends GoRouteData {
+  const CombatDemoPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const CombatDemoPage();
   }
 }

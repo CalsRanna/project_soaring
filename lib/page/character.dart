@@ -40,31 +40,38 @@ class _CharacterPageState extends State<CharacterPage> {
               AsyncData(:final value) => value,
               _ => null,
             };
-            return Column(children: [
-              if (character != null) ...[
-                if (character.creature.value != null)
-                  _StatusBar(creature: character.creature.value!),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (character != null) ...[
+                  if (character.creature.value != null)
+                    _StatusBar(creature: character.creature.value!),
+                  const SizedBox(height: 16),
+                  const _StatsPanel(label: '基本属性', statIndexes: [0, 14, 1, 15]),
+                  const _StatsPanel(
+                    label: '六维属性',
+                    statIndexes: [2, 3, 4, 5, 6, 7],
+                  ),
+                  const _StatsPanel(
+                    label: '其他属性',
+                    statIndexes: [8, 9, 10, 11, 12, 13],
+                  ),
+                ],
+                if (character != null && area != null) ...[
+                  _StationedArea(
+                    harvestAt: character.harvestAt,
+                    name: area.name,
+                    onTap: () => handleTap(ref),
+                  ),
+                ],
                 const SizedBox(height: 16),
-                const _StatsPanel(label: '基本属性', statIndexes: [0, 14, 1, 15]),
-                const _StatsPanel(
-                  label: '六维属性',
-                  statIndexes: [2, 3, 4, 5, 6, 7],
+                const Wrap(
+                  children: [_AvailableQuest()],
                 ),
-                const _StatsPanel(
-                  label: '其他属性',
-                  statIndexes: [8, 9, 10, 11, 12, 13],
-                ),
+                const Spacer(),
+                const Toolbar(),
               ],
-              if (character != null && area != null) ...[
-                _StationedArea(
-                  harvestAt: character.harvestAt,
-                  name: area.name,
-                  onTap: () => handleTap(ref),
-                ),
-              ],
-              const Spacer(),
-              const Toolbar(),
-            ]);
+            );
           }),
         ),
       ),
@@ -303,5 +310,27 @@ class _StatusBar extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class _AvailableQuest extends StatelessWidget {
+  const _AvailableQuest({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => handleTap(context),
+      child: SoaringContainer(
+        borderRadius: BorderRadius.circular(4),
+        height: 72,
+        width: 72,
+        child: const Center(child: Text('新任务')),
+      ),
+    );
+  }
+
+  void handleTap(BuildContext context) {
+    Modal.of(context).show(child: Text('New Quest!'));
   }
 }

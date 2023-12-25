@@ -6,6 +6,7 @@ import 'package:project_soaring/schema/dungeon.dart';
 // import 'package:project_soaring/schema/equipment.dart';
 import 'package:project_soaring/schema/event.dart';
 import 'package:project_soaring/schema/item.dart';
+import 'package:project_soaring/schema/quest.dart';
 import 'package:project_soaring/schema/trait.dart';
 import 'package:project_soaring/util/label.dart';
 
@@ -71,6 +72,20 @@ class Generator {
     // clothes.traits.add(trait);
     // trousers.traits.add(trait);
     return [clothes, trousers];
+  }
+
+  Quest startedQuest() {
+    var quest = Quest();
+    quest.description = '欢迎来到PROJECT SOARING。';
+    quest.level = 1;
+    quest.name = '旅途的开始';
+    quest.progress = 0;
+    List<QuestReward> rewards = [];
+    var reward = QuestReward();
+    reward.type = 2;
+    reward.count = 1;
+    rewards.add(reward);
+    return quest;
   }
 
   Item equipment() {

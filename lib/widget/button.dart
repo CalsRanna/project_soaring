@@ -12,15 +12,42 @@ class SoaringButton extends StatefulWidget {
 }
 
 class _SoaringButtonState extends State<SoaringButton> {
+  double scale = 1;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: widget.onTap,
-      child: SoaringContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        child: Text(widget.text),
+      onTapCancel: handleTapCancel,
+      onTapDown: handleTapDown,
+      onTapUp: handleTapUp,
+      child: AnimatedScale(
+        duration: const Duration(milliseconds: 200),
+        scale: scale,
+        child: SoaringContainer(
+          borderRadius: BorderRadius.circular(4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          child: Text(widget.text),
+        ),
       ),
     );
+  }
+
+  void handleTapCancel() {
+    setState(() {
+      scale = 1;
+    });
+  }
+
+  void handleTapDown(TapDownDetails details) {
+    setState(() {
+      scale = 0.9;
+    });
+  }
+
+  void handleTapUp(TapUpDetails details) {
+    setState(() {
+      scale = 1;
+    });
   }
 }

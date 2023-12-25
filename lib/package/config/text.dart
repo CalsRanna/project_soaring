@@ -36,4 +36,10 @@ abstract class SoaringText {
     '主手', // 10
     '副手', // 11
   ];
+
+  static const progresses = [
+    '未接受', // 0
+    '进行中', // 1
+    '已完成', // 2
+  ];
 }

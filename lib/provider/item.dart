@@ -9,8 +9,15 @@ part 'item.g.dart';
 class ItemsNotifier extends _$ItemsNotifier {
   @override
   Future<List<Item>> build() async {
-    final items = await isar.items.where().findAll();
+    final items = await isar.items.filter().typeEqualTo(0).findAll();
     return items;
+  }
+
+  Future<void> add(Item item) async {
+    await isar.writeTxn(() async {
+      await isar.items.put(item);
+    });
+    ref.invalidateSelf();
   }
 }
 

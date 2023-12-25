@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/router/router.dart';
-import 'package:project_soaring/widget/container.dart';
+import 'package:project_soaring/widget/button.dart';
 
 class LauncherPage extends StatefulWidget {
   const LauncherPage({super.key});
@@ -25,13 +25,9 @@ class _LauncherPageState extends State<LauncherPage> {
             ),
             const SizedBox(height: 16),
             Consumer(
-              builder: (context, ref, child) => GestureDetector(
-                behavior: HitTestBehavior.opaque,
+              builder: (context, ref, child) => SoaringButton(
                 onTap: () => startGame(ref),
-                child: const SoaringContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                  child: Text('开始游戏'),
-                ),
+                text: '开始游戏',
               ),
             )
           ],
