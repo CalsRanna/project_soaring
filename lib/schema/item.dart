@@ -8,6 +8,7 @@ part 'item.g.dart';
 @Name('items')
 class Item extends SoaringItem {
   Id id = Isar.autoIncrement;
+  int count = 1;
   List<Trait> traits = [];
 
   int get score {

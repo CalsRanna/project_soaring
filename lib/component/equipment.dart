@@ -134,29 +134,40 @@ class EquipmentInformationTile extends StatelessWidget {
                 // if (equipment.extraLevel > 0) Text('+ ${equipment.extraLevel}'),
               ],
             ),
-            Text(
-              Labels.levels[equipment.rank],
-              style: TextStyle(color: rankColor),
-            ),
-            Text(SoaringText.positions[equipment.position]),
-            const SizedBox(height: 8),
-            for (var trait in equipment.traits) Text(trait.toString()),
-            const SizedBox(height: 4),
-            Text('装备评分: ${equipment.score}'),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Transform.rotate(
-                  angle: pi / 4,
-                  child: Container(color: rankColor, height: 8, width: 8),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  equipment.description,
-                  style: TextStyle(color: rankColor),
-                ),
-              ],
-            ),
+            if (equipment.type == 0) ...[
+              Text(
+                Labels.levels[equipment.rank],
+                style: TextStyle(color: rankColor),
+              ),
+              Text(SoaringText.positions[equipment.position]),
+              const SizedBox(height: 8),
+              for (var trait in equipment.traits) Text(trait.toString()),
+              const SizedBox(height: 4),
+              Text('装备评分: ${equipment.score}'),
+            ],
+            if (equipment.type == 1)
+              Text(
+                equipment.description,
+                style: TextStyle(color: rankColor),
+              ),
+            if (equipment.rank > 3) const SizedBox(height: 8),
+            if (equipment.rank > 3)
+              Row(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Transform.rotate(
+                    angle: pi / 4,
+                    child: Container(color: rankColor, height: 8, width: 8),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      equipment.description,
+                      style: TextStyle(color: rankColor),
+                    ),
+                  ),
+                ],
+              ),
             const SizedBox(height: 8),
             Consumer(
               builder: (context, ref, child) => Wrap(

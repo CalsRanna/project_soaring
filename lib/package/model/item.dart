@@ -1,6 +1,6 @@
 import 'package:project_soaring/package/config/text.dart';
 
-abstract class SoaringItem {
+class SoaringItem {
   int level = 0;
   int rank = 0;
   String name = '';

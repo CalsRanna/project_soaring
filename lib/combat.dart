@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:project_soaring/component/equipment.dart';
 import 'package:project_soaring/package/manager/combat.dart';
+import 'package:project_soaring/package/manager/loot.dart';
 import 'package:project_soaring/package/model/combat.dart';
 import 'package:project_soaring/package/model/trait.dart';
 import 'package:project_soaring/package/type/combat.dart';
@@ -26,10 +28,21 @@ class _CombatDemoPageState extends State<CombatDemoPage> {
   }
 
   void start() {
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => const _CombatPage(),
+    // );
     showDialog(
       context: context,
-      builder: (context) => const _CombatPage(),
+      builder: (context) => const LootPage(),
     );
+    // final lootManager = SoaringLootManager();
+    // lootManager.loot(level: 1, rank: 1);
+    // for (var item in lootManager.items) {
+    //   final count = item.type == 0 ? '' : ' x${item.count}';
+    //   final traits = item.traits.map((e) => e.toString()).join(', ');
+    //   print('${item.name}$count ($traits)');
+    // }
   }
 }
 
@@ -65,7 +78,7 @@ class __CombatPageState extends State<_CombatPage> {
               children: [
                 Container(
                   decoration: BoxDecoration(color: surfaceVariant),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -83,6 +96,7 @@ class __CombatPageState extends State<_CombatPage> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
                 Text('${round <= 5 ? '${5 - round + 1}回合后可' : '点击此处'}跳过战斗'),
               ],
             ),
@@ -187,5 +201,89 @@ class __CombatTileState extends State<_CombatTile> {
         ),
       ),
     );
+  }
+}
+
+class LootPage extends StatefulWidget {
+  const LootPage();
+
+  @override
+  State<LootPage> createState() => _LootPageState();
+}
+
+class _LootPageState extends State<LootPage> {
+  List<SoaringCombatEntry> entries = [];
+  late SoaringCombatManager combat;
+
+  int round = 1;
+  int maxRound = 20;
+
+  SoaringLootManager lootManager = SoaringLootManager();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final surfaceVariant = colorScheme.surfaceVariant;
+    return PopScope(
+      canPop: false,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: handleTap,
+        child: Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(color: surfaceVariant),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('战斗胜利'),
+                      const Text('获得物品'),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (var i = 0; i < lootManager.items.length; i++)
+                            EquipmentTile(
+                              equipment: lootManager.items[i],
+                            )
+                        ],
+                      ),
+                      const Text('获得装备'),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (var i = 0; i < lootManager.equipment.length; i++)
+                            EquipmentTile(
+                              equipment: lootManager.equipment[i],
+                            )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    lootManager.loot(level: 1, rank: 1);
+  }
+
+  void handleTap() {
+    Navigator.of(context).pop();
   }
 }
