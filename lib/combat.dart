@@ -1,12 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:project_soaring/component/equipment.dart';
-import 'package:project_soaring/package/manager/combat.dart';
-import 'package:project_soaring/package/manager/loot.dart';
-import 'package:project_soaring/package/model/combat.dart';
-import 'package:project_soaring/package/model/trait.dart';
-import 'package:project_soaring/package/type/combat.dart';
+import 'package:project_soaring/component/item_tile.dart';
+import 'package:project_soaring/game/combat/combat.dart';
+import 'package:project_soaring/game/loot/loot.dart';
+import 'package:project_soaring/game/combat/combatant.dart';
 import 'package:project_soaring/schema/trait.dart';
 
 class CombatDemoPage extends StatefulWidget {
@@ -54,8 +52,8 @@ class _CombatPage extends StatefulWidget {
 }
 
 class __CombatPageState extends State<_CombatPage> {
-  List<SoaringCombatEntry> entries = [];
-  late SoaringCombatManager combat;
+  List<Combatant> entries = [];
+  late CombatManager combat;
 
   int round = 1;
   int maxRound = 20;
@@ -144,13 +142,13 @@ class __CombatPageState extends State<_CombatPage> {
     final size = mediaQuery.size;
     final width = size.width;
     const double height = 256;
-    combat = SoaringCombatManager(
+    combat = CombatManager(
       battlegroundSize: Size(width, height),
       onLoop: handleLoop,
     );
     for (var i = 0; i < 5; i++) {
-      var entry = SoaringCombatEntry();
-      List<SoaringTrait> traits = [];
+      var entry = Combatant();
+      List<Trait> traits = [];
       traits.add(Trait()
         ..type = 0
         ..value = 100);
@@ -161,7 +159,7 @@ class __CombatPageState extends State<_CombatPage> {
         ..type = 15
         ..value = 10);
       entry.traits = traits;
-      if (i >= 2) entry.position = SoaringCombatPosition.defender;
+      if (i >= 2) entry.position = CombatantPosition.defender;
       entries.add(entry);
     }
     combat.spawn(entries);
@@ -170,7 +168,7 @@ class __CombatPageState extends State<_CombatPage> {
 }
 
 class _CombatTile extends StatefulWidget {
-  final SoaringCombatEntry entry;
+  final Combatant entry;
 
   const _CombatTile({required this.entry});
 
@@ -212,13 +210,13 @@ class LootPage extends StatefulWidget {
 }
 
 class _LootPageState extends State<LootPage> {
-  List<SoaringCombatEntry> entries = [];
-  late SoaringCombatManager combat;
+  List<Combatant> entries = [];
+  late CombatManager combat;
 
   int round = 1;
   int maxRound = 20;
 
-  SoaringLootManager lootManager = SoaringLootManager();
+  LootManager lootManager = LootManager();
 
   @override
   Widget build(BuildContext context) {
@@ -244,26 +242,15 @@ class _LootPageState extends State<LootPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text('战斗胜利'),
-                      const Text('获得物品'),
                       Wrap(
+                        alignment: WrapAlignment.center,
                         spacing: 8,
                         runSpacing: 8,
                         children: [
                           for (var i = 0; i < lootManager.items.length; i++)
-                            EquipmentTile(
-                              equipment: lootManager.items[i],
-                            )
-                        ],
-                      ),
-                      const Text('获得装备'),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          for (var i = 0; i < lootManager.equipment.length; i++)
-                            EquipmentTile(
-                              equipment: lootManager.equipment[i],
-                            )
+                            ItemTile(
+                              item: lootManager.items[i],
+                            ),
                         ],
                       ),
                     ],

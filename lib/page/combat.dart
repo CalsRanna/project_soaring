@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/package/config/text.dart';
+import 'package:project_soaring/config/text.dart';
 import 'package:project_soaring/provider/combat.dart';
 import 'package:project_soaring/provider/creature.dart';
 import 'package:project_soaring/schema/item.dart';

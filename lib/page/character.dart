@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/component/toolbar.dart';
-import 'package:project_soaring/package/config/text.dart';
+import 'package:project_soaring/config/text.dart';
 import 'package:project_soaring/provider/area.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/stat.dart';
@@ -28,13 +28,14 @@ class _CharacterPageState extends State<CharacterPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
           child: Consumer(builder: (context, ref, child) {
             final characterProvider = ref.watch(characterNotifierProvider);
             Character? character = switch (characterProvider) {
               AsyncData(:final value) => value,
               _ => null,
             };
+            if (character == null) return const SizedBox();
             final areaProvider = ref.watch(stationedAreaProvider);
             Area? area = switch (areaProvider) {
               AsyncData(:final value) => value,
@@ -43,20 +44,42 @@ class _CharacterPageState extends State<CharacterPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (character != null) ...[
-                  if (character.creature.value != null)
-                    _StatusBar(creature: character.creature.value!),
-                  const SizedBox(height: 16),
-                  const _StatsPanel(label: '基本属性', statIndexes: [0, 14, 1, 15]),
-                  const _StatsPanel(
-                    label: '六维属性',
-                    statIndexes: [2, 3, 4, 5, 6, 7],
+                SizedBox(
+                  height: 24,
+                  child: Stack(
+                    children: [
+                      Container(
+                        color: Colors.blue,
+                        height: 16,
+                        margin: EdgeInsets.all(4),
+                        width: 128,
+                      ),
+                      Transform.rotate(
+                        angle: pi / 4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue[200]!),
+                            color: Colors.blue,
+                          ),
+                          height: 24,
+                          width: 24,
+                        ),
+                      )
+                    ],
                   ),
-                  const _StatsPanel(
-                    label: '其他属性',
-                    statIndexes: [8, 9, 10, 11, 12, 13],
-                  ),
-                ],
+                ),
+                if (character.creature.value != null)
+                  _StatusBar(creature: character.creature.value!),
+                const SizedBox(height: 16),
+                const _StatsPanel(label: '基本属性', statIndexes: [0, 14, 1, 15]),
+                const _StatsPanel(
+                  label: '六维属性',
+                  statIndexes: [2, 3, 4, 5, 6, 7],
+                ),
+                const _StatsPanel(
+                  label: '其他属性',
+                  statIndexes: [8, 9, 10, 11, 12, 13],
+                ),
                 if (character != null && area != null) ...[
                   _StationedArea(
                     harvestAt: character.harvestAt,

@@ -17,59 +17,64 @@ const ItemSchema = CollectionSchema(
   name: r'items',
   id: 8862548941132702200,
   properties: {
-    r'description': PropertySchema(
+    r'count': PropertySchema(
       id: 0,
+      name: r'count',
+      type: IsarType.long,
+    ),
+    r'description': PropertySchema(
+      id: 1,
       name: r'description',
       type: IsarType.string,
     ),
     r'equipped': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'equipped',
       type: IsarType.bool,
     ),
     r'level': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'level',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'position': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'position',
       type: IsarType.long,
     ),
     r'positionText': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'positionText',
       type: IsarType.string,
     ),
     r'rank': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'rank',
       type: IsarType.long,
     ),
     r'score': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'score',
       type: IsarType.long,
     ),
     r'traits': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'traits',
       type: IsarType.objectList,
       target: r'Trait',
     ),
     r'type': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'type',
       type: IsarType.long,
     ),
     r'typeText': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'typeText',
       type: IsarType.string,
     )
@@ -115,22 +120,23 @@ void _itemSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.description);
-  writer.writeBool(offsets[1], object.equipped);
-  writer.writeLong(offsets[2], object.level);
-  writer.writeString(offsets[3], object.name);
-  writer.writeLong(offsets[4], object.position);
-  writer.writeString(offsets[5], object.positionText);
-  writer.writeLong(offsets[6], object.rank);
-  writer.writeLong(offsets[7], object.score);
+  writer.writeLong(offsets[0], object.count);
+  writer.writeString(offsets[1], object.description);
+  writer.writeBool(offsets[2], object.equipped);
+  writer.writeLong(offsets[3], object.level);
+  writer.writeString(offsets[4], object.name);
+  writer.writeLong(offsets[5], object.position);
+  writer.writeString(offsets[6], object.positionText);
+  writer.writeLong(offsets[7], object.rank);
+  writer.writeLong(offsets[8], object.score);
   writer.writeObjectList<Trait>(
-    offsets[8],
+    offsets[9],
     allOffsets,
     TraitSchema.serialize,
     object.traits,
   );
-  writer.writeLong(offsets[9], object.type);
-  writer.writeString(offsets[10], object.typeText);
+  writer.writeLong(offsets[10], object.type);
+  writer.writeString(offsets[11], object.typeText);
 }
 
 Item _itemDeserialize(
@@ -140,21 +146,22 @@ Item _itemDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Item();
-  object.description = reader.readString(offsets[0]);
-  object.equipped = reader.readBool(offsets[1]);
+  object.count = reader.readLong(offsets[0]);
+  object.description = reader.readString(offsets[1]);
+  object.equipped = reader.readBool(offsets[2]);
   object.id = id;
-  object.level = reader.readLong(offsets[2]);
-  object.name = reader.readString(offsets[3]);
-  object.position = reader.readLong(offsets[4]);
-  object.rank = reader.readLong(offsets[6]);
+  object.level = reader.readLong(offsets[3]);
+  object.name = reader.readString(offsets[4]);
+  object.position = reader.readLong(offsets[5]);
+  object.rank = reader.readLong(offsets[7]);
   object.traits = reader.readObjectList<Trait>(
-        offsets[8],
+        offsets[9],
         TraitSchema.deserialize,
         allOffsets,
         Trait(),
       ) ??
       [];
-  object.type = reader.readLong(offsets[9]);
+  object.type = reader.readLong(offsets[10]);
   return object;
 }
 
@@ -166,22 +173,24 @@ P _itemDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
-    case 5:
       return (reader.readString(offset)) as P;
-    case 6:
+    case 5:
       return (reader.readLong(offset)) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
     case 7:
       return (reader.readLong(offset)) as P;
     case 8:
+      return (reader.readLong(offset)) as P;
+    case 9:
       return (reader.readObjectList<Trait>(
             offset,
             TraitSchema.deserialize,
@@ -189,9 +198,9 @@ P _itemDeserializeProp<P>(
             Trait(),
           ) ??
           []) as P;
-    case 9:
-      return (reader.readLong(offset)) as P;
     case 10:
+      return (reader.readLong(offset)) as P;
+    case 11:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -286,6 +295,58 @@ extension ItemQueryWhere on QueryBuilder<Item, Item, QWhereClause> {
 }
 
 extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
+  QueryBuilder<Item, Item, QAfterFilterCondition> countEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'count',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> countGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'count',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> countLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'count',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> countBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'count',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterFilterCondition> descriptionEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1221,6 +1282,18 @@ extension ItemQueryObject on QueryBuilder<Item, Item, QFilterCondition> {
 extension ItemQueryLinks on QueryBuilder<Item, Item, QFilterCondition> {}
 
 extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
+  QueryBuilder<Item, Item, QAfterSortBy> sortByCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'count', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'count', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> sortByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
@@ -1343,6 +1416,18 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
 }
 
 extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
+  QueryBuilder<Item, Item, QAfterSortBy> thenByCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'count', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'count', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> thenByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
@@ -1477,6 +1562,12 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
 }
 
 extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
+  QueryBuilder<Item, Item, QDistinct> distinctByCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'count');
+    });
+  }
+
   QueryBuilder<Item, Item, QDistinct> distinctByDescription(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1546,6 +1637,12 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
   QueryBuilder<Item, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Item, int, QQueryOperations> countProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'count');
     });
   }
 

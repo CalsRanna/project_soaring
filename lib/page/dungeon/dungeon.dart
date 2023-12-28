@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/component/equipment.dart';
+import 'package:project_soaring/component/item_tile.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/dungeon.dart';
 import 'package:project_soaring/provider/equipment.dart';
@@ -94,8 +94,8 @@ class _DungeonPageState extends State<DungeonPage> {
                 crossAxisSpacing: 4,
                 mainAxisSpacing: 4,
               ),
-              itemBuilder: (context, index) => EquipmentTile(
-                equipment: equipments[index],
+              itemBuilder: (context, index) => ItemTile(
+                item: equipments[index],
               ),
               itemCount: equipments.length,
             );

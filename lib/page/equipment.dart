@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/component/equipment.dart';
-import 'package:project_soaring/package/config/text.dart';
+import 'package:project_soaring/component/item_tile.dart';
+import 'package:project_soaring/config/text.dart';
 import 'package:project_soaring/provider/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/widget/tab.dart';
@@ -47,8 +47,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       spacing: 4,
                       children: [
                         for (var i = 0; i < 6; i++)
-                          EquipmentTile(
-                            equipment: equipments
+                          ItemTile(
+                            item: equipments
                                 .where((element) => element.position == i * 2)
                                 .firstOrNull,
                             position: i * 2,
@@ -61,8 +61,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       spacing: 4,
                       children: [
                         for (var i = 0; i < 6; i++)
-                          EquipmentTile(
-                            equipment: equipments
+                          ItemTile(
+                            item: equipments
                                 .where(
                                     (element) => element.position == i * 2 + 1)
                                 .firstOrNull,
@@ -102,8 +102,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     crossAxisSpacing: 4,
                     mainAxisSpacing: 4,
                   ),
-                  itemBuilder: (context, index) => EquipmentTile(
-                    equipment: equipments[index],
+                  itemBuilder: (context, index) => ItemTile(
+                    item: equipments[index],
                   ),
                   itemCount: equipments.length,
                 );

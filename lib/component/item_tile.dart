@@ -2,17 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/package/config/text.dart';
+import 'package:project_soaring/config/text.dart';
 import 'package:project_soaring/provider/equipment.dart';
 import 'package:project_soaring/schema/item.dart';
 import 'package:project_soaring/util/label.dart';
 import 'package:project_soaring/widget/button.dart';
 
-class EquipmentTile extends StatelessWidget {
-  const EquipmentTile({super.key, this.equipment, this.position, this.onTap})
-      : assert(equipment != null || position != null);
+class ItemTile extends StatelessWidget {
+  const ItemTile({super.key, this.item, this.position, this.onTap})
+      : assert(item != null || position != null);
 
-  final Item? equipment;
+  final Item? item;
   final int? position;
   final void Function()? onTap;
 
@@ -22,26 +22,39 @@ class EquipmentTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final onSurface = colorScheme.onSurface;
     var color = onSurface;
-    if (equipment != null) {
-      color = Labels.rankColors[equipment!.rank];
+    if (item != null) {
+      color = Labels.rankColors[item!.rank];
     }
     var border = Border.all(color: color);
     var style = TextStyle(color: color);
     final surfaceVariant = colorScheme.surfaceVariant;
-    if (equipment == null) {
+    if (item == null) {
       border = Border.all(color: surfaceVariant);
       style = TextStyle(color: surfaceVariant);
     }
-    final text = equipment?.name ?? SoaringText.positions[position!];
+    final text = item?.name ?? SoaringText.positions[position!];
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => handleTap(context, equipment),
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(border: border),
-        height: 64,
-        width: 64,
-        child: Text(text, style: style, textAlign: TextAlign.center),
+      onTap: () => handleTap(context, item),
+      child: Stack(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(border: border),
+            height: 64,
+            width: 64,
+            child: Text(text, style: style, textAlign: TextAlign.center),
+          ),
+          if (item?.type == 1)
+            Positioned(
+              bottom: 4,
+              right: 4,
+              child: Text(
+                item?.count == null ? '' : 'x${item?.count}',
+                style: style.copyWith(fontSize: 8),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -168,29 +181,31 @@ class EquipmentInformationTile extends StatelessWidget {
                   ),
                 ],
               ),
-            const SizedBox(height: 8),
-            Consumer(
-              builder: (context, ref, child) => Wrap(
-                spacing: 8,
-                children: [
-                  if (!equipment.equipped)
-                    SoaringButton(
-                      text: '装备',
-                      onTap: () => equip(context, ref, equipment),
-                    ),
-                  if (equipment.equipped)
-                    SoaringButton(
-                      text: '卸下',
-                      onTap: () => takeoff(context, ref, equipment),
-                    ),
-                  if (!equipment.equipped)
-                    SoaringButton(
-                      text: '卖出',
-                      onTap: () => sold(context, ref, equipment),
-                    ),
-                ],
-              ),
-            )
+            if (equipment.type == 0) ...[
+              const SizedBox(height: 8),
+              Consumer(
+                builder: (context, ref, child) => Wrap(
+                  spacing: 8,
+                  children: [
+                    if (!equipment.equipped)
+                      SoaringButton(
+                        text: '装备',
+                        onTap: () => equip(context, ref, equipment),
+                      ),
+                    if (equipment.equipped)
+                      SoaringButton(
+                        text: '卸下',
+                        onTap: () => takeoff(context, ref, equipment),
+                      ),
+                    if (!equipment.equipped)
+                      SoaringButton(
+                        text: '卖出',
+                        onTap: () => sold(context, ref, equipment),
+                      ),
+                  ],
+                ),
+              )
+            ]
           ],
         ),
       ),

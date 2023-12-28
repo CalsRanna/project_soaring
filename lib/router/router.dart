@@ -15,7 +15,8 @@ import 'package:project_soaring/page/trials.dart';
 
 part 'router.g.dart';
 
-final router = GoRouter(routes: $appRoutes, initialLocation: '/combat-demo');
+final router = GoRouter(routes: $appRoutes);
+// final router = GoRouter(routes: $appRoutes, initialLocation: '/combat-demo');
 
 @TypedGoRoute<LauncherPageRoute>(path: '/')
 class LauncherPageRoute extends GoRouteData {

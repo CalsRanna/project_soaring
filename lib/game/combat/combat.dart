@@ -1,29 +1,28 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:project_soaring/package/model/combat.dart';
-import 'package:project_soaring/package/type/combat.dart';
+import 'package:project_soaring/game/combat/combatant.dart';
 
-class SoaringCombatManager {
+class CombatManager {
   final Size battlegroundSize;
-  final List<SoaringCombatEntry> entries = [];
+  final List<Combatant> entries = [];
   bool fastSimulate = false;
   final int maxRound = 20;
   int round = 1;
   String winner = '';
   final void Function(int)? onLoop;
 
-  SoaringCombatManager({required this.battlegroundSize, this.onLoop});
+  CombatManager({required this.battlegroundSize, this.onLoop});
 
-  List<SoaringCombatEntry> get defenders {
+  List<Combatant> get defenders {
     return entries.where((entry) {
-      return entry.position == SoaringCombatPosition.defender && entry.isAlive;
+      return entry.position == CombatantPosition.defender && entry.isAlive;
     }).toList();
   }
 
-  List<SoaringCombatEntry> get offenders {
+  List<Combatant> get offenders {
     return entries.where((entry) {
-      return entry.position == SoaringCombatPosition.offender && entry.isAlive;
+      return entry.position == CombatantPosition.offender && entry.isAlive;
     }).toList();
   }
 
@@ -39,10 +38,9 @@ class SoaringCombatManager {
           winner = defenders.isEmpty ? 'offenders' : 'defenders';
           break;
         }
-        SoaringCombatEntry target =
-            entry.position == SoaringCombatPosition.offender
-                ? defenders[random.nextInt(defenders.length)]
-                : offenders[random.nextInt(offenders.length)];
+        Combatant target = entry.position == CombatantPosition.offender
+            ? defenders[random.nextInt(defenders.length)]
+            : offenders[random.nextInt(offenders.length)];
         if (fastSimulate) {
           entry.cast(target);
         } else {
@@ -61,14 +59,13 @@ class SoaringCombatManager {
     fastSimulate = true;
   }
 
-  void spawn(List<SoaringCombatEntry> entries) {
+  void spawn(List<Combatant> entries) {
     this.entries.addAll(entries);
     _spawnEntries(offenders);
     _spawnEntries(defenders);
   }
 
-  Future<void> _round(
-      SoaringCombatEntry entry, SoaringCombatEntry target) async {
+  Future<void> _round(Combatant entry, Combatant target) async {
     entry.move(target);
     onLoop?.call(round);
     await Future.delayed(const Duration(milliseconds: 200));
@@ -80,12 +77,12 @@ class SoaringCombatManager {
   }
 
   // entries中每个entry的position必须相同
-  void _spawnEntries(List<SoaringCombatEntry> entries) {
+  void _spawnEntries(List<Combatant> entries) {
     if (entries.isEmpty) return;
     final height = battlegroundSize.height / entries.length;
     final width = battlegroundSize.width / 2;
     final offset =
-        entries.first.position == SoaringCombatPosition.offender ? 0 : width;
+        entries.first.position == CombatantPosition.offender ? 0 : width;
     for (var i = 0; i < entries.length; i++) {
       var entry = entries[i];
       var x = (width - entry.size.width) / 2 + offset;

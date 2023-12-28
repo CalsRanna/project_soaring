@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/component/equipment.dart';
+import 'package:project_soaring/component/item_tile.dart';
 import 'package:project_soaring/provider/character.dart';
 import 'package:project_soaring/provider/item.dart';
 import 'package:project_soaring/schema/item.dart';
@@ -42,8 +42,8 @@ class _BackpackPageState extends State<BackpackPage> {
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {},
-                          child: EquipmentTile(
-                            equipment: item,
+                          child: ItemTile(
+                            item: item,
                           ),
                         )
                     ],
