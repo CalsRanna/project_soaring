@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:project_soaring/util/generator.dart';
+import 'package:project_soaring/app/util/generator.dart';
 
 @RoutePage()
 class SpawnPage extends StatefulWidget {

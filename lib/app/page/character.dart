@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:project_soaring/widget/container.dart';
+import 'package:project_soaring/app/widget/container.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});

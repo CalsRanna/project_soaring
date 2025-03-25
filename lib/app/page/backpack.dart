@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_soaring/game/item/item.dart';
-import 'package:project_soaring/widget/container.dart';
+import 'package:project_soaring/app/widget/container.dart';
 
 class BackpackPage extends StatefulWidget {
   const BackpackPage({super.key});

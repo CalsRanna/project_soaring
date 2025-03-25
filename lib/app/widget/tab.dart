@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_soaring/widget/container.dart';
+import 'package:project_soaring/app/widget/container.dart';
 
 class SoaringTab extends StatelessWidget {
   const SoaringTab({

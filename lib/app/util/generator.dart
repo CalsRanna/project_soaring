@@ -7,7 +7,7 @@ import 'package:project_soaring/game/dungeon/tile.dart';
 import 'package:project_soaring/game/event/event.dart';
 import 'package:project_soaring/game/item/item.dart';
 import 'package:project_soaring/game/quest/quest.dart';
-import 'package:project_soaring/util/label.dart';
+import 'package:project_soaring/app/util/label.dart';
 
 class Generator {
   late Random random;

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:project_soaring/router/router.gr.dart';
-import 'package:project_soaring/widget/button.dart';
+import 'package:project_soaring/app/router/router.gr.dart';
+import 'package:project_soaring/app/widget/button.dart';
 
 @RoutePage()
 class LauncherPage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:project_soaring/component/item_tile.dart';
+import 'package:project_soaring/app/component/item_tile.dart';
 import 'package:project_soaring/game/combat/combat.dart';
 import 'package:project_soaring/game/loot/loot.dart';
 import 'package:project_soaring/game/combat/combatant.dart';

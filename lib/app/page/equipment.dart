@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_soaring/config/text.dart';
-import 'package:project_soaring/widget/tab.dart';
+import 'package:project_soaring/app/config/text.dart';
+import 'package:project_soaring/app/widget/tab.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});

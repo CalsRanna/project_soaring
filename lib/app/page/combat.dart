@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_soaring/config/text.dart';
+import 'package:project_soaring/app/config/text.dart';
 import 'package:project_soaring/game/item/item.dart';
-import 'package:project_soaring/widget/container.dart';
+import 'package:project_soaring/app/widget/container.dart';
 
 class CombatPage extends StatefulWidget {
   const CombatPage({super.key});

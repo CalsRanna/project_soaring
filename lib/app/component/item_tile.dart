@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_soaring/game/item/item.dart';
-import 'package:project_soaring/util/label.dart';
+import 'package:project_soaring/app/util/label.dart';
 
 class ItemTile extends StatelessWidget {
   const ItemTile({super.key, this.item, this.position, this.onTap})
