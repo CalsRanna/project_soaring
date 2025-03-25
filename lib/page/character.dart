@@ -49,10 +49,14 @@ class _CharacterPageState extends State<CharacterPage> {
                   child: Stack(
                     children: [
                       Container(
+                        alignment: Alignment.centerRight,
                         color: Colors.blue,
                         height: 16,
                         margin: EdgeInsets.all(4),
                         width: 128,
+                        child: Text(
+                          character.creature.value?.level.toString() ?? '',
+                        ),
                       ),
                       Transform.rotate(
                         angle: pi / 4,
