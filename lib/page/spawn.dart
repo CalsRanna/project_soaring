@@ -1,11 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/provider/area.dart';
-import 'package:project_soaring/provider/character.dart';
-import 'package:project_soaring/router/router.dart';
 import 'package:project_soaring/util/generator.dart';
-import 'package:project_soaring/widget/button.dart';
 
+@RoutePage()
 class SpawnPage extends StatefulWidget {
   const SpawnPage({super.key});
 
@@ -28,16 +25,18 @@ class _SpawnPageState extends State<SpawnPage> {
               onTap: randomName,
               child: Container(
                 alignment: Alignment.center,
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 width: 96,
                 child: Text(name),
               ),
             ),
-            Consumer(builder: (context, ref, child) {
-              return SoaringButton(text: '进入游戏', onTap: () => enterGame(ref));
-            })
+            // Consumer(
+            //   builder: (context, ref, child) {
+            //     return SoaringButton(text: '进入游戏', onTap: () => enterGame(ref));
+            //   },
+            // ),
           ],
         ),
       ),
@@ -51,12 +50,12 @@ class _SpawnPageState extends State<SpawnPage> {
     });
   }
 
-  Future<void> enterGame(WidgetRef ref) async {
-    final notifier = ref.read(characterNotifierProvider.notifier);
-    await notifier.create(name);
-    final areaNotifier = ref.read(areasNotifierProvider.notifier);
-    await areaNotifier.generate();
-    if (!mounted) return;
-    const CharacterPageRoute().replace(context);
-  }
+  // Future<void> enterGame(WidgetRef ref) async {
+  //   final notifier = ref.read(characterNotifierProvider.notifier);
+  //   await notifier.create(name);
+  //   final areaNotifier = ref.read(areasNotifierProvider.notifier);
+  //   await areaNotifier.generate();
+  //   if (!mounted) return;
+  //   const CharacterPageRoute().replace(context);
+  // }
 }

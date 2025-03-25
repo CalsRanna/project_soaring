@@ -5,7 +5,6 @@ import 'package:project_soaring/component/item_tile.dart';
 import 'package:project_soaring/game/combat/combat.dart';
 import 'package:project_soaring/game/loot/loot.dart';
 import 'package:project_soaring/game/combat/combatant.dart';
-import 'package:project_soaring/schema/trait.dart';
 
 class CombatDemoPage extends StatefulWidget {
   const CombatDemoPage({super.key});
@@ -30,10 +29,7 @@ class _CombatDemoPageState extends State<CombatDemoPage> {
     //   context: context,
     //   builder: (context) => const _CombatPage(),
     // );
-    showDialog(
-      context: context,
-      builder: (context) => const LootPage(),
-    );
+    showDialog(context: context, builder: (context) => const LootPage());
     // final lootManager = SoaringLootManager();
     // lootManager.loot(level: 1, rank: 1);
     // for (var item in lootManager.items) {
@@ -62,7 +58,7 @@ class __CombatPageState extends State<_CombatPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final surfaceVariant = colorScheme.surfaceVariant;
+    final surfaceContainerHighest = colorScheme.surfaceContainerHighest;
     return PopScope(
       canPop: false,
       child: GestureDetector(
@@ -75,7 +71,7 @@ class __CombatPageState extends State<_CombatPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  decoration: BoxDecoration(color: surfaceVariant),
+                  decoration: BoxDecoration(color: surfaceContainerHighest),
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -146,22 +142,28 @@ class __CombatPageState extends State<_CombatPage> {
       battlegroundSize: Size(width, height),
       onLoop: handleLoop,
     );
-    for (var i = 0; i < 5; i++) {
-      var entry = Combatant();
-      List<Trait> traits = [];
-      traits.add(Trait()
-        ..type = 0
-        ..value = 100);
-      traits.add(Trait()
-        ..type = 14
-        ..value = 20);
-      traits.add(Trait()
-        ..type = 15
-        ..value = 10);
-      entry.traits = traits;
-      if (i >= 2) entry.position = CombatantPosition.defender;
-      entries.add(entry);
-    }
+    // for (var i = 0; i < 5; i++) {
+    //   var entry = Combatant();
+    //   List<Trait> traits = [];
+    //   traits.add(
+    //     Trait()
+    //       ..type = 0
+    //       ..value = 100,
+    //   );
+    //   traits.add(
+    //     Trait()
+    //       ..type = 14
+    //       ..value = 20,
+    //   );
+    //   traits.add(
+    //     Trait()
+    //       ..type = 15
+    //       ..value = 10,
+    //   );
+    //   entry.traits = traits;
+    //   if (i >= 2) entry.position = CombatantPosition.defender;
+    //   entries.add(entry);
+    // }
     combat.spawn(entries);
     setState(() {});
   }
@@ -203,7 +205,7 @@ class __CombatTileState extends State<_CombatTile> {
 }
 
 class LootPage extends StatefulWidget {
-  const LootPage();
+  const LootPage({super.key});
 
   @override
   State<LootPage> createState() => _LootPageState();
@@ -222,7 +224,7 @@ class _LootPageState extends State<LootPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final surfaceVariant = colorScheme.surfaceVariant;
+    final surfaceContainerHighest = colorScheme.surfaceContainerHighest;
     return PopScope(
       canPop: false,
       child: GestureDetector(
@@ -235,7 +237,7 @@ class _LootPageState extends State<LootPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  decoration: BoxDecoration(color: surfaceVariant),
+                  decoration: BoxDecoration(color: surfaceContainerHighest),
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: Column(
@@ -248,9 +250,7 @@ class _LootPageState extends State<LootPage> {
                         runSpacing: 8,
                         children: [
                           for (var i = 0; i < lootManager.items.length; i++)
-                            ItemTile(
-                              item: lootManager.items[i],
-                            ),
+                            ItemTile(item: lootManager.items[i]),
                         ],
                       ),
                     ],

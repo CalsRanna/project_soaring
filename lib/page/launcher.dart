@@ -1,9 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_soaring/provider/character.dart';
-import 'package:project_soaring/router/router.dart';
+import 'package:project_soaring/router/router.gr.dart';
 import 'package:project_soaring/widget/button.dart';
 
+@RoutePage()
 class LauncherPage extends StatefulWidget {
   const LauncherPage({super.key});
 
@@ -24,26 +24,26 @@ class _LauncherPageState extends State<LauncherPage> {
               style: Theme.of(context).textTheme.displaySmall,
             ),
             const SizedBox(height: 16),
-            Consumer(
-              builder: (context, ref, child) => SoaringButton(
-                onTap: () => startGame(ref),
-                text: '开始游戏',
-              ),
-            )
+            SoaringButton(onTap: continueGame, text: 'Continue Game'),
+            const SizedBox(height: 16),
+            SoaringButton(onTap: startGame, text: 'Start Game'),
           ],
         ),
       ),
     );
   }
 
-  Future<void> startGame(WidgetRef ref) async {
-    final character = await ref.read(characterNotifierProvider.future);
-    final creature = character?.creature.value;
-    if (!mounted) return;
-    if (creature == null || creature.name.isEmpty) {
-      const SpawnPageRoute().replace(context);
-    } else {
-      const CharacterPageRoute().replace(context);
-    }
+  void continueGame() {}
+
+  Future<void> startGame() async {
+    // final character = await ref.read(characterNotifierProvider.future);
+    // final creature = character?.creature.value;
+    // if (!mounted) return;
+    // if (creature == null || creature.name.isEmpty) {
+    //   const SpawnPageRoute().replace(context);
+    // } else {
+    //   const CharacterPageRoute().replace(context);
+    // }
+    SpawnRoute().push(context);
   }
 }

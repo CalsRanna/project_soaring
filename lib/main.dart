@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_soaring/router/router.dart';
-import 'package:project_soaring/schema/isar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-  await IsarInitializer.ensureInitialized();
-  runApp(const ProviderScope(child: ProjectSoaring()));
+  runApp(const ProjectSoaring());
 }
 
 class ProjectSoaring extends StatelessWidget {
@@ -17,12 +14,11 @@ class ProjectSoaring extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const appBarTheme = AppBarTheme(surfaceTintColor: Colors.transparent);
     return MaterialApp.router(
-      routerConfig: router,
+      routerConfig: soaringRouter.config(),
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          surfaceTintColor: Colors.transparent,
-        ),
+        appBarTheme: appBarTheme,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,
           brightness: Brightness.dark,

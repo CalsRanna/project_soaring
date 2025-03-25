@@ -17,12 +17,12 @@ class SoaringTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final surfaceVariant = colorScheme.surfaceVariant;
+    final surfaceContainerHighest = colorScheme.surfaceContainerHighest;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: SoaringContainer(
-        color: active ? surfaceVariant : null,
+        color: active ? surfaceContainerHighest : null,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Text(label),
       ),

@@ -1,9 +1,6 @@
-import 'dart:math';
-
-import 'package:project_soaring/schema/character.dart';
-import 'package:project_soaring/schema/creature.dart';
-import 'package:project_soaring/schema/item.dart';
-import 'package:project_soaring/util/generator.dart';
+import 'package:project_soaring/game/character/character.dart';
+import 'package:project_soaring/game/creature/creature.dart';
+import 'package:project_soaring/game/item/item.dart';
 
 class Combat {
   Character character;
@@ -63,18 +60,18 @@ class Combat {
   }
 
   void loot(Creature creature) {
-    final random = Random();
-    experience = random.nextInt(100) * (creature.level);
-    gold = random.nextInt(100) * (creature.level);
-    final count = random.nextInt(max(creature.rank * 5, 1));
-    final generator = Generator();
-    for (var i = 0; i < count; i++) {
-      final equipment = random.nextBool();
-      if (equipment) {
-        // equipments.add(generator.equipment());
-      } else {
-        items.add(generator.item());
-      }
-    }
+    // final random = Random();
+    // experience = random.nextInt(100) * (creature.level);
+    // gold = random.nextInt(100) * (creature.level);
+    // final count = random.nextInt(max(creature.rank * 5, 1));
+    // final generator = Generator();
+    // for (var i = 0; i < count; i++) {
+    //   final equipment = random.nextBool();
+    //   if (equipment) {
+    //     // equipments.add(generator.equipment());
+    //   } else {
+    //     items.add(generator.item());
+    //   }
+    // }
   }
 }

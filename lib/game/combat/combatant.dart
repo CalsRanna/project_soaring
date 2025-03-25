@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:project_soaring/schema/trait.dart';
+import 'package:project_soaring/game/trait/trait.dart';
 
 class Combatant {
   double x = 0;
@@ -70,11 +70,12 @@ class Combatant {
   }
 
   int _calculateTrait(int type) {
-    final iterator = traits.where((trait) => trait.type == type);
-    if (iterator.isEmpty) return 0;
-    return iterator.fold(0, (previousValue, trait) {
-      return previousValue + trait.value;
-    });
+    // final iterator = traits.where((trait) => trait.type == type);
+    // if (iterator.isEmpty) return 0;
+    // return iterator.fold(0, (previousValue, trait) {
+    //   return previousValue + trait.value;
+    // });
+    return 0;
   }
 }
 

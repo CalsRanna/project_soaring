@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_soaring/router/router.dart';
 
 class Toolbar extends StatelessWidget {
   const Toolbar({super.key});
@@ -11,35 +10,31 @@ class Toolbar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        for (var page in pages)
-          ToolbarTile(
-            label: page,
-            onTap: () => replace(context, page),
-          ),
+        // for (var page in pages)
+        //   ToolbarTile(
+        //     label: page,
+        //     onTap: () => replace(context, page),
+        //   ),
       ],
     );
   }
 
-  void replace(BuildContext context, String page) {
-    var _ = switch (page) {
-      '角色' => const CharacterPageRoute().replace(context),
-      '洞府' => const CharacterPageRoute().replace(context),
-      '装备' => const EquipmentPageRoute().push(context),
-      '背包' => const BackpackPageRoute().push(context),
-      '地图' => const AreasPageRoute().push(context),
-      '地宫' => const DungeonsPageRoute().push(context),
-      '试炼' => const TrialsPageRoute().push(context),
-      _ => null,
-    };
-  }
+  // void replace(BuildContext context, String page) {
+  //   var _ = switch (page) {
+  //     '角色' => const CharacterPageRoute().replace(context),
+  //     '洞府' => const CharacterPageRoute().replace(context),
+  //     '装备' => const EquipmentPageRoute().push(context),
+  //     '背包' => const BackpackPageRoute().push(context),
+  //     '地图' => const AreasPageRoute().push(context),
+  //     '地宫' => const DungeonsPageRoute().push(context),
+  //     '试炼' => const TrialsPageRoute().push(context),
+  //     _ => null,
+  //   };
+  // }
 }
 
 class ToolbarTile extends StatefulWidget {
-  const ToolbarTile({
-    super.key,
-    required this.label,
-    this.onTap,
-  });
+  const ToolbarTile({super.key, required this.label, this.onTap});
 
   final String label;
   final void Function()? onTap;
