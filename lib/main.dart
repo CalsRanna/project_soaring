@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:project_soaring/app/router/router.dart';
+import 'package:get_it/get_it.dart';
+import 'package:project_soaring/page/combat/combat_view_model.dart';
+import 'package:project_soaring/page/home/home_view_model.dart';
+import 'package:project_soaring/router/router.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  DI.ensureInitialized();
   runApp(const ProjectSoaring());
 }
 
@@ -14,17 +15,13 @@ class ProjectSoaring extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const appBarTheme = AppBarTheme(surfaceTintColor: Colors.transparent);
-    return MaterialApp.router(
-      routerConfig: soaringRouter.config(),
-      theme: ThemeData(
-        appBarTheme: appBarTheme,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-    );
+    return MaterialApp.router(routerConfig: router.config());
+  }
+}
+
+class DI {
+  static void ensureInitialized() {
+    GetIt.instance.registerLazySingleton(() => HomeViewModel());
+    GetIt.instance.registerFactory(() => CombatViewModel());
   }
 }
