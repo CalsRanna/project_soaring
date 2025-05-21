@@ -1,0 +1,1 @@
+enum CombatRound { character, creature }

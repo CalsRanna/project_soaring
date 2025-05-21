@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:project_soaring/core/combat/combat_result.dart';
+import 'package:project_soaring/core/combat/combat_round.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/creature/creature.dart';
 import 'package:project_soaring/core/item/item.dart';
@@ -31,5 +32,3 @@ class CombatController {
     }
   }
 }
-
-enum CombatRound { character, creature }

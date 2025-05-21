@@ -8,6 +8,7 @@ class ProjectSoaringRouter extends RootStackRouter {
     return [
       AutoRoute(initial: true, page: HomeRoute.page),
       AutoRoute(page: CombatRoute.page),
+      AutoRoute(page: ExerciseRoute.page),
     ];
   }
 }

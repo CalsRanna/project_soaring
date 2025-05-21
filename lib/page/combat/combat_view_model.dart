@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
 import 'package:project_soaring/core/combat/combat_controller.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/creature/creature.dart';
 import 'package:project_soaring/core/item/item.dart';
+import 'package:project_soaring/page/home/home_view_model.dart';
 import 'package:signals/signals_flutter.dart';
 
 class CombatViewModel {
@@ -37,6 +39,8 @@ class CombatViewModel {
         logs.value = [...logs.value, 'C E'];
         if (result.loot != null) {
           loots.value = [...loots.value, ...result.loot!];
+          var homeViewModel = GetIt.instance.get<HomeViewModel>();
+          homeViewModel.addItems(result.loot!);
         }
         _creature = null;
       }
