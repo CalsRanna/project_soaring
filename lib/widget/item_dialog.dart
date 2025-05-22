@@ -4,7 +4,8 @@ import 'package:project_soaring/util/item_extension.dart';
 
 class ItemDialog extends StatelessWidget {
   final Item item;
-  const ItemDialog({super.key, required this.item});
+  final void Function()? onPutIn;
+  const ItemDialog({super.key, required this.item, this.onPutIn});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,19 @@ class ItemDialog extends StatelessWidget {
       side: BorderSide(),
     );
     return Dialog(shape: shape, child: _buildContent(context));
+  }
+
+  Widget _buildPutInButton(BuildContext context) {
+    var container = Container(
+      decoration: BoxDecoration(border: Border.all()),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text('放入'),
+    );
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onPutIn,
+      child: container,
+    );
   }
 
   Widget _buildCancelButton(BuildContext context) {
@@ -31,7 +45,11 @@ class ItemDialog extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     var buttons = Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [_buildCancelButton(context)],
+      spacing: 8,
+      children: [
+        if (onPutIn != null) _buildPutInButton(context),
+        _buildCancelButton(context),
+      ],
     );
     var body = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

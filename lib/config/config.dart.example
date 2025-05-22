@@ -1,0 +1,4 @@
+class Config {
+  static const String apiKey = 'PUT YOUR API KEY HERE';
+  static const String baseUrl = 'PUT YOUR API BASE URL HERE';
+}

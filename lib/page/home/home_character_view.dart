@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/item/item.dart';
-import 'package:project_soaring/widget/equipment_slot.dart';
+import 'package:project_soaring/util/dialog_util.dart';
+import 'package:project_soaring/widget/item_dialog.dart';
 import 'package:project_soaring/widget/item_slot.dart';
 
 class HomeCharacterView extends StatefulWidget {
@@ -66,8 +67,8 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
                     child: TabBarView(
                       controller: tabController,
                       children: [
-                        _buildInventory('E'),
                         _buildInventory('M'),
+                        _buildInventory('E'),
                         _buildInventory('D'),
                       ],
                     ),
@@ -92,7 +93,7 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
           crossAxisSpacing: 8,
         ),
         itemBuilder: (context, index) {
-          return EquipmentSlot(placeholder: placeholders[index]);
+          return ItemSlot(placeholder: placeholders[index]);
         },
         itemCount: 8,
         physics: const NeverScrollableScrollPhysics(),
@@ -115,7 +116,10 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
         crossAxisSpacing: 8,
       ),
       itemBuilder: (context, index) {
-        return ItemSlot(item: items[index]);
+        return ItemSlot(
+          item: items[index],
+          onTap: () => DialogUtil.instance.show(ItemDialog(item: items[index])),
+        );
       },
       itemCount: items.length,
     );

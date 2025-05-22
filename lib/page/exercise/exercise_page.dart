@@ -24,7 +24,7 @@ class _ExercisePageState extends State<ExercisePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('E')),
+      appBar: AppBar(title: const Text('修炼')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -53,7 +53,7 @@ class _ExercisePageState extends State<ExercisePage> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(border: Border.all()),
                   padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Text('Start'),
+                  child: Text('开始修炼'),
                 ),
               ),
             ],

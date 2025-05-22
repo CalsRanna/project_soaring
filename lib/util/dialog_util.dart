@@ -6,6 +6,26 @@ class DialogUtil {
 
   DialogUtil._();
 
+  void dismiss({int count = 1}) {
+    var navigator = Navigator.of(router.navigatorKey.currentContext!);
+    for (int i = 0; i < count; i++) {
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    }
+  }
+
+  void loading() {
+    show(_LoadingDialog());
+  }
+
+  void openBottomSheet(Widget bottomSheet) {
+    showModalBottomSheet(
+      builder: (context) => bottomSheet,
+      context: router.navigatorKey.currentContext!,
+    );
+  }
+
   void show(Widget dialog) {
     showDialog(
       builder: (context) => dialog,
@@ -21,6 +41,27 @@ class DialogUtil {
   }
 }
 
+class _LoadingDialog extends StatelessWidget {
+  const _LoadingDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    var shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.zero,
+      side: BorderSide(),
+    );
+    return Dialog(shape: shape, child: _buildBody());
+  }
+
+  Padding _buildBody() {
+    var sizedBox = SizedBox(
+      height: 100,
+      child: Center(child: CircularProgressIndicator()),
+    );
+    return Padding(padding: const EdgeInsets.all(16.0), child: sizedBox);
+  }
+}
+
 class _WarningDialog extends StatelessWidget {
   final String content;
   const _WarningDialog({required this.content});
@@ -31,7 +72,21 @@ class _WarningDialog extends StatelessWidget {
       borderRadius: BorderRadius.zero,
       side: BorderSide(),
     );
-    return Dialog(shape: shape, child: _buildContent(context));
+    return Dialog(shape: shape, child: _buildBody(context));
+  }
+
+  Widget _buildBody(BuildContext context) {
+    var buttons = Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [_buildCancelButton(context)],
+    );
+    var column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: 16,
+      children: [Text(content), buttons],
+    );
+    return Padding(padding: const EdgeInsets.all(16), child: column);
   }
 
   Widget _buildCancelButton(BuildContext context) {
@@ -45,19 +100,5 @@ class _WarningDialog extends StatelessWidget {
       onTap: () => Navigator.pop(context),
       child: container,
     );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    var buttons = Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [_buildCancelButton(context)],
-    );
-    var body = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      spacing: 16,
-      children: [Text(content), buttons],
-    );
-    return Padding(padding: const EdgeInsets.all(16), child: body);
   }
 }

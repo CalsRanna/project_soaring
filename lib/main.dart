@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:project_soaring/page/combat/combat_view_model.dart';
 import 'package:project_soaring/page/exercise/exercise_view_model.dart';
+import 'package:project_soaring/page/forge/forge_view_model.dart';
 import 'package:project_soaring/page/home/home_view_model.dart';
 import 'package:project_soaring/router/router.dart';
 
@@ -31,5 +32,6 @@ class DI {
     GetIt.instance.registerLazySingleton(() => HomeViewModel());
     GetIt.instance.registerFactory(() => CombatViewModel());
     GetIt.instance.registerFactory(() => ExerciseViewModel());
+    GetIt.instance.registerFactory(() => ForgeViewModel());
   }
 }

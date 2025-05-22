@@ -7,6 +7,7 @@ class HomeHouseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final features = ['修炼', '锻造'];
     return Scaffold(
       appBar: AppBar(title: const Text('H')),
       body: Padding(
@@ -20,19 +21,25 @@ class HomeHouseView extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () {
-                AutoRouter.of(context).push(ExerciseRoute());
-              },
+              onTap: () => navigate(context, index),
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(border: Border.all()),
-                child: Text('H ${index + 1}'),
+                child: Text(features[index]),
               ),
             );
           },
-          itemCount: 100,
+          itemCount: features.length,
         ),
       ),
     );
+  }
+
+  void navigate(BuildContext context, int index) {
+    if (index == 0) {
+      AutoRouter.of(context).push(ExerciseRoute());
+    } else {
+      AutoRouter.of(context).push(ForgeRoute());
+    }
   }
 }
