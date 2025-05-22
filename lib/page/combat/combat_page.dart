@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:project_soaring/page/combat/combat_view_model.dart';
+import 'package:project_soaring/widget/item_slot.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -33,7 +34,7 @@ class _CombatPageState extends State<CombatPage> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(title: const Text('C'), leading: const SizedBox()),
+        appBar: AppBar(title: const Text('探索'), leading: const SizedBox()),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -59,12 +60,7 @@ class _CombatPageState extends State<CombatPage> {
                           crossAxisSpacing: 8,
                         ),
                         itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(border: Border.all()),
-                            child: Text(
-                              viewModel.loots.value[index].toString(),
-                            ),
-                          );
+                          return ItemSlot(item: viewModel.loots.value[index]);
                         },
                         itemCount: viewModel.loots.value.length,
                       ),
@@ -93,7 +89,7 @@ class _CombatPageState extends State<CombatPage> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          label: const Text('E'),
+          label: const Text('结束探索'),
           icon: const Icon(HugeIcons.strokeRoundedCancel01),
         ),
       ),

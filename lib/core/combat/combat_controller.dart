@@ -20,14 +20,14 @@ class CombatController {
       var loot = random.nextBool() ? [Item()] : null;
       _round = CombatRound.creature;
       return CombatResult()
-        ..log = 'Ch a Cr, g $damage D'
+        ..log = '${character.name} 攻击 ${creature.name}, 造成 $damage 点伤害'
         ..damage = damage
         ..loot = loot;
     } else {
       var damage = random.nextInt(100);
       _round = CombatRound.character;
       return CombatResult()
-        ..log = 'Cr a Ch, g $damage D'
+        ..log = '${creature.name} 攻击 ${character.name}, 造成 $damage 点伤害'
         ..damage = damage;
     }
   }

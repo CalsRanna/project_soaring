@@ -6,6 +6,13 @@ class DialogUtil {
 
   DialogUtil._();
 
+  void show(Widget dialog) {
+    showDialog(
+      builder: (context) => dialog,
+      context: router.navigatorKey.currentContext!,
+    );
+  }
+
   void warning(String content) {
     showDialog(
       builder: (context) => _WarningDialog(content: content),
@@ -31,7 +38,7 @@ class _WarningDialog extends StatelessWidget {
     var container = Container(
       decoration: BoxDecoration(border: Border.all()),
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text('Cancel'),
+      child: Text('取消'),
     );
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

@@ -18,7 +18,10 @@ class ProjectSoaring extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router.config(),
-      // theme: ThemeData(brightness: Brightness.dark),
+      theme: ThemeData(
+        // brightness: Brightness.dark,
+        fontFamily: 'DanGuYin',
+      ),
     );
   }
 }

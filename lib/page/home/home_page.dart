@@ -56,11 +56,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       bottomNavigationBar: Watch(
         (context) => HomeBottomBar(
           items: [
-            HomeBottomBarItem(label: 'C'),
-            HomeBottomBarItem(label: 'H'),
-            HomeBottomBarItem(label: 'G'),
-            HomeBottomBarItem(label: 'M'),
-            HomeBottomBarItem(label: 'S'),
+            HomeBottomBarItem(label: '角色'),
+            HomeBottomBarItem(label: '洞府'),
+            HomeBottomBarItem(label: '宗门'),
+            HomeBottomBarItem(label: '地图'),
+            HomeBottomBarItem(label: '任务'),
           ],
           onItemSelected: viewModel.selectIndex,
           selectedIndex: viewModel.selectedIndex.value,

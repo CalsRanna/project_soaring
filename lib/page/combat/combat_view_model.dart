@@ -27,7 +27,7 @@ class CombatViewModel {
   void combat() {
     _timer = Timer.periodic(const Duration(milliseconds: 1500), (timer) {
       if (_creature == null) {
-        if (logs.value.isNotEmpty && logs.value.last != 'Seeking Cr') {
+        if (logs.value.isNotEmpty && logs.value.last != '寻找怪物...') {
           logs.value = [];
         }
         _seekCreature();
@@ -36,8 +36,9 @@ class CombatViewModel {
       var result = _combatController.next();
       logs.value = [...logs.value, result.log];
       if (result.damage >= 80) {
-        logs.value = [...logs.value, 'C E'];
+        logs.value = [...logs.value, '战斗结束'];
         if (result.loot != null) {
+          logs.value = [...logs.value, '获得 ${result.loot!.length} 件战利品'];
           loots.value = [...loots.value, ...result.loot!];
           var homeViewModel = GetIt.instance.get<HomeViewModel>();
           homeViewModel.addItems(result.loot!);
@@ -56,7 +57,7 @@ class CombatViewModel {
   }
 
   void _seekCreature() {
-    logs.value = [...logs.value, 'Seeking Cr'];
+    logs.value = [...logs.value, '寻找怪物...'];
     var random = Random.secure();
     if (random.nextInt(100) < 50) {
       _creature = Creature();

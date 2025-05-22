@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/item/item.dart';
+import 'package:project_soaring/widget/equipment_slot.dart';
+import 'package:project_soaring/widget/item_slot.dart';
 
 class HomeCharacterView extends StatefulWidget {
   final Character character;
@@ -19,7 +21,7 @@ class HomeCharacterView extends StatefulWidget {
 
 class _HomeCharacterViewState extends State<HomeCharacterView>
     with TickerProviderStateMixin {
-  late final tabController = TabController(length: 2, vsync: this);
+  late final tabController = TabController(length: 3, vsync: this);
 
   @override
   void dispose() {
@@ -30,7 +32,7 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('C')),
+      appBar: AppBar(title: const Text('角色')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -51,36 +53,23 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
                 ],
               ),
             ),
-            AspectRatio(
-              aspectRatio: 2 / 1,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                ),
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(border: Border.all()),
-                    child: Text(''),
-                  );
-                },
-                itemCount: 8,
-                physics: const NeverScrollableScrollPhysics(),
-              ),
-            ),
+            _buildEquipments(),
             Expanded(
               child: Column(
                 spacing: 16,
                 children: [
                   TabBar(
                     controller: tabController,
-                    tabs: [Tab(text: 'E'), Tab(text: 'M')],
+                    tabs: [Tab(text: '材料'), Tab(text: '装备'), Tab(text: '丹药')],
                   ),
                   Expanded(
                     child: TabBarView(
                       controller: tabController,
-                      children: [_buildGridView('E'), _buildGridView('M')],
+                      children: [
+                        _buildInventory('E'),
+                        _buildInventory('M'),
+                        _buildInventory('D'),
+                      ],
                     ),
                   ),
                 ],
@@ -92,12 +81,33 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
     );
   }
 
-  Widget _buildGridView(String type) {
+  Widget _buildEquipments() {
+    final placeholders = ['头', '身', '腿', '脚', '法宝', '法宝', '法宝', '法宝'];
+    return AspectRatio(
+      aspectRatio: 2 / 1,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+        ),
+        itemBuilder: (context, index) {
+          return EquipmentSlot(placeholder: placeholders[index]);
+        },
+        itemCount: 8,
+        physics: const NeverScrollableScrollPhysics(),
+      ),
+    );
+  }
+
+  Widget _buildInventory(String type) {
     var items = switch (type) {
-      'E' => widget.items.where((item) => item.type != 0).toList(),
-      'M' => widget.items.where((item) => item.type == 0).toList(),
+      'M' => widget.items.where((item) => item.type == 1).toList(),
+      'E' => widget.items.where((item) => item.type == 2).toList(),
+      'D' => widget.items.where((item) => item.type == 3).toList(),
       _ => widget.items,
     };
+    items.sort((a, b) => b.rank.compareTo(a.rank));
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
@@ -105,22 +115,7 @@ class _HomeCharacterViewState extends State<HomeCharacterView>
         crossAxisSpacing: 8,
       ),
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(border: Border.all()),
-          child: Stack(
-            children: [
-              Center(child: Text(items[index].name)),
-              Positioned(
-                bottom: 4,
-                right: 4,
-                child: Text(
-                  items[index].count.toString(),
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-            ],
-          ),
-        );
+        return ItemSlot(item: items[index]);
       },
       itemCount: items.length,
     );

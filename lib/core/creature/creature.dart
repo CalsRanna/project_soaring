@@ -1,5 +1,5 @@
 class Creature {
-  String name = 'Creature';
+  String name = '';
   int level = 1;
   int health = 100;
   int attack = 1;
