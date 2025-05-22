@@ -4,10 +4,10 @@ import 'package:project_soaring/util/dialog_util.dart';
 import 'package:project_soaring/widget/item_dialog.dart';
 import 'package:project_soaring/widget/item_slot.dart';
 
-class LootDialog extends StatelessWidget {
+class SellDialog extends StatelessWidget {
   final String title;
-  final List<Item> loots;
-  const LootDialog({super.key, required this.title, required this.loots});
+  final List<Item> currency;
+  const SellDialog({super.key, required this.title, required this.currency});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +31,14 @@ class LootDialog extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               return ItemSlot(
-                item: loots[index],
+                item: currency[index],
                 onTap:
                     () => DialogUtil.instance.show(
-                      ItemDialog(item: loots[index]),
+                      ItemDialog(item: currency[index]),
                     ),
               );
             },
-            itemCount: loots.length,
+            itemCount: currency.length,
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
           ),

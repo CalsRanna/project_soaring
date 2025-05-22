@@ -19,6 +19,12 @@ class ExerciseViewModel {
 
   void start() {
     var homeViewModel = GetIt.instance.get<HomeViewModel>();
+    if (homeViewModel.isExercising.value) {
+      stop();
+      return;
+    }
+    homeViewModel.updateIsExercising(true);
+    logs.value = ['开始修炼...'];
     var exerciseController = ExerciseController();
     _timer = Timer.periodic(const Duration(seconds: 15), (_) {
       var result = exerciseController.exercise();
@@ -37,5 +43,7 @@ class ExerciseViewModel {
 
   void stop() {
     _timer.cancel();
+    var homeViewModel = GetIt.instance.get<HomeViewModel>();
+    homeViewModel.updateIsExercising(false);
   }
 }

@@ -7,7 +7,7 @@ class HomeMapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('M')),
+      appBar: AppBar(title: const Text('地图')),
       body: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: 16),
         itemBuilder: (context, i) {
@@ -17,7 +17,7 @@ class HomeMapView extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(border: Border.all()),
               padding: const EdgeInsets.all(16),
-              child: Text('M ${i + 1}'),
+              child: Text('地图 ${i + 1}'),
             ),
           );
         },

@@ -9,7 +9,7 @@ class HomeHouseView extends StatelessWidget {
   Widget build(BuildContext context) {
     final features = ['修炼', '锻造'];
     return Scaffold(
-      appBar: AppBar(title: const Text('H')),
+      appBar: AppBar(title: const Text('洞府')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: GridView.builder(

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:project_soaring/page/combat/combat_view_model.dart';
+import 'package:project_soaring/util/dialog_util.dart';
+import 'package:project_soaring/widget/item_dialog.dart';
 import 'package:project_soaring/widget/item_slot.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -31,67 +33,70 @@ class _CombatPageState extends State<CombatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(title: const Text('探索'), leading: const SizedBox()),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              spacing: 16,
-              children: [
-                Container(
+    return Scaffold(
+      appBar: AppBar(title: const Text('探索')),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            spacing: 16,
+            children: [
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                padding: EdgeInsets.all(16),
+                width: double.infinity,
+                child: Text('\n\n\n'),
+              ),
+              Expanded(
+                child: Container(
                   decoration: BoxDecoration(border: Border.all()),
                   padding: EdgeInsets.all(16),
                   width: double.infinity,
-                  child: Text('\n\n\n'),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(border: Border.all()),
-                    padding: EdgeInsets.all(16),
-                    width: double.infinity,
-                    child: Watch(
-                      (context) => GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                        ),
-                        itemBuilder: (context, index) {
-                          return ItemSlot(item: viewModel.loots.value[index]);
-                        },
-                        itemCount: viewModel.loots.value.length,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(border: Border.all()),
-                  height: 200,
                   child: Watch(
-                    (context) => ListView.builder(
-                      controller: viewModel.logController,
+                    (context) => GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                      ),
                       itemBuilder: (context, index) {
-                        return Text(viewModel.logs.value[index]);
+                        return ItemSlot(
+                          item: viewModel.loots.value[index],
+                          onTap:
+                              () => DialogUtil.instance.show(
+                                ItemDialog(item: viewModel.loots.value[index]),
+                              ),
+                        );
                       },
-                      itemCount: viewModel.logs.value.length,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: viewModel.loots.value.length,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                height: 200,
+                child: Watch(
+                  (context) => ListView.builder(
+                    controller: viewModel.logController,
+                    itemBuilder: (context, index) {
+                      return Text(viewModel.logs.value[index]);
+                    },
+                    itemCount: viewModel.logs.value.length,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          label: const Text('结束探索'),
-          icon: const Icon(HugeIcons.strokeRoundedCancel01),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        label: const Text('结束探索'),
+        icon: const Icon(HugeIcons.strokeRoundedCancel01),
       ),
     );
   }

@@ -4,22 +4,59 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/item/item.dart';
-import 'package:project_soaring/core/loot/loot_controller.dart';
 import 'package:project_soaring/router/router.gr.dart';
+import 'package:project_soaring/util/dialog_util.dart';
 import 'package:signals/signals.dart';
 
 class HomeViewModel {
   final character = Signal(Character());
   final items = signal(<Item>[]);
   final selectedIndex = signal(0);
+  final isExercising = signal(false);
+  final equipments = signal(<Item>[]);
 
-  late final currency = computed(() {
+  late final score = computed(() {
+    return character.value.health +
+        character.value.attack +
+        character.value.defense;
+  });
+  late final firstCurrency = computed(() {
     var specifiedItems = items.value.where(
-      (item) => item.type == 1 && item.name.contains('灵石'),
+      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 1,
     );
     var total = 0;
     for (var item in specifiedItems) {
-      total += item.count * pow(100, item.rank - 1).toInt();
+      total += item.count;
+    }
+    return total;
+  });
+  late final secondaryCurrency = computed(() {
+    var specifiedItems = items.value.where(
+      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 2,
+    );
+    var total = 0;
+    for (var item in specifiedItems) {
+      total += item.count;
+    }
+    return total;
+  });
+  late final thirdCurrency = computed(() {
+    var specifiedItems = items.value.where(
+      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 3,
+    );
+    var total = 0;
+    for (var item in specifiedItems) {
+      total += item.count;
+    }
+    return total;
+  });
+  late final fourthCurrency = computed(() {
+    var specifiedItems = items.value.where(
+      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 4,
+    );
+    var total = 0;
+    for (var item in specifiedItems) {
+      total += item.count;
     }
     return total;
   });
@@ -38,32 +75,6 @@ class HomeViewModel {
 
   Future<void> initSignal() async {
     character.value = Character()..name = '苏九尾';
-    items.value = [
-      Item()
-        ..count = 1000
-        ..name = '下品灵石'
-        ..description = '修仙界最基础的灵石，也是最常见的货币，蕴含着较少的灵气。'
-        ..rank = 1,
-      Item()
-        ..count = 10000
-        ..name = '中品灵石'
-        ..description = '修仙界比较基础的灵石，蕴含着较多的灵气。'
-        ..rank = 2,
-      Item()
-        ..count = 900
-        ..name = '上品灵石'
-        ..description = '修仙界比较好的灵石，蕴含着较多的灵气。'
-        ..rank = 3,
-      Item()
-        ..count = 20
-        ..name = '极品灵石'
-        ..description = '修仙界最好的灵石，蕴含着最多的灵气。'
-        ..rank = 4,
-    ];
-    var lootController = LootController();
-    for (var i = 0; i < 100; i++) {
-      items.value.add(lootController.generateLoot());
-    }
   }
 
   void initTabController(TickerProvider vsync) {
@@ -92,6 +103,64 @@ class HomeViewModel {
   }
 
   void addItems(List<Item> items) {
-    this.items.value = [...this.items.value, ...items];
+    var newItems = [...this.items.value];
+    for (var item in items) {
+      var index = newItems.indexWhere((i) => i.name == item.name);
+      if (index >= 0) {
+        newItems[index] = newItems[index].copyWith(
+          count: newItems[index].count + item.count,
+        );
+      } else {
+        newItems.add(item);
+      }
+    }
+    this.items.value = newItems;
+  }
+
+  void removeItems(List<Item> items) {
+    var newItems = [...this.items.value];
+    for (var item in items) {
+      var index = newItems.indexWhere((i) => i.name == item.name);
+      if (index >= 0) {
+        newItems[index] = newItems[index].copyWith(
+          count: newItems[index].count - item.count,
+        );
+        if (newItems[index].count <= 0) {
+          newItems.removeAt(index);
+        }
+      }
+    }
+    this.items.value = newItems;
+  }
+
+  void updateIsExercising(bool value) {
+    isExercising.value = value;
+  }
+
+  void putOnItem(Item item) {
+    var newEquipments = [...equipments.value];
+    var samePositionIndex = newEquipments.indexWhere(
+      (i) => i.position == item.position,
+    );
+    if (samePositionIndex >= 0) {
+      newEquipments[samePositionIndex] = item;
+      removeItems([newEquipments[samePositionIndex]]);
+    } else {
+      newEquipments.add(item);
+    }
+    equipments.value = [...newEquipments];
+    removeItems([item]);
+    DialogUtil.instance.dismiss();
+  }
+
+  void takeOffItem(Item item) {
+    var newEquipments = [...equipments.value];
+    var index = newEquipments.indexWhere((i) => i.name == item.name);
+    if (index >= 0) {
+      newEquipments.removeAt(index);
+    }
+    equipments.value = [...newEquipments];
+    addItems([item]);
+    DialogUtil.instance.dismiss();
   }
 }

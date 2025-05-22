@@ -3,7 +3,7 @@ import 'package:project_soaring/core/forge/forge_controller.dart';
 import 'package:project_soaring/core/item/item.dart';
 import 'package:project_soaring/page/home/home_view_model.dart';
 import 'package:project_soaring/util/dialog_util.dart';
-import 'package:project_soaring/widget/forge_bottom_sheet.dart';
+import 'package:project_soaring/page/forge/forge_bottom_sheet.dart';
 import 'package:project_soaring/widget/loot_dialog.dart';
 import 'package:signals/signals_flutter.dart';
 

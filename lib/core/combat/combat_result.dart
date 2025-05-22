@@ -4,4 +4,5 @@ class CombatResult {
   List<Item>? loot;
   int damage = 0;
   String log = '';
+  String winner = '';
 }

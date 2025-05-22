@@ -10,6 +10,6 @@ class ExerciseController {
     var experience = random.nextInt(averagePerformance) + averagePerformance;
     return ExerciseResult()
       ..experience = experience
-      ..log = 'G $experience E';
+      ..log = '运转心法，你的修为提升了 $experience 点。';
   }
 }

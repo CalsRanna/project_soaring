@@ -4,6 +4,7 @@ import 'package:project_soaring/page/combat/combat_view_model.dart';
 import 'package:project_soaring/page/exercise/exercise_view_model.dart';
 import 'package:project_soaring/page/forge/forge_view_model.dart';
 import 'package:project_soaring/page/home/home_view_model.dart';
+import 'package:project_soaring/page/market/market_view_model.dart';
 import 'package:project_soaring/router/router.dart';
 
 Future<void> main() async {
@@ -33,5 +34,6 @@ class DI {
     GetIt.instance.registerFactory(() => CombatViewModel());
     GetIt.instance.registerFactory(() => ExerciseViewModel());
     GetIt.instance.registerFactory(() => ForgeViewModel());
+    GetIt.instance.registerFactory(() => MarketViewModel());
   }
 }

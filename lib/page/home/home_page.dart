@@ -43,8 +43,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Watch(
             (_) => HomeCharacterView(
               character: viewModel.character.value,
-              currency: viewModel.currency.value,
+              score: viewModel.score.value,
+              firstCurrency: viewModel.firstCurrency.value,
+              secondaryCurrency: viewModel.secondaryCurrency.value,
+              thirdCurrency: viewModel.thirdCurrency.value,
+              fourthCurrency: viewModel.fourthCurrency.value,
               items: viewModel.items.value,
+              equipments: viewModel.equipments.value,
+              onPutOn: viewModel.putOnItem,
+              onTakeOff: viewModel.takeOffItem,
             ),
           ),
           HomeHouseView(),

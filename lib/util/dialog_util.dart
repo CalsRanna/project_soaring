@@ -20,9 +20,11 @@ class DialogUtil {
   }
 
   void openBottomSheet(Widget bottomSheet) {
+    var shape = BeveledRectangleBorder(side: BorderSide());
     showModalBottomSheet(
       builder: (context) => bottomSheet,
       context: router.navigatorKey.currentContext!,
+      shape: shape,
     );
   }
 
@@ -46,10 +48,7 @@ class _LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.zero,
-      side: BorderSide(),
-    );
+    var shape = BeveledRectangleBorder(side: BorderSide());
     return Dialog(shape: shape, child: _buildBody());
   }
 
@@ -68,10 +67,7 @@ class _WarningDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.zero,
-      side: BorderSide(),
-    );
+    var shape = BeveledRectangleBorder(side: BorderSide());
     return Dialog(shape: shape, child: _buildBody(context));
   }
 

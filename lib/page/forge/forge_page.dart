@@ -22,7 +22,7 @@ class _ForgePageState extends State<ForgePage> {
       appBar: AppBar(title: Text('锻造')),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.all(16),
           child: Column(
             children: [
               Spacer(),
