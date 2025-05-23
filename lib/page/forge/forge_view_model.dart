@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/forge/forge_controller.dart';
 import 'package:project_soaring/core/item/item.dart';
 import 'package:project_soaring/page/home/home_view_model.dart';
@@ -8,19 +9,7 @@ import 'package:project_soaring/widget/loot_dialog.dart';
 import 'package:signals/signals_flutter.dart';
 
 class ForgeViewModel {
-  final materials = signal(<Item?>[
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
-
-  final placeholders = ['巽', '离', '坤', '震', '中宫', '兑', '艮', '坎', '乾'];
+  final materials = signal<List<Item?>>(List.generate(9, (index) => null));
 
   Future<void> forge() async {
     DialogUtil.instance.loading();
@@ -28,8 +17,11 @@ class ForgeViewModel {
     materials.value = List.generate(9, (index) => null);
     var homeViewModel = GetIt.instance.get<HomeViewModel>();
     homeViewModel.addItems([item]);
+    homeViewModel.removeItems(materials.value.whereType<Item>().toList());
     DialogUtil.instance.dismiss();
-    DialogUtil.instance.show(LootDialog(title: '锻造结果', loots: [item]));
+    DialogUtil.instance.show(
+      LootDialog(title: Strings.forgeDialogTitle, loots: [item]),
+    );
   }
 
   void openBottomSheet(int index) {

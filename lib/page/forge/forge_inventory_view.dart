@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/item/item.dart';
 import 'package:project_soaring/util/dialog_util.dart';
 import 'package:project_soaring/widget/button.dart';
@@ -27,12 +28,12 @@ class _ForgeInventoryViewState extends State<ForgeInventoryView> {
           children: [
             PSButton(
               selected: category == 1,
-              text: '材料',
+              text: Strings.material,
               onPressed: () => updateCategory(1),
             ),
             PSButton(
               selected: category == 2,
-              text: '装备',
+              text: Strings.equipment,
               onPressed: () => updateCategory(2),
             ),
           ],
@@ -64,7 +65,7 @@ class _ForgeInventoryViewState extends State<ForgeInventoryView> {
                   item: items[index],
                   actions: [
                     PSButton(
-                      text: '放入',
+                      text: Strings.putIn,
                       onPressed: () => widget.onPutIn?.call(items[index]),
                     ),
                   ],

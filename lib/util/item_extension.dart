@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/item/item.dart';
 
 extension ItemExtension on Item {
@@ -17,47 +18,47 @@ extension ItemExtension on Item {
 
   String get elementString {
     return switch (element) {
-      0 => '无',
-      1 => '金',
-      2 => '木',
-      3 => '水',
-      4 => '火',
-      5 => '土',
-      _ => '无',
+      0 => Strings.elementNeutral,
+      1 => Strings.elementMetal,
+      2 => Strings.elementWood,
+      3 => Strings.elementWater,
+      4 => Strings.elementFire,
+      5 => Strings.elementEarth,
+      _ => Strings.elementNeutral,
     };
   }
 
   String get rankString {
     return switch (rank) {
-      0 => '普通',
-      1 => '优秀',
-      2 => '精良',
-      3 => '史诗',
-      4 => '传说',
-      5 => '神话',
-      6 => '神器',
-      _ => '普通',
+      0 => Strings.rank0,
+      1 => Strings.rank1,
+      2 => Strings.rank2,
+      3 => Strings.rank3,
+      4 => Strings.rank4,
+      5 => Strings.rank5,
+      6 => Strings.rank6,
+      _ => Strings.rank0,
     };
   }
 
   String get positionString {
     return switch (position) {
-      0 => '',
-      1 => '头',
-      2 => '身',
-      3 => '腿',
-      4 => '脚',
-      5 => '法宝',
-      _ => '',
+      0 => Strings.emptyString,
+      1 => Strings.positionHead,
+      2 => Strings.positionBody,
+      3 => Strings.positionLeg,
+      4 => Strings.positionFoot,
+      5 => Strings.positionTreasure,
+      _ => Strings.emptyString,
     };
   }
 
   String get typeString {
     return switch (type) {
-      1 => '材料',
-      2 => '装备',
-      3 => '丹药',
-      _ => '',
+      1 => Strings.material,
+      2 => Strings.equipment,
+      3 => Strings.elixir,
+      _ => Strings.emptyString,
     };
   }
 }

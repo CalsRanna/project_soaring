@@ -1,52 +1,63 @@
+import 'package:project_soaring/core/modification/modification.dart';
+
 class Item {
-  String name = '';
-  String description = '';
   int count = 1;
-  int type = 1;
-  int rank = 0;
+  String description = '';
   int element = 0;
+  List<Modification> modifications = [];
+  String name = '';
   int position = 0;
+  int rank = 0;
+  int type = 1;
 
   Item();
 
   Item.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    description = json['description'];
     count = json['count'];
-    type = json['type'];
-    rank = json['rank'];
+    description = json['description'];
     element = json['element'];
+
+    modifications =
+        (json['modifications'] as List<dynamic>)
+            .map<Modification>((e) => Modification.fromJson(e))
+            .toList();
+    name = json['name'];
     position = json['position'];
+    rank = json['rank'];
+    type = json['type'];
   }
 
   Item copyWith({
-    String? name,
-    String? description,
     int? count,
-    int? type,
-    int? rank,
+    String? description,
     int? element,
+    List<Modification>? modifications,
+    String? name,
     int? position,
+    int? rank,
+    int? type,
   }) {
     return Item()
-      ..name = name ?? this.name
-      ..description = description ?? this.description
       ..count = count ?? this.count
-      ..type = type ?? this.type
-      ..rank = rank ?? this.rank
+      ..description = description ?? this.description
       ..element = element ?? this.element
-      ..position = position ?? this.position;
+      ..modifications = modifications ?? this.modifications
+      ..name = name ?? this.name
+      ..position = position ?? this.position
+      ..rank = rank ?? this.rank
+      ..type = type ?? this.type;
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'description': description,
       'count': count,
-      'type': type,
-      'rank': rank,
+      'description': description,
       'element': element,
+      'modifications': modifications.map((e) => e.toJson()).toList(),
+      'name': name,
       'position': position,
+      'rank': rank,
+      'type': type,
     };
   }
 }

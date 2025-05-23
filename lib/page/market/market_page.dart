@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/page/home/home_view_model.dart';
 import 'package:project_soaring/page/market/market_inventory_view.dart';
 import 'package:project_soaring/page/market/market_view_model.dart';
@@ -22,7 +23,7 @@ class _MarketPageState extends State<MarketPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('坊市')),
+      appBar: AppBar(title: const Text(Strings.market)),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16),

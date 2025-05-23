@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/page/forge/forge_view_model.dart';
 import 'package:project_soaring/widget/item_slot.dart';
 import 'package:signals/signals_flutter.dart';
@@ -19,7 +20,7 @@ class _ForgePageState extends State<ForgePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('锻造')),
+      appBar: AppBar(title: Text(Strings.forge)),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -36,7 +37,7 @@ class _ForgePageState extends State<ForgePage> {
                   return Watch(
                     (context) => ItemSlot(
                       item: viewModel.materials.value[index],
-                      placeholder: viewModel.placeholders[index],
+                      placeholder: Strings.palaces[index],
                       onTap: () => viewModel.openBottomSheet(index),
                     ),
                   );
@@ -53,7 +54,7 @@ class _ForgePageState extends State<ForgePage> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(border: Border.all()),
                   padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Text('开始锻造'),
+                  child: Text(Strings.startForge),
                 ),
               ),
             ],

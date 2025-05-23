@@ -25,7 +25,6 @@ class LootController {
 
   // 材料名称
   final List<String> _materialNames = [
-    '灵石',
     '矿石',
     '草药',
     '兽皮',
@@ -161,12 +160,12 @@ class LootController {
     String description;
 
     switch (item.type) {
-      case 2:
+      case 1:
         itemName =
             '$prefix${_materialNames[_random.nextInt(_materialNames.length)]}';
         description = '一种$itemName，散发着${item.elementString}属性的气息。';
         break;
-      case 1:
+      case 2:
         itemName =
             '$prefix${_equipmentNames[_random.nextInt(_equipmentNames.length)]}';
         description = '一件$itemName，蕴含着${item.elementString}属性的力量。';
@@ -181,17 +180,15 @@ class LootController {
         description = '这是一个神秘的物品，它的用途不明。';
     }
 
-    // 添加品级前缀
     item.name = itemName;
     item.description = description;
   }
 
-  // 生成装备位置
   void _setupItemPosition(Item item) {
     if (item.type == 2) {
-      item.position = 0;
+      item.position = _random.nextInt(5);
       return;
     }
-    item.position = _random.nextInt(5);
+    item.position = 0;
   }
 }

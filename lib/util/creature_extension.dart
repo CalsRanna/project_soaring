@@ -13,6 +13,6 @@ extension CreatureExtension on Creature {
       <= 9 => stages[2],
       _ => stages[3],
     };
-    return '${levels[levelIndex]}$stage';
+    return '【${levels[levelIndex]}$stage】';
   }
 }

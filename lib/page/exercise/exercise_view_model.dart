@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/exercise/exercise_controller.dart';
 import 'package:project_soaring/page/home/home_view_model.dart';
 import 'package:signals/signals.dart';
@@ -24,7 +25,7 @@ class ExerciseViewModel {
       return;
     }
     homeViewModel.updateIsExercising(true);
-    logs.value = ['开始修炼...'];
+    logs.value = [Strings.exerciseProgress];
     var exerciseController = ExerciseController();
     _timer = Timer.periodic(const Duration(seconds: 15), (_) {
       var result = exerciseController.exercise();

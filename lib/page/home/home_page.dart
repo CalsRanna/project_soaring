@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/page/home/home_bottom_bar_widget.dart';
 import 'package:project_soaring/page/home/home_character_view.dart';
 import 'package:project_soaring/page/home/home_guild_view.dart';
@@ -45,7 +46,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               character: viewModel.character.value,
               score: viewModel.score.value,
               firstCurrency: viewModel.firstCurrency.value,
-              secondaryCurrency: viewModel.secondaryCurrency.value,
+              secondCurrency: viewModel.secondaryCurrency.value,
               thirdCurrency: viewModel.thirdCurrency.value,
               fourthCurrency: viewModel.fourthCurrency.value,
               items: viewModel.items.value,
@@ -60,18 +61,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Container(),
         ],
       ),
-      bottomNavigationBar: Watch(
-        (context) => HomeBottomBar(
-          items: [
-            HomeBottomBarItem(label: '角色'),
-            HomeBottomBarItem(label: '洞府'),
-            HomeBottomBarItem(label: '宗门'),
-            HomeBottomBarItem(label: '地图'),
-            HomeBottomBarItem(label: '任务'),
-          ],
-          onItemSelected: viewModel.selectIndex,
-          selectedIndex: viewModel.selectedIndex.value,
-        ),
+      bottomNavigationBar: _buildBottomBar(),
+    );
+  }
+
+  Watch<HomeBottomBar> _buildBottomBar() {
+    var items =
+        Strings.bottomBarItems.map((e) => HomeBottomBarItem(label: e)).toList();
+    return Watch(
+      (context) => HomeBottomBar(
+        items: items,
+        onItemSelected: viewModel.selectIndex,
+        selectedIndex: viewModel.selectedIndex.value,
       ),
     );
   }

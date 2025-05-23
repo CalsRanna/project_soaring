@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/item/item.dart';
 import 'package:project_soaring/util/item_extension.dart';
+import 'package:project_soaring/util/modification_extension.dart';
 
 class ItemDialog extends StatelessWidget {
   final Item item;
@@ -20,12 +22,11 @@ class ItemDialog extends StatelessWidget {
       children: [
         Text(item.name, style: TextStyle(color: item.color)),
         const SizedBox(height: 8),
-        Text('属性：${item.elementString}'),
+        if (item.element > 0) Text('${Strings.element}${item.elementString}'),
+        ..._buildModifications(),
         if (item.position > 0) Text(item.positionString),
-        if (item.description.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Text('“${item.description}”', style: TextStyle(fontSize: 10)),
-        ],
+        const SizedBox(height: 8),
+        Text(item.description),
         if (actions != null) ...[
           const SizedBox(height: 16),
           Row(
@@ -37,5 +38,11 @@ class ItemDialog extends StatelessWidget {
       ],
     );
     return Padding(padding: const EdgeInsets.all(16), child: column);
+  }
+
+  List<Widget> _buildModifications() {
+    return item.modifications.map((e) {
+      return Text('${e.keyString}: ${e.value > 0 ? '+' : ''}${e.value}');
+    }).toList();
   }
 }

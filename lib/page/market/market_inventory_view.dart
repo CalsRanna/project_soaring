@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/item/item.dart';
 import 'package:project_soaring/util/dialog_util.dart';
 import 'package:project_soaring/widget/button.dart';
@@ -33,17 +34,17 @@ class _MarketInventoryViewState extends State<MarketInventoryView> {
           children: [
             PSButton(
               selected: category == 1,
-              text: '材料',
+              text: Strings.material,
               onPressed: () => updateCategory(1),
             ),
             PSButton(
               selected: category == 2,
-              text: '装备',
+              text: Strings.equipment,
               onPressed: () => updateCategory(2),
             ),
             PSButton(
               selected: category == 3,
-              text: '丹药',
+              text: Strings.elixir,
               onPressed: () => updateCategory(3),
             ),
           ],
@@ -57,7 +58,9 @@ class _MarketInventoryViewState extends State<MarketInventoryView> {
     var items = switch (category) {
       1 =>
         widget.items
-            .where((item) => item.type == 1 && !item.name.contains('灵石'))
+            .where(
+              (item) => item.type == 1 && !item.name.contains(Strings.currency),
+            )
             .toList(),
       2 => widget.items.where((item) => item.type == 2).toList(),
       3 => widget.items.where((item) => item.type == 3).toList(),
@@ -81,19 +84,19 @@ class _MarketInventoryViewState extends State<MarketInventoryView> {
                       items[index].count > 1
                           ? [
                             PSButton(
-                              text: '出售所有',
+                              text: Strings.sellAll,
                               onPressed:
                                   () => widget.onSellAll?.call(items[index]),
                             ),
                             PSButton(
-                              text: '出售单个',
+                              text: Strings.sellSingle,
                               onPressed:
                                   () => widget.onSell?.call(items[index]),
                             ),
                           ]
                           : [
                             PSButton(
-                              text: '出售',
+                              text: Strings.sell,
                               onPressed:
                                   () => widget.onSell?.call(items[index]),
                             ),

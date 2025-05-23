@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/router/router.dart';
 
 class DialogUtil {
@@ -89,7 +90,7 @@ class _WarningDialog extends StatelessWidget {
     var container = Container(
       decoration: BoxDecoration(border: Border.all()),
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text('取消'),
+      child: Text(Strings.cancel),
     );
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

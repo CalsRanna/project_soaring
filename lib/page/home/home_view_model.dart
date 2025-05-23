@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/item/item.dart';
 import 'package:project_soaring/router/router.gr.dart';
@@ -16,13 +17,23 @@ class HomeViewModel {
   final equipments = signal(<Item>[]);
 
   late final score = computed(() {
-    return character.value.health +
+    var score =
+        character.value.health +
         character.value.attack +
         character.value.defense;
-  });
+    for (var equipment in equipments.value) {
+      for (var modification in equipment.modifications) {
+        score += modification.value;
+      }
+    }
+    return score;
+  }, debugLabel: 'score');
   late final firstCurrency = computed(() {
     var specifiedItems = items.value.where(
-      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 1,
+      (item) =>
+          item.type == 1 &&
+          item.name.contains(Strings.currency) &&
+          item.rank == 1,
     );
     var total = 0;
     for (var item in specifiedItems) {
@@ -32,7 +43,10 @@ class HomeViewModel {
   });
   late final secondaryCurrency = computed(() {
     var specifiedItems = items.value.where(
-      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 2,
+      (item) =>
+          item.type == 1 &&
+          item.name.contains(Strings.currency) &&
+          item.rank == 2,
     );
     var total = 0;
     for (var item in specifiedItems) {
@@ -42,7 +56,10 @@ class HomeViewModel {
   });
   late final thirdCurrency = computed(() {
     var specifiedItems = items.value.where(
-      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 3,
+      (item) =>
+          item.type == 1 &&
+          item.name.contains(Strings.currency) &&
+          item.rank == 3,
     );
     var total = 0;
     for (var item in specifiedItems) {
@@ -52,7 +69,10 @@ class HomeViewModel {
   });
   late final fourthCurrency = computed(() {
     var specifiedItems = items.value.where(
-      (item) => item.type == 1 && item.name.contains('灵石') && item.rank == 4,
+      (item) =>
+          item.type == 1 &&
+          item.name.contains(Strings.currency) &&
+          item.rank == 4,
     );
     var total = 0;
     for (var item in specifiedItems) {
@@ -114,7 +134,7 @@ class HomeViewModel {
         newItems.add(item);
       }
     }
-    this.items.value = newItems;
+    this.items.value = [...newItems];
   }
 
   void removeItems(List<Item> items) {
@@ -143,8 +163,9 @@ class HomeViewModel {
       (i) => i.position == item.position,
     );
     if (samePositionIndex >= 0) {
+      var samePositionEquipment = newEquipments[samePositionIndex];
       newEquipments[samePositionIndex] = item;
-      removeItems([newEquipments[samePositionIndex]]);
+      addItems([samePositionEquipment]);
     } else {
       newEquipments.add(item);
     }
@@ -154,11 +175,9 @@ class HomeViewModel {
   }
 
   void takeOffItem(Item item) {
-    var newEquipments = [...equipments.value];
-    var index = newEquipments.indexWhere((i) => i.name == item.name);
-    if (index >= 0) {
-      newEquipments.removeAt(index);
-    }
+    var newEquipments = equipments.value.where(
+      (i) => i.position != item.position,
+    );
     equipments.value = [...newEquipments];
     addItems([item]);
     DialogUtil.instance.dismiss();

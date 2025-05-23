@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:openai_dart/openai_dart.dart';
 import 'package:project_soaring/config/config.dart';
+import 'package:project_soaring/constant/strings.dart';
 import 'package:project_soaring/core/item/item.dart';
 
 class ForgeController {
@@ -10,14 +11,19 @@ class ForgeController {
 
 **材料定义:**
 我将为你提供一个JSON数组，其中每个对象代表一种材料，包含以下信息：
-- `name` (String): 材料的中文名。
-- `description` (String): 材料的中文描述。
 - `count` (int): 材料的数量。
-- `type` (int): 固定为1，表示这是一个材料。
-- `rank` (int): 材料的品阶 (0-6: 普通, 优秀, 精良, 史诗, 传说, 神话, 神器)。
+- `description` (String): 材料的中文描述。
 - `element` (int): 材料的元素属性 (0:无, 1:金, 2:木, 3:水, 4:火, 5:土)。
-- `position` (int): 材料通常固定为0。
+- `modifications` (List<Modification>): 材料的属性修改列表。
+- `name` (String): 材料的中文名。
 - `palace` (String): 材料在九宫格中摆放的方位名称，从以下列表中选择：['巽', '离', '坤', '震', '中宫', '兑', '艮', '坎', '乾']。
+- `position` (int): 材料通常固定为0。
+- `rank` (int): 材料的品阶 (0-6: 普通, 优秀, 精良, 史诗, 传说, 神话, 神器)。
+- `type` (int): 固定为1，表示这是一个材料。
+
+**修改定义：**
+- `key` (int): 修改的属性 (0:无, 1:生命, 2:攻击, 3:防御)。
+- `value` (int): 修改的值，正值为增加，负值为减少。
 
 **九宫八卦与五行对应关系:**
 在锻造过程中，材料所处的宫位及其对应的八卦和五行属性至关重要：
@@ -50,30 +56,31 @@ class ForgeController {
 
 **输出的 `Item` 结构要求:**
 
-1.  **`name` (名称)**:
-    *   成功: 富有仙侠气息，体现材料、五行、八卦特性或装备效果的中文名称。
-    *   失败: 如 "一滩熔渣", "灵爆残渣", "废弃的五行石屑"。
+1.  **`count` (数量)**: 固定为1。
 2.  **`description` (描述)**:
     *   成功: 生动描述装备的外观、能力、特殊效果、潜在力量或相关传说。
     *   失败: 描述锻造失败的景象，残留物的状态，或失败的原因推测。
-3.  **`count` (数量)**: 固定为1。
-4.  **`type` (类型)**:
-    *   成功锻造出装备: `type` 固定为 2。
-    *   锻造失败产生废物: `type` 固定为 1 (视为残留的、无用的材料)。
-5.  **`rank` (品阶)**:
-    *   成功: 根据锻造过程的凶吉、材料品质、五行八卦互动综合判定，范围0-6。好的组合可以超越原材料品阶，糟糕的则可能降级。
-    *   失败: `rank` 固定为 0。
-6.  **`element` (元素)**:
+3.  **`element` (元素)**:
     *   成功: 根据主材、辅材元素、五行生克转化、宫位影响来决定。可能是单一元素，也可能是0 (无特定元素，或多种元素平衡/冲突后的结果)。
     *   失败: `element` 通常为 0。
-7.  **`position` (位置)**:
+4.  **`modifications` (修改)**:
+    *   成功: 根据主材、辅材属性、五行生克转化、宫位影响来决定。可能包含多个修改，每个修改包含 `key` (属性) 和 `value` (值)。
+    *   失败: `modifications` 通常为空列表。
+4.  **`name` (名称)**:
+    *   成功: 富有仙侠气息，体现材料、五行、八卦特性或装备效果的中文名称。
+    *   失败: 如 "一滩熔渣", "灵爆残渣", "废弃的五行石屑"。
+5.  **`position` (位置)**:
     *   成功: 装备则根据其形态选择 (0:通用/特殊, 1:头, 2:身, 3:腿, 4:脚, 5:法宝)。
     *   失败: `position` 固定为 0。
+6.  **`rank` (品阶)**:
+    *   成功: 根据锻造过程的凶吉、材料品质、五行八卦互动综合判定，范围0-6。好的组合可以超越原材料品阶，糟糕的则可能降级。
+    *   失败: `rank` 固定为 0。
+7.  **`type` (类型)**:
+    *   成功锻造出装备: `type` 固定为 2。
+    *   锻造失败产生废物: `type` 固定为 1 (视为残留的、无用的材料)。
 
 请将你锻造出的物品信息，严格按照以下JSON格式返回，不要包含任何额外的解释或对话。
 ''';
-
-  final _palaces = ['巽', '离', '坤', '震', '中宫', '兑', '艮', '坎', '乾'];
 
   Future<Item> forge(List<Item?> materials) async {
     final client = OpenAIClient(apiKey: Config.apiKey, baseUrl: Config.baseUrl);
@@ -99,16 +106,16 @@ class ForgeController {
   }
 
   String _buildUserPrompt(List<Item?> materials) {
-    var prompt = [];
+    var materialStrings = <Map<String, dynamic>>[];
     for (var i = 0; i < materials.length; i++) {
       var item = materials[i];
       if (item != null) {
         var json = item.toJson();
         json['count'] = 1;
-        json['palace'] = _palaces[i];
-        prompt.add(json);
+        json['palace'] = Strings.palaces[i];
+        materialStrings.add(json);
       }
     }
-    return '提供的材料如下: ${prompt.toString()}';
+    return '${Strings.forgeMaterials}$materialStrings';
   }
 }
