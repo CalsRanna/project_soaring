@@ -7,6 +7,7 @@ import 'package:project_soaring/util/dialog_util.dart';
 import 'package:project_soaring/widget/item_dialog.dart';
 import 'package:project_soaring/widget/item_slot.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:project_soaring/constant/strings.dart';
 
 @RoutePage()
 class CombatPage extends StatefulWidget {
@@ -34,7 +35,7 @@ class _CombatPageState extends State<CombatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('探索')),
+      appBar: AppBar(title: const Text(Strings.explore)),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -95,7 +96,7 @@ class _CombatPageState extends State<CombatPage> {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        label: const Text('结束探索'),
+        label: const Text(Strings.stopExplore),
         icon: const Icon(HugeIcons.strokeRoundedCancel01),
       ),
     );

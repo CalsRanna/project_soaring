@@ -111,13 +111,22 @@ class HomeViewModel {
     var maxExperience = (pow(level, 3) * 100).toInt();
     var newExperience = character.value.experience + experience;
     var newLevel = level;
+    var newHealth = character.value.health;
+    var newAttack = character.value.attack;
+    var newDefense = character.value.defense;
     while (newExperience >= maxExperience) {
       newExperience = newExperience - maxExperience;
       newLevel++;
       maxExperience = (pow(newLevel, 3) * 100).toInt();
+      newHealth += 100 * newLevel;
+      newAttack += 10 * pow(newLevel, 2).toInt();
+      newDefense += 10 * pow(newLevel, 2).toInt();
     }
     character.value = character.value.copyWith(
+      attack: newAttack,
+      defense: newDefense,
       experience: newExperience,
+      health: newHealth,
       level: newLevel,
     );
   }

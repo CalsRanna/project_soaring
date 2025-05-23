@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:project_soaring/util/item_extension.dart';
 
 class LootController {
-  // 物品名称前缀
   final List<String> _prefixes = [
     '普通的',
     '闪亮的',
@@ -23,7 +22,6 @@ class LootController {
     '远古的',
   ];
 
-  // 材料名称
   final List<String> _materialNames = [
     '矿石',
     '草药',
@@ -41,7 +39,6 @@ class LootController {
     '灵草',
   ];
 
-  // 装备名称
   final List<String> _equipmentNames = [
     '剑',
     '刀',
@@ -60,7 +57,6 @@ class LootController {
     '护腿',
   ];
 
-  // 消耗品名称
   final List<String> _consumableNames = [
     '药水',
     '卷轴',
@@ -81,14 +77,11 @@ class LootController {
 
   final Random _random = Random();
 
-  // 生成战利品
   Item generateLoot({int? rank, int? element, int? type}) {
-    // 随机生成未指定的属性
     final itemRank = rank ?? _generateRank();
     final itemElement = element ?? _generateElement();
     final itemType = type ?? _generateType();
 
-    // 生成物品
     final item =
         Item()
           ..type = itemType
@@ -96,64 +89,57 @@ class LootController {
           ..element = itemElement
           ..count = _generateCount(itemRank);
 
-    // 设置名称和描述
     _setupItemNameAndDescription(item);
     _setupItemPosition(item);
 
     return item;
   }
 
-  // 生成品级 (0-6)
   int _generateRank() {
-    // 品级越高，概率越低
     final roll = _random.nextDouble();
-    if (roll < 0.4) return 0; // 40% 普通
-    if (roll < 0.7) return 1; // 30% 优秀
-    if (roll < 0.85) return 2; // 15% 精良
-    if (roll < 0.95) return 3; // 10% 史诗
-    if (roll < 0.99) return 4; // 4% 传说
-    if (roll < 0.999) return 5; // 0.9% 神话
-    return 6; // 0.1% 神器
+    if (roll < 0.4) return 0;
+    if (roll < 0.7) return 1;
+    if (roll < 0.85) return 2;
+    if (roll < 0.95) return 3;
+    if (roll < 0.99) return 4;
+    if (roll < 0.999) return 5;
+    return 6;
   }
 
-  // 生成元素属性
   int _generateElement() {
     final roll = _random.nextDouble();
-    if (roll < 0.2) return 0; // 20% 无属性
-    return _random.nextInt(5) + 1; // 16% 每个属性
+    if (roll < 0.01) return 0;
+    return _random.nextInt(5) + 1;
   }
 
-  // 生成物品类型
   int _generateType() {
     final roll = _random.nextDouble();
-    if (roll < 0.5) return 2; // 50% 材料
-    if (roll < 0.8) return 1; // 30% 装备
-    return 3; // 20% 消耗品
+    if (roll < 0.5) return 2;
+    if (roll < 0.8) return 1;
+    return 3;
   }
 
-  // 生成数量 (品级越高，数量越少)
   int _generateCount(int rank) {
     switch (rank) {
       case 0:
-        return _random.nextInt(10) + 1; // 1-10
+        return _random.nextInt(10) + 1;
       case 1:
-        return _random.nextInt(5) + 1; // 1-5
+        return _random.nextInt(5) + 1;
       case 2:
-        return _random.nextInt(3) + 1; // 1-3
+        return _random.nextInt(3) + 1;
       case 3:
-        return 1; // 1
+        return 1;
       case 4:
-        return 1; // 1
+        return 1;
       case 5:
-        return 1; // 1
+        return 1;
       case 6:
-        return 1; // 1
+        return 1;
       default:
         return 1;
     }
   }
 
-  // 设置物品名称和描述
   void _setupItemNameAndDescription(Item item) {
     final prefix = _prefixes[_random.nextInt(_prefixes.length)];
     String itemName;

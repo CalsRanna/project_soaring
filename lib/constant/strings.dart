@@ -78,4 +78,12 @@ abstract class Strings {
   static const String health = '生命';
   static const String attack = '攻击';
   static const String defense = '防御';
+  static const String combatLog = '%s 攻击 %s，造成了 %s 点伤害。';
+  static const String explore = '探索';
+  static const String startExplore = '开始探索';
+  static const String stopExplore = '停止探索';
+  static const String combatSeekCreature = '正在寻找怪物...';
+  static const String combatFoundCreature = '找到怪物 %s。';
+  static const String combatEnd = '战斗结束，%s 获得胜利。';
+  static const String combatLoot = '获得 %s 。';
 }

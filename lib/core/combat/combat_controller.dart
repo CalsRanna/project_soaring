@@ -4,7 +4,8 @@ import 'package:project_soaring/core/combat/combat_result.dart';
 import 'package:project_soaring/core/combat/combat_round.dart';
 import 'package:project_soaring/core/creature/character.dart';
 import 'package:project_soaring/core/creature/creature.dart';
-import 'package:project_soaring/core/loot/loot_controller.dart';
+import 'package:project_soaring/constant/strings.dart';
+import 'package:project_soaring/util/string_extension.dart';
 
 class CombatController {
   Character character;
@@ -13,25 +14,23 @@ class CombatController {
 
   CombatController({required this.character, required this.creature});
 
-  CombatResult next() {
-    var random = Random.secure();
+  CombatResult combat() {
     if (_round == CombatRound.character) {
-      var damage = random.nextInt(100);
-      var loot =
-          random.nextBool() ? [LootController().generateLoot(type: 1)] : null;
+      var damage = max(character.attack - creature.defense, 1) * _damageTimes;
       _round = CombatRound.creature;
+      var args = [character.name, creature.name, damage];
       return CombatResult()
-        ..log = '${character.name} 攻击 ${creature.name}, 造成 $damage 点伤害'
-        ..damage = damage
-        ..loot = loot
-        ..winner = character.name;
+        ..log = Strings.combatLog.format(args)
+        ..characterDamage = damage;
     } else {
-      var damage = random.nextInt(100);
+      var damage = max(creature.attack - character.defense, 1) * _damageTimes;
       _round = CombatRound.character;
+      var args = [creature.name, character.name, damage];
       return CombatResult()
-        ..log = '${creature.name} 攻击 ${character.name}, 造成 $damage 点伤害'
-        ..damage = damage
-        ..winner = creature.name;
+        ..log = Strings.combatLog.format(args)
+        ..creatureDamage = damage;
     }
   }
+
+  int get _damageTimes => Random.secure().nextDouble() < 0.1 ? 2 : 1;
 }
